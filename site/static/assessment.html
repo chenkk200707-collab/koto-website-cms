@@ -24,12 +24,11 @@
             font-family: 'Noto Sans SC', sans-serif;
             margin: 0;
             padding: 0;
-            padding-bottom: 180px; /* 给底部悬浮条留空间 */
+            padding-bottom: 200px;
         }
 
         .container { max-width: 850px; margin: 0 auto; padding: 20px; }
 
-        /* 顶部导航 */
         header { display: flex; justify-content: space-between; align-items: center; padding: 20px 0; margin-bottom: 20px; }
         .logo { font-weight: 800; font-size: 1.5rem; color: var(--brand-navy); text-decoration: none; }
         .back-link { color: #666; text-decoration: none; font-size: 0.9rem; }
@@ -37,7 +36,6 @@
         h1 { text-align: center; color: var(--brand-navy); margin-bottom: 10px; }
         .subtitle { text-align: center; color: #666; font-size: 0.9rem; margin-bottom: 40px; }
 
-        /* --- 卡片样式 (Claymorphism) --- */
         .section-card {
             background: var(--card-white);
             border-radius: 20px;
@@ -49,7 +47,9 @@
 
         h2 { color: var(--brand-navy); font-size: 1.3rem; margin-top: 0; margin-bottom: 15px; border-bottom: 2px solid #eee; padding-bottom: 15px;}
         
-        /* 新增：引导性描述文字 (General Idea) */
+        /* 二级标题 (用于区分第一语言/第二语言) */
+        h3 { color: var(--brand-gold); font-size: 1.1rem; margin-top: 30px; margin-bottom: 15px; text-transform: uppercase; letter-spacing: 1px; }
+
         .section-intro {
             font-size: 0.95rem;
             color: #666;
@@ -66,7 +66,6 @@
 
         label { display: block; font-weight: 700; margin-bottom: 10px; color: var(--brand-navy); }
         
-        /* --- 输入框样式 --- */
         select, input {
             width: 100%;
             padding: 14px;
@@ -81,11 +80,8 @@
             transition: 0.2s;
         }
         select:focus { border: 1px solid var(--brand-gold); background: #fff; }
-        
-        /* 默认占位符颜色 */
         select:invalid, select option[value=""] { color: #999; }
 
-        /* --- 底部悬浮算分条 --- */
         .score-bar {
             position: fixed;
             bottom: 20px;
@@ -135,17 +131,15 @@
         </header>
 
         <h1>官方 CRS 移民算分器</h1>
-        <p class="subtitle">基于加拿大移民局 (IRCC) 2025 最新算法标准</p>
+        <p class="subtitle">基于 IRCC 2025 最新算法 • 含法语加分模块</p>
 
         <form id="crsForm">
             
             <div class="section-card">
                 <h2>1. 婚姻状况 (Marital Status)</h2>
                 <p class="section-intro">
-                    您的婚姻状况将决定您的算分基准。加拿大移民局将申请人分为“单身”和“已婚”两类。
-                    如果您已婚但配偶不随行，或者配偶已经是加拿大公民/PR，您将依然按照更有优势的“单身标准”进行评分。
+                    您的婚姻状况决定算分基准。如配偶不随行或已是加拿大公民/PR，您将按“单身标准”算分（通常更有利）。
                 </p>
-                
                 <div class="form-grid">
                     <div class="full-width">
                         <label>您的婚姻状况？</label>
@@ -169,8 +163,7 @@
             <div class="section-card">
                 <h2>2. 核心背景 (Core Factors)</h2>
                 <p class="section-intro">
-                    这是 CRS 评分的基础。年龄在 20-29 岁之间得分最高；学历越高分数越高。
-                    加拿大本地的工作经验非常宝贵，满 1 年即可获得加分，满 2 年及以上在交叉项中优势明显。
+                    年龄、学历和加拿大工作经验是三大支柱。20-29岁年龄分满分；双学历比单学历更有优势。
                 </p>
                 <div class="form-grid">
                     <div>
@@ -231,61 +224,77 @@
             <div class="section-card">
                 <h2>3. 语言能力 (Language)</h2>
                 <p class="section-intro">
-                    语言是拉开分差的关键！**CLB 9 (雅思 8777)** 是一个神奇的分水岭。
-                    如果听说读写四项都达到 CLB 9，您的交叉项加分会成倍增长，总分可能直接增加 50-100 分。
+                    第一语言推荐雅思 (IELTS-G)。**CLB 9 (8777)** 是高分关键。
+                    如有法语能力，即使是基础水平 (CLB 5/7)，也能带来 **额外 25-50 分** 的巨大优势！
                 </p>
+                
+                <h3>第一官方语言 (英语 / 雅思 G类)</h3>
                 <div class="form-grid">
                     <div>
                         <label>听力 (Listening)</label>
                         <select id="langListen" onchange="runCalculations()" required>
                             <option value="" disabled selected>请选择...</option>
-                            <option value="0">CLB 4 以下</option>
-                            <option value="6">CLB 4-5</option>
-                            <option value="9">CLB 6</option>
-                            <option value="17">CLB 7 (雅思 6.0)</option>
-                            <option value="23">CLB 8 (雅思 7.5)</option>
-                            <option value="31">CLB 9 (雅思 8.0)</option>
-                            <option value="34">CLB 10 (雅思 8.5+)</option>
+                            <option value="0">CLB 4 以下 (雅思听力 < 4.5)</option>
+                            <option value="6">CLB 4-5 (雅思听力 4.5-5.5)</option>
+                            <option value="9">CLB 6 (雅思听力 5.5)</option>
+                            <option value="17">CLB 7 (雅思听力 6.0-7.0)</option>
+                            <option value="23">CLB 8 (雅思听力 7.5)</option>
+                            <option value="31">CLB 9 (雅思听力 8.0)</option>
+                            <option value="34">CLB 10 (雅思听力 8.5+)</option>
                         </select>
                     </div>
                     <div>
                         <label>口语 (Speaking)</label>
                         <select id="langSpeak" onchange="runCalculations()" required>
                             <option value="" disabled selected>请选择...</option>
-                            <option value="0">CLB 4 以下</option>
-                            <option value="6">CLB 4-5</option>
-                            <option value="9">CLB 6 (雅思 6.0)</option>
-                            <option value="17">CLB 7 (雅思 6.0)</option>
-                            <option value="23">CLB 8 (雅思 6.5)</option>
-                            <option value="31">CLB 9 (雅思 7.0)</option>
-                            <option value="34">CLB 10 (雅思 7.5+)</option>
+                            <option value="0">CLB 4 以下 (雅思口语 < 4.0)</option>
+                            <option value="6">CLB 4-5 (雅思口语 4.0-5.5)</option>
+                            <option value="9">CLB 6 (雅思口语 6.0)</option>
+                            <option value="17">CLB 7 (雅思口语 6.0)</option>
+                            <option value="23">CLB 8 (雅思口语 6.5)</option>
+                            <option value="31">CLB 9 (雅思口语 7.0)</option>
+                            <option value="34">CLB 10 (雅思口语 7.5+)</option>
                         </select>
                     </div>
                     <div>
                         <label>阅读 (Reading)</label>
                         <select id="langRead" onchange="runCalculations()" required>
                             <option value="" disabled selected>请选择...</option>
-                            <option value="0">CLB 4 以下</option>
-                            <option value="6">CLB 4-5</option>
-                            <option value="9">CLB 6 (雅思 6.0)</option>
-                            <option value="17">CLB 7 (雅思 6.0)</option>
-                            <option value="23">CLB 8 (雅思 6.5)</option>
-                            <option value="31">CLB 9 (雅思 7.0)</option>
-                            <option value="34">CLB 10 (雅思 8.0+)</option>
+                            <option value="0">CLB 4 以下 (雅思阅读 < 3.5)</option>
+                            <option value="6">CLB 4-5 (雅思阅读 3.5-5.5)</option>
+                            <option value="9">CLB 6 (雅思阅读 6.0)</option>
+                            <option value="17">CLB 7 (雅思阅读 6.0)</option>
+                            <option value="23">CLB 8 (雅思阅读 6.5)</option>
+                            <option value="31">CLB 9 (雅思阅读 7.0)</option>
+                            <option value="34">CLB 10 (雅思阅读 8.0+)</option>
                         </select>
                     </div>
                     <div>
                         <label>写作 (Writing)</label>
                         <select id="langWrite" onchange="runCalculations()" required>
                             <option value="" disabled selected>请选择...</option>
-                            <option value="0">CLB 4 以下</option>
-                            <option value="6">CLB 4-5</option>
-                            <option value="9">CLB 6 (雅思 6.0)</option>
-                            <option value="17">CLB 7 (雅思 6.0)</option>
-                            <option value="23">CLB 8 (雅思 6.5)</option>
-                            <option value="31">CLB 9 (雅思 7.0)</option>
-                            <option value="34">CLB 10 (雅思 7.5+)</option>
+                            <option value="0">CLB 4 以下 (雅思写作 < 4.0)</option>
+                            <option value="6">CLB 4-5 (雅思写作 4.0-5.5)</option>
+                            <option value="9">CLB 6 (雅思写作 6.0)</option>
+                            <option value="17">CLB 7 (雅思写作 6.0)</option>
+                            <option value="23">CLB 8 (雅思写作 6.5)</option>
+                            <option value="31">CLB 9 (雅思写作 7.0)</option>
+                            <option value="34">CLB 10 (雅思写作 7.5+)</option>
                         </select>
+                    </div>
+                </div>
+
+                <h3>第二官方语言 (法语 / TEF Canada)</h3>
+                <div class="form-grid">
+                    <div class="full-width">
+                        <label>您的法语水平？</label>
+                        <select id="lang2Select" onchange="updateFrench(); runCalculations();" required>
+                            <option value="" disabled selected>请选择...</option>
+                            <option value="none">无法语成绩 / 低于 CLB 5</option>
+                            <option value="clb5">基础水平 (四项均达 CLB 5/6)</option>
+                            <option value="clb7">中高级水平 (四项均达 CLB 7+)</option>
+                        </select>
+                        <p style="font-size:0.8rem; color:#888; margin-top:5px;">* 法语达到 CLB 7 可获得额外 50 分加分！</p>
                     </div>
                 </div>
             </div>
@@ -293,8 +302,7 @@
             <div class="section-card">
                 <h2>4. 额外加分项 (Additional Points)</h2>
                 <p class="section-intro">
-                    如果核心分数不够，这里是弯道超车的机会。
-                    海外工作经验需要配合雅思 CLB 9 才能发挥最大威力。LMIA 雇主担保和 PNP 省提名则是最直接的加分手段。
+                    海外工作经验需配合雅思 CLB 9 才能触发高额加分。PNP 省提名直接 +600 分，是目前的保过金牌。
                 </p>
                 <div class="form-grid">
                     <div class="full-width">
@@ -324,7 +332,7 @@
                         </select>
                     </div>
                     <div>
-                        <label>兄弟姐妹在加拿大</label>
+                        <label>兄弟姐妹在加拿大 (公民/PR)</label>
                         <select id="sibling" onchange="runCalculations()" required>
                             <option value="" disabled selected>请选择...</option>
                             <option value="0">无</option>
@@ -382,21 +390,32 @@
     </div>
 
     <script>
-        // --- 1. 强制重置表单 (修复选项残留问题) ---
+        // --- 1. 强制重置表单 ---
         window.onload = function() {
             document.getElementById("crsForm").reset();
-            runCalculations(); // 初始化分数
+            runCalculations(); 
         };
 
-        // --- 数据字典 (官方算法) ---
+        // --- 数据字典 ---
         const agePointsSingle = {17:0, 18:99, 19:105, 20:110, 21:110, 22:110, 23:110, 24:110, 25:110, 26:110, 27:110, 28:110, 29:110, 30:105, 31:99, 32:94, 33:88, 34:83, 35:77, 36:72, 37:66, 38:61, 39:55, 40:50, 41:39, 42:28, 43:17, 44:6, 45:0};
         const agePointsMarried = {17:0, 18:90, 19:95, 20:100, 21:100, 22:100, 23:100, 24:100, 25:100, 26:100, 27:100, 28:100, 29:100, 30:95, 31:90, 32:85, 33:80, 34:75, 35:70, 36:65, 37:60, 38:55, 39:50, 40:45, 41:35, 42:25, 43:15, 44:5, 45:0};
 
-        // 安全获取数值，如果为空(NaN)则返回0
+        // 全局变量存储法语分数
+        let lang2Vals = {s:0, l:0, r:0, w:0};
+
         function getVal(id) { 
             let el = document.getElementById(id);
-            if (!el || el.value === "") return 0; // 关键修复：空值返回0
+            if (!el || el.value === "") return 0; 
             return parseInt(el.value); 
+        }
+
+        // 更新法语分数对象
+        function updateFrench() {
+            const level = document.getElementById('lang2Select').value;
+            // 官方加分：NCLC 7+ 每项6分；NCLC 5-6 每项1分 (简化逻辑，取中间值)
+            if(level === 'clb7') lang2Vals = {s:6, l:6, r:6, w:6}; // CLB 7+
+            else if(level === 'clb5') lang2Vals = {s:1, l:1, r:1, w:1}; // CLB 5
+            else lang2Vals = {s:0, l:0, r:0, w:0};
         }
 
         function toggleSpouseSection() {
@@ -420,23 +439,15 @@
 
         function calculateScore() {
             let score = 0;
-            
-            // 状态判断
             let mStatus = document.getElementById('maritalStatus').value;
             let spCdn = document.getElementById('spouseCanadian').value;
-            
-            // 如果没选婚姻状况，按单身算（或者记0），防止报错
-            // 逻辑：已婚 且 配偶不是加拿大人 = 已婚算分标准
             let isMarriedCalc = (mStatus === 'married' && spCdn === 'no');
 
             // --- 1. 核心人力资本 ---
             
             // A. 年龄
             let age = getVal('age');
-            // 处理20-29岁区间（这些值HTML里是一样的，逻辑上也是满分）
             if(age >= 20 && age <= 29) age = 29; 
-            
-            // 只有当年龄被选择时才算分，否则查不到表就是0
             let ageScore = 0;
             if (document.getElementById('age').value !== "") {
                 ageScore = isMarriedCalc ? (agePointsMarried[age] || 0) : (agePointsSingle[age] || 0);
@@ -446,7 +457,6 @@
             // B. 学历
             let eduScore = getVal('education');
             if(isMarriedCalc) {
-                // 已婚折算
                 if(eduScore == 150) eduScore = 140; 
                 else if(eduScore == 135) eduScore = 126; 
                 else if(eduScore == 128) eduScore = 119; 
@@ -465,7 +475,6 @@
             
             let langTotal = 0;
             if(isMarriedCalc) {
-                // 已婚单项满分32
                 let adjust = (val) => {
                     if(val==34) return 32; if(val==31) return 29; 
                     if(val==23) return 22; if(val==17) return 16; 
@@ -473,16 +482,17 @@
                 };
                 langTotal = adjust(lSpeak) + adjust(lListen) + adjust(lRead) + adjust(lWrite);
             } else {
-                // 单身单项满分34
                 langTotal = lSpeak + lListen + lRead + lWrite;
             }
             score += langTotal;
+
+            // 第二语言(法语)加分 (第一部分，直接加分)
+            score += (lang2Vals.s + lang2Vals.l + lang2Vals.r + lang2Vals.w);
 
             // D. 加拿大工作
             let cdnExp = getVal('cdnExp');
             let cdnScore = cdnExp;
             if(isMarriedCalc) {
-                // 已婚折算
                 if(cdnExp == 80) cdnScore = 70;
                 else if(cdnExp == 72) cdnScore = 63;
                 else if(cdnExp == 64) cdnScore = 56;
@@ -491,15 +501,13 @@
             }
             score += cdnScore;
 
-            // 配偶加分 (简单模拟，根据选填情况)
+            // 配偶加分
             if(isMarriedCalc) {
                 score += getVal('spouseEdu');
                 score += getVal('spouseCdnExp');
-                // 假设配偶语言 (略简化)
             }
 
             // --- 2. 交叉项 (Transferability) ---
-            // 这里的逻辑：如果有CLB9，分数组合会大增
             let clb9Count = 0; 
             let clb7Count = 0;
             [lSpeak, lListen, lRead, lWrite].forEach(val => {
@@ -509,16 +517,14 @@
 
             // 学历交叉
             let transEdu = 0;
-            let eduHigh = (getVal('education') >= 128); // 双学历及以上
+            let eduHigh = (getVal('education') >= 128); 
             let eduPostSec = (getVal('education') >= 90);
 
-            // 学历 + 语言
             if(eduHigh && clb9Count == 4) transEdu += 50;
             else if(eduHigh && clb7Count == 4) transEdu += 25;
             else if(eduPostSec && clb9Count == 4) transEdu += 25;
             else if(eduPostSec && clb7Count == 4) transEdu += 13;
 
-            // 学历 + 加拿大工作
             let cdn1yr = (getVal('cdnExp') >= 40); 
             let cdn2yr = (getVal('cdnExp') >= 53); 
 
@@ -527,7 +533,7 @@
             else if(eduPostSec && cdn2yr) transEdu += 25;
             else if(eduPostSec && cdn1yr) transEdu += 13;
             
-            if(transEdu > 50) transEdu = 50; // 上限50
+            if(transEdu > 50) transEdu = 50; 
             score += transEdu;
 
             // 海外工作交叉
@@ -536,13 +542,11 @@
             let for3yr = (forExp >= 3);
             let for1yr = (forExp >= 1);
 
-            // 海外工作 + 语言
             if(for3yr && clb9Count == 4) transFor += 50;
             else if(for3yr && clb7Count == 4) transFor += 25;
             else if(for1yr && clb9Count == 4) transFor += 25;
             else if(for1yr && clb7Count == 4) transFor += 13;
 
-            // 海外工作 + 加拿大工作
             if(for3yr && cdn2yr) transFor += 50;
             else if(for3yr && cdn1yr) transFor += 25;
             else if(for1yr && cdn2yr) transFor += 25;
@@ -551,19 +555,28 @@
             if(transFor > 50) transFor = 50;
             score += transFor;
 
-            // 限制交叉项总分 100
             if((transEdu + transFor) > 100) {
-                // 回退一部分
                 score -= (transEdu + transFor - 100);
             }
 
-            // --- 3. 额外加分 ---
+            // --- 3. 额外加分 (含法语交叉加分) ---
             let addScore = 0;
             addScore += getVal('pnp');
             addScore += getVal('jobOffer');
             addScore += getVal('sibling');
             addScore += getVal('cdnEdu');
             
+            // 法语强力交叉加分 (NCLC 7+)
+            // 规则：法语4项NCLC7 + 英语CLB4以下 = +25
+            // 规则：法语4项NCLC7 + 英语CLB5以上 = +50
+            if(document.getElementById('lang2Select').value === 'clb7') {
+                // 检查英语水平 (CLB 5 对应单项分值大概在 6分以上)
+                // 这里用总分简单判断，或者判断单项是否都>0
+                let engScore = lSpeak + lListen + lRead + lWrite;
+                if(engScore >= 24) addScore += 50; // 英语也不错
+                else addScore += 25; // 英语一般
+            }
+
             if(addScore > 600) addScore = 600;
             score += addScore;
 
@@ -572,13 +585,11 @@
 
         function runCalculations() {
             let score = calculateScore();
-            // 只有当分数大于0时才执行数字跳动，否则显示0
             let displayElem = document.getElementById('displayScore');
             let currentDisplay = parseInt(displayElem.innerText);
             
             if(score !== currentDisplay) {
                 displayElem.innerText = score;
-                // 简单的放大动画效果
                 displayElem.style.transform = "scale(1.2)";
                 setTimeout(() => { displayElem.style.transform = "scale(1)"; }, 200);
             }
