@@ -3,320 +3,679 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CRS 移民分数评估 | KOTO Immigration</title>
+    <title>KOTO 官方 CRS 移民算分器 | 精准评估</title>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
-        :root { --primary: #C41E3A; --secondary: #2C3E50; --bg: #F5F7FA; }
-        body { margin: 0; font-family: 'Noto Sans SC', sans-serif; background-color: var(--bg); color: #333; }
-        
-        /* 顶部导航 */
-        header { background: white; padding: 15px 5%; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
-        .logo { font-weight: 700; font-size: 1.2rem; color: var(--secondary); text-decoration: none; }
-        .back-link { color: #666; text-decoration: none; font-size: 0.9rem; }
-
-        /* 容器 */
-        .container { max-width: 800px; margin: 40px auto; padding: 0 20px; }
-        .calc-card { background: white; border-radius: 20px; padding: 50px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); }
-        h1 { text-align: center; color: var(--secondary); margin-bottom: 40px; }
-        
-        /* 表单区域 */
-        .form-section { margin-bottom: 30px; border-bottom: 1px solid #eee; padding-bottom: 30px; }
-        .form-section:last-child { border-bottom: none; }
-        
-        /* 动态隐藏区域 (动画效果) */
-        .hidden-section { 
-            display: none; 
-            background-color: #fff8f8; 
-            padding: 20px; 
-            border-radius: 10px; 
-            margin-top: 15px;
-            border: 1px dashed var(--primary);
+        /* --- KOTO 品牌视觉变量 (参考了你上传的文件) --- */
+        :root {
+            --bg-cream: #F5F0E6; /* 奶油色背景 */
+            --brand-navy: #182B45; /* 深蓝品牌色 */
+            --brand-gold: #C5A059; /* 金色点缀 */
+            --brand-red: #C14F4F; /* 警示/强调红 */
+            --text-dark: #2C2C2C;
+            --card-surface: #FFFFFF;
+            /* 这种阴影让卡片看起来像立体的软陶 (Claymorphism) */
+            --clay-shadow: 8px 8px 16px rgba(166, 156, 142, 0.15), 
+                           -8px -8px 16px rgba(255, 255, 255, 0.8);
+            --inset-clay: inset 4px 4px 8px rgba(166, 156, 142, 0.1), 
+                          inset -4px -4px 8px rgba(255, 255, 255, 0.9);
         }
 
-        label { display: block; margin-bottom: 10px; font-weight: 600; color: var(--secondary); }
-        .sub-label { font-size: 0.85rem; color: #666; margin-top: -5px; margin-bottom: 10px; font-weight: normal; }
-
-        select, input {
-            width: 100%; padding: 12px 15px; border: 2px solid #eee; border-radius: 8px; font-size: 1rem;
-            transition: 0.3s; box-sizing: border-box;
+        /* --- 全局设置 --- */
+        * { box-sizing: border-box; }
+        body {
+            background-color: var(--bg-cream);
+            color: var(--text-dark);
+            font-family: 'Noto Sans SC', sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
         }
-        select:focus, input:focus { border-color: var(--primary); outline: none; }
-        
-        .ielts-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
-        
-        .calc-btn {
-            width: 100%; padding: 18px; background: var(--primary); color: white; border: none; border-radius: 50px;
-            font-size: 1.1rem; font-weight: bold; cursor: pointer; transition: 0.3s; margin-top: 20px;
-        }
-        .calc-btn:hover { background: #a0182f; transform: translateY(-2px); }
 
-        #result-area { margin-top: 30px; background: #2C3E50; color: white; padding: 30px; border-radius: 12px; text-align: center; display: none; }
-        .score-big { font-size: 3rem; font-weight: bold; color: #FFD700; display: block; margin: 10px 0; }
+        .main-wrapper {
+            padding: 20px;
+            flex: 1; 
+            padding-bottom: 200px; /* 给底部悬浮条留出足够空间 */
+        }
+
+        .container { max-width: 900px; margin: 0 auto; }
+
+        /* --- 顶部导航 --- */
+        header { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            padding: 10px 0 40px 0;
+        }
+        .logo { font-weight: 800; font-size: 1.5rem; color: var(--brand-navy); text-decoration: none; }
+        .back-link { color: #666; text-decoration: none; font-size: 0.9rem; font-weight: 500; }
+        .back-link:hover { color: var(--brand-gold); }
         
-        select:invalid, select option[value=""] { color: #999; } select { color: #333; }
+        h1 { text-align: center; color: var(--brand-navy); margin-bottom: 10px; font-size: 1.8rem; }
+        .subtitle { text-align: center; color: #666; font-size: 0.9rem; margin-bottom: 40px; }
+
+        /* --- 卡片样式 --- */
+        .section-card {
+            background: var(--card-surface);
+            border-radius: 24px;
+            padding: 35px;
+            margin-bottom: 30px;
+            box-shadow: var(--clay-shadow);
+            border: 1px solid rgba(255,255,255,0.6);
+            transition: all 0.3s ease;
+        }
+        .section-card:hover { transform: translateY(-2px); border-color: var(--brand-gold); }
+
+        h2 { 
+            color: var(--brand-navy); 
+            font-size: 1.2rem; 
+            border-bottom: 2px solid #EEE; 
+            padding-bottom: 15px; 
+            margin-top: 0;
+            margin-bottom: 25px; 
+            display: flex;
+            align-items: center;
+        }
+        h2::before { content: ''; display: inline-block; width: 6px; height: 20px; background: var(--brand-gold); margin-right: 10px; border-radius: 4px; }
+
+        h3 { font-size: 0.95rem; color: #888; margin-top: 25px; margin-bottom: 15px; text-transform: uppercase; letter-spacing: 1px; }
+
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 25px; }
+        .full-width { grid-column: span 2; }
+
+        label { display: block; font-weight: 600; margin-bottom: 10px; font-size: 0.95rem; color: #444; }
+        
+        /* --- 输入框样式 --- */
+        select, input[type="number"] {
+            width: 100%;
+            padding: 14px;
+            border-radius: 12px;
+            border: 1px solid transparent;
+            background: #F9F7F2;
+            box-shadow: var(--inset-clay); /* 内阴影让它看起来是凹进去的 */
+            font-size: 1rem;
+            color: var(--text-dark);
+            outline: none;
+            transition: 0.2s;
+            cursor: pointer;
+        }
+        select:focus { border-color: var(--brand-gold); background: #fff; }
+
+        /* --- 底部悬浮算分条 (核心功能) --- */
+        .score-bar {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 92%;
+            max-width: 800px;
+            background: var(--brand-navy);
+            color: white;
+            padding: 20px 30px;
+            border-radius: 24px;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 15px 40px rgba(24, 43, 69, 0.4); /* 深色投影 */
+            z-index: 1000;
+            border: 2px solid rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+        }
+        
+        .score-header {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(255,255,255,0.15);
+        }
+
+        .score-label { font-size: 1.1rem; opacity: 0.9; font-weight: 500; }
+        .total-score { font-size: 2.8rem; font-weight: 800; color: var(--brand-gold); line-height: 1; text-shadow: 0 2px 10px rgba(0,0,0,0.3); }
+        
+        /* 潜力分析钩子区域 */
+        .score-hook-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .hook-text {
+            font-size: 0.9rem;
+            margin: 0;
+            flex: 1; 
+            line-height: 1.5;
+            color: #eee;
+        }
+        .hook-highlight { color: #4ade80; font-weight: bold; } /* 绿色高亮加分项 */
+
+        .contact-btn {
+            background: var(--brand-gold);
+            color: var(--brand-navy);
+            padding: 10px 20px;
+            border-radius: 50px;
+            font-weight: bold;
+            text-decoration: none;
+            font-size: 0.9rem;
+            white-space: nowrap;
+            transition: 0.2s;
+        }
+        .contact-btn:hover { background: #fff; transform: scale(1.05); }
+
+        .hidden { display: none; }
+
+        @media (max-width: 768px) {
+            .form-grid { grid-template-columns: 1fr; }
+            .full-width { grid-column: span 1; }
+            .score-bar { padding: 15px 20px; bottom: 10px; width: 95%; }
+            .score-header { margin-bottom: 10px; padding-bottom: 10px; }
+            .total-score { font-size: 2.2rem; }
+            .score-hook-container { flex-direction: column; text-align: left; align-items: flex-start; gap: 10px; }
+            .contact-btn { width: 100%; text-align: center; }
+        }
     </style>
 </head>
 <body>
+    
+    <div class="main-wrapper">
+        <div class="container">
+            <header>
+                <a href="/" class="logo">KOTO <span style="color:var(--brand-gold)">IMMIGRATION</span></a>
+                <a href="/" class="back-link">← 返回首页</a>
+            </header>
 
-    <header>
-        <a href="/" class="logo">KOTO <span style="color:var(--primary)">IMMIGRATION</span></a>
-        <a href="/" class="back-link">← 返回首页</a>
-    </header>
+            <h1>官方 CRS 移民算分器</h1>
+            <p class="subtitle">基于 IRCC 官方最新算法 (2025版) • 实时精准评估</p>
 
-    <div class="container">
-        <div class="calc-card">
-            <h1>Express Entry 移民分数自测</h1>
-            
-            <div class="form-section">
-                <label>1. 婚姻状况 (Marital Status)</label>
-                <select id="marital-status" onchange="toggleSpouseQ()" required>
-                    <option value="" disabled selected>请选择您的婚姻状况...</option>
-                    <option value="single">单身 / 离异 / 丧偶 (Single)</option>
-                    <option value="married">已婚 / 同居伴侣 (Married / Common-law)</option>
-                </select>
-
-                <div id="spouse-citizen-box" class="hidden-section">
-                    <label>您的配偶是加拿大公民或永久居民吗？</label>
-                    <div class="sub-label">* 如果选“是”，您的算分规则将按“单身”标准计算（分数更高）。</div>
-                    <select id="spouse-citizen" onchange="checkScoreMode()">
-                        <option value="" disabled selected>请选择...</option>
-                        <option value="yes">是 (配偶是加拿大人)</option>
-                        <option value="no">否 (配偶将随行移民)</option>
-                    </select>
+            <form id="crsForm">
+                
+                <div class="section-card">
+                    <h2>1. 婚姻状况 (Marital Status)</h2>
+                    <div class="form-grid">
+                        <div class="full-width">
+                            <label>您的婚姻状况？</label>
+                            <select id="maritalStatus" onchange="toggleSpouseSection(); runCalculations();">
+                                <option value="single">单身 / 离异 / 丧偶</option>
+                                <option value="married">已婚 / 同居伴侣</option>
+                            </select>
+                        </div>
+                        <div class="full-width hidden" id="spouseComeDiv">
+                            <label style="color:var(--brand-red);">您的配偶是加拿大公民或永久居民吗？</label>
+                            <select id="spouseCanadian" onchange="toggleSpouseSection(); runCalculations();">
+                                <option value="no">否 (配偶将随行移民)</option>
+                                <option value="yes">是 (配偶已经是加拿大人)</option>
+                            </select>
+                            <p style="font-size:0.8rem; color:#888; margin-top:8px;">* 如果选择“是”，您将获得与单身人士相同的积分优势。</p>
+                        </div>
+                    </div>
                 </div>
-            </div>
 
-            <div class="form-section">
-                <label>2. 您的年龄</label>
-                <select id="age" required>
-                    <option value="" disabled selected>请选择您的年龄区间...</option>
-                    <option value="12">18-29岁 (黄金年龄)</option>
-                    <option value="11">30岁</option>
-                    <option value="10">31岁</option>
-                    <option value="9">32岁</option>
-                    <option value="8">33岁</option>
-                    <option value="7">34岁</option>
-                    <option value="6">35岁</option>
-                    <option value="5">36岁</option>
-                    <option value="4">37岁</option>
-                    <option value="3">38岁</option>
-                    <option value="2">39岁</option>
-                    <option value="1">40-44岁</option>
-                    <option value="0">45岁及以上</option>
-                </select>
-            </div>
-
-            <div class="form-section">
-                <label>3. 最高学历</label>
-                <select id="education" required>
-                    <option value="" disabled selected>请选择最高学历...</option>
-                    <option value="phd">博士学位 (PhD)</option>
-                    <option value="master">硕士学位 (Master's)</option>
-                    <option value="two-certs">双学历 (其中一个为3年以上)</option>
-                    <option value="bachelor">本科 (3年以上) / 3年大专</option>
-                    <option value="2yr">2年大专/文凭</option>
-                    <option value="1yr">1年大专/文凭</option>
-                    <option value="hs">高中毕业</option>
-                </select>
-            </div>
-
-            <div class="form-section">
-                <label>4. 雅思 G类成绩 (IELTS General)</label>
-                <div class="ielts-grid">
-                    <div><input type="number" id="ielts-l" step="0.5" min="0" placeholder="听力 (Listening)" oninput="if(value<0)value=0"></div>
-                    <div><input type="number" id="ielts-r" step="0.5" min="0" placeholder="阅读 (Reading)" oninput="if(value<0)value=0"></div>
-                    <div><input type="number" id="ielts-w" step="0.5" min="0" placeholder="写作 (Writing)" oninput="if(value<0)value=0"></div>
-                    <div><input type="number" id="ielts-s" step="0.5" min="0" placeholder="口语 (Speaking)" oninput="if(value<0)value=0"></div>
+                <div class="section-card">
+                    <h2>2. 核心背景 (Core Factors)</h2>
+                    <div class="form-grid">
+                        <div>
+                            <label>年龄 (Age)</label>
+                            <select id="age" onchange="runCalculations()">
+                                <option value="17">17 岁及以下</option>
+                                <option value="18">18 岁</option>
+                                <option value="19">19 岁</option>
+                                <option value="20">20-29 岁 (满分)</option> <option value="29" selected hidden>29</option> <option value="30">30 岁</option>
+                                <option value="31">31 岁</option>
+                                <option value="32">32 岁</option>
+                                <option value="33">33 岁</option>
+                                <option value="34">34 岁</option>
+                                <option value="35">35 岁</option>
+                                <option value="36">36 岁</option>
+                                <option value="37">37 岁</option>
+                                <option value="38">38 岁</option>
+                                <option value="39">39 岁</option>
+                                <option value="40">40 岁</option>
+                                <option value="41">41 岁</option>
+                                <option value="42">42 岁</option>
+                                <option value="43">43 岁</option>
+                                <option value="44">44 岁</option>
+                                <option value="45">45 岁及以上</option>
+                            </select>
+                            </div>
+                        <div>
+                            <label>最高学历</label>
+                            <select id="education" onchange="runCalculations()">
+                                <option value="0">高中及以下</option>
+                                <option value="30">高中毕业</option>
+                                <option value="90">1年制大专/证书</option>
+                                <option value="98">2年制大专/文凭</option>
+                                <option value="120">本科 (3年以上) / 3年大专</option>
+                                <option value="128">双学历 (其中一个为3年以上)</option>
+                                <option value="135" selected>硕士学位 (Master's)</option>
+                                <option value="150">博士学位 (PhD)</option>
+                            </select>
+                        </div>
+                        <div class="full-width">
+                            <label>加拿大本地工作经验 (年)</label>
+                            <select id="cdnExp" onchange="runCalculations()">
+                                <option value="0">无 / 不满1年</option>
+                                <option value="40" selected>1 年</option>
+                                <option value="53">2 年</option>
+                                <option value="64">3 年</option>
+                                <option value="72">4 年</option>
+                                <option value="80">5 年及以上</option>
+                            </select>
+                        </div>
+                    </div>
                 </div>
-            </div>
 
-            <div class="form-section">
-                <label>5. 加拿大本地工作经验</label>
-                <select id="can-exp" required>
-                    <option value="" disabled selected>请选择年限...</option>
-                    <option value="0">无 / 不满1年</option>
-                    <option value="1">1年</option>
-                    <option value="2">2年</option>
-                    <option value="3">3年</option>
-                    <option value="4">4年</option>
-                    <option value="5">5年及以上</option>
-                </select>
-            </div>
+                <div class="section-card">
+                    <h2>3. 语言能力 (Language)</h2>
+                    
+                    <h3>第一官方语言 (雅思 G类 / 思培)</h3>
+                    <div class="form-grid">
+                        <div>
+                            <label>听力 (Listening)</label>
+                            <select id="langListen" onchange="runCalculations()">
+                                <option value="0">CLB 4 以下</option>
+                                <option value="6">CLB 4-5</option>
+                                <option value="9">CLB 6</option>
+                                <option value="17">CLB 7 (雅思 6.0)</option>
+                                <option value="23">CLB 8 (雅思 7.5)</option>
+                                <option value="31" selected>CLB 9 (雅思 8.0)</option>
+                                <option value="34">CLB 10 (雅思 8.5+)</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label>口语 (Speaking)</label>
+                            <select id="langSpeak" onchange="runCalculations()">
+                                <option value="0">CLB 4 以下</option>
+                                <option value="6">CLB 4-5</option>
+                                <option value="9">CLB 6 (雅思 6.0)</option>
+                                <option value="17">CLB 7 (雅思 6.0)</option>
+                                <option value="23">CLB 8 (雅思 6.5)</option>
+                                <option value="31" selected>CLB 9 (雅思 7.0)</option>
+                                <option value="34">CLB 10 (雅思 7.5+)</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label>阅读 (Reading)</label>
+                            <select id="langRead" onchange="runCalculations()">
+                                <option value="0">CLB 4 以下</option>
+                                <option value="6">CLB 4-5</option>
+                                <option value="9">CLB 6 (雅思 6.0)</option>
+                                <option value="17">CLB 7 (雅思 6.0)</option>
+                                <option value="23">CLB 8 (雅思 6.5)</option>
+                                <option value="31" selected>CLB 9 (雅思 7.0)</option>
+                                <option value="34">CLB 10 (雅思 8.0+)</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label>写作 (Writing)</label>
+                            <select id="langWrite" onchange="runCalculations()">
+                                <option value="0">CLB 4 以下</option>
+                                <option value="6">CLB 4-5</option>
+                                <option value="9">CLB 6 (雅思 6.0)</option>
+                                <option value="17">CLB 7 (雅思 6.0)</option>
+                                <option value="23">CLB 8 (雅思 6.5)</option>
+                                <option value="31" selected>CLB 9 (雅思 7.0)</option>
+                                <option value="34">CLB 10 (雅思 7.5+)</option>
+                            </select>
+                        </div>
+                    </div>
 
-            <div class="form-section">
-                <label>6. 海外(中国)工作经验</label>
-                <select id="foreign-exp" required>
-                    <option value="" disabled selected>请选择年限...</option>
-                    <option value="0">无 / 不满1年</option>
-                    <option value="1">1-2年</option>
-                    <option value="3">3年及以上</option>
-                </select>
-            </div>
+                    <h3>第二官方语言 (法语 TEF/TCF) - 选填</h3>
+                    <div class="form-grid">
+                        <div class="full-width">
+                            <label>您的法语水平？</label>
+                            <select id="lang2Select" onchange="updateFrench(); runCalculations();">
+                                <option value="none">无法语成绩 / 低于 CLB 5</option>
+                                <option value="clb5">基础 (CLB 5-6)</option>
+                                <option value="clb7">中高级 (CLB 7+)</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
 
-            <button class="calc-btn" onclick="calculateCRS()">查看我的分数</button>
+                <div class="section-card hidden" id="spouseFactorsSection">
+                    <h2>4. 配偶条件 (Spouse Factors)</h2>
+                    <div class="form-grid">
+                        <div>
+                            <label>配偶学历</label>
+                            <select id="spouseEdu" onchange="runCalculations()">
+                                <option value="0">高中及以下</option>
+                                <option value="6">1年制大专</option>
+                                <option value="7">2年制大专</option>
+                                <option value="8">3年以上学位</option>
+                                <option value="9">双学历</option>
+                                <option value="10">硕士或博士</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label>配偶加拿大工作经验</label>
+                            <select id="spouseCdnExp" onchange="runCalculations()">
+                                <option value="0">无</option>
+                                <option value="5">1 年</option>
+                                <option value="7">2 年</option>
+                                <option value="8">3 年</option>
+                                <option value="9">4 年</option>
+                                <option value="10">5 年及以上</option>
+                            </select>
+                        </div>
+                        <div class="full-width">
+                            <label>配偶语言水平 (雅思/思培)</label>
+                            <select id="spouseLang" onchange="runCalculations()">
+                                <option value="0">低 (CLB 4及以下)</option>
+                                <option value="1">基础 (CLB 5/6)</option>
+                                <option value="3">中等 (CLB 7/8)</option>
+                                <option value="5">高 (CLB 9及以上)</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
 
-            <div id="result-area">
-                <p>您的 CRS 预估总分</p>
-                <span class="score-big" id="total-score">0</span>
-                <p id="status-display" style="font-size:0.9rem; color:#ccc;">(基于单身/配偶不随行标准)</p>
-                <p id="score-advice" style="opacity: 0.9; margin-top: 15px;">...</p>
-            </div>
+                <div class="section-card">
+                    <h2>5. 额外加分项 (Additional Points)</h2>
+                    <div class="form-grid">
+                        <div class="full-width">
+                            <label>海外(中国)工作经验</label>
+                            <select id="foreignExp" onchange="runCalculations()">
+                                <option value="0">无</option>
+                                <option value="1">1 或 2 年</option>
+                                <option value="3">3 年及以上</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label>省提名 (PNP)</label>
+                            <select id="pnp" onchange="runCalculations()">
+                                <option value="0">无</option>
+                                <option value="600">是 (+600分)</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label>LMIA 雇主担保 (Job Offer)</label>
+                            <select id="jobOffer" onchange="runCalculations()">
+                                <option value="0">无</option>
+                                <option value="50">普通职位 (+50)</option>
+                                <option value="200">00类高管 (+200)</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label>兄弟姐妹在加拿大 (公民/PR)</label>
+                            <select id="sibling" onchange="runCalculations()">
+                                <option value="0">无</option>
+                                <option value="15">有 (+15)</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label>加拿大本地学历</label>
+                            <select id="cdnEdu" onchange="runCalculations()">
+                                <option value="0">无</option>
+                                <option value="15">1或2年文凭</option>
+                                <option value="30" selected>3年以上学位/硕士/博士 (+30)</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
 
+            </form>
+        </div>
+    </div>
+
+    <div class="score-bar">
+        <div class="score-header">
+            <span class="score-label">您的 CRS 预估总分:</span>
+            <span class="total-score" id="displayScore">0</span>
+        </div>
+        
+        <div class="score-hook-container">
+            <p class="hook-text" id="hookMessage">正在分析您的加分潜力...</p>
+            <a href="/#contact" class="contact-btn">免费定制方案 →</a>
         </div>
     </div>
 
     <script>
-        // 1. 界面联动逻辑
-        function toggleSpouseQ() {
-            var status = document.getElementById("marital-status").value;
-            var box = document.getElementById("spouse-citizen-box");
-            if (status === "married") {
-                box.style.display = "block"; // 显示第二个问题
-                box.style.animation = "fadeIn 0.5s";
+        // --- 数据字典 (官方算法) ---
+        // 20-29岁统一处理 (前端显示简化，逻辑保留)
+        const agePointsSingle = {17:0, 18:99, 19:105, 20:110, 21:110, 22:110, 23:110, 24:110, 25:110, 26:110, 27:110, 28:110, 29:110, 30:105, 31:99, 32:94, 33:88, 34:83, 35:77, 36:72, 37:66, 38:61, 39:55, 40:50, 41:39, 42:28, 43:17, 44:6, 45:0};
+        const agePointsMarried = {17:0, 18:90, 19:95, 20:100, 21:100, 22:100, 23:100, 24:100, 25:100, 26:100, 27:100, 28:100, 29:100, 30:95, 31:90, 32:85, 33:80, 34:75, 35:70, 36:65, 37:60, 38:55, 39:50, 40:45, 41:35, 42:25, 43:15, 44:5, 45:0};
+
+        function getVal(id) { return parseInt(document.getElementById(id).value) || 0; }
+        
+        // 法语简化处理
+        let lang2Vals = {s:0, l:0, r:0, w:0};
+        function updateFrench() {
+            const level = document.getElementById('lang2Select').value;
+            if(level === 'clb7') lang2Vals = {s:6, l:6, r:6, w:6}; // CLB 7+
+            else if(level === 'clb5') lang2Vals = {s:1, l:1, r:1, w:1}; // CLB 5
+            else lang2Vals = {s:0, l:0, r:0, w:0};
+        }
+
+        function toggleSpouseSection() {
+            const status = document.getElementById('maritalStatus').value;
+            const spouseDiv = document.getElementById('spouseComeDiv');
+            const factorsDiv = document.getElementById('spouseFactorsSection');
+            
+            if(status === 'married') {
+                spouseDiv.classList.remove('hidden');
+                const isCdn = document.getElementById('spouseCanadian').value === 'yes';
+                // 如果配偶是加拿大人，不需要填配偶条件（因为按单身算）
+                if(!isCdn) factorsDiv.classList.remove('hidden');
+                else factorsDiv.classList.add('hidden');
             } else {
-                box.style.display = "none";
-                document.getElementById("spouse-citizen").value = ""; // 重置选项
+                spouseDiv.classList.add('hidden');
+                factorsDiv.classList.add('hidden');
             }
         }
 
-        // 2. 判断是否视为“单身”计算 (isSingleStatus)
-        // 规则：单身 OR 已婚但配偶是加拿大人 = 单身分值表
-        //      已婚且配偶不随行(或非公民) = 已婚分值表 (稍微低一点，因为有配偶加分项，这里简化为主申得分)
-        function getIsSingle() {
-            var mStatus = document.getElementById("marital-status").value;
-            var spCitizen = document.getElementById("spouse-citizen").value;
+        // --- 核心算法引擎 ---
+        function calculateCRSFromData(data) {
+            let score = 0;
+            // 判定是否按“已婚标准”算分 (已婚 且 配偶不随行/非公民)
+            let isMarriedCalc = (data.maritalStatus === 'married' && data.spouseCanadian === 'no');
+
+            // 1. 核心人力资本 (Human Capital)
+            // A. 年龄
+            // 处理20-29岁的简化逻辑
+            let age = data.age;
+            if(age >= 20 && age <= 29) age = 29; 
+            score += isMarriedCalc ? (agePointsMarried[age] || 0) : (agePointsSingle[age] || 0);
+
+            // B. 学历
+            let eduScore = data.education;
+            if(isMarriedCalc) {
+                // 已婚表折算
+                if(data.education == 150) eduScore = 140; 
+                else if(data.education == 135) eduScore = 126; 
+                else if(data.education == 128) eduScore = 119; 
+                else if(data.education == 120) eduScore = 112; 
+                else if(data.education == 98) eduScore = 91; 
+                else if(data.education == 90) eduScore = 84; 
+                else if(data.education == 30) eduScore = 28; 
+            }
+            score += eduScore;
+
+            // C. 语言
+            let langTotal = 0;
+            if(isMarriedCalc) {
+                let adjust = (val) => {
+                    if(val==34) return 32; if(val==31) return 29; 
+                    if(val==23) return 22; if(val==17) return 16; 
+                    if(val==9) return 6; return 0;
+                };
+                langTotal = adjust(data.langSpeak) + adjust(data.langListen) + adjust(data.langRead) + adjust(data.langWrite);
+            } else {
+                langTotal = data.langSpeak + data.langListen + data.langRead + data.langWrite;
+            }
+            score += langTotal;
             
-            // 如果是单身 -> True
-            if (mStatus === "single") return true;
-            // 如果是已婚，但配偶是加拿大人 -> True
-            if (mStatus === "married" && spCitizen === "yes") return true;
-            // 其他情况 (已婚且配偶非公民) -> False (使用Category B - 已婚打分表)
-            return false;
+            // 法语加分
+            score += (data.lang2.s + data.lang2.l + data.lang2.r + data.lang2.w);
+
+            // D. 加拿大工作
+            let cdnScore = data.cdnExp;
+            if(isMarriedCalc) {
+                if(data.cdnExp == 80) cdnScore = 70;
+                else if(data.cdnExp == 72) cdnScore = 63;
+                else if(data.cdnExp == 64) cdnScore = 56;
+                else if(data.cdnExp == 53) cdnScore = 46;
+                else if(data.cdnExp == 40) cdnScore = 35;
+            }
+            score += cdnScore;
+
+            // 配偶加分 (仅适用于 isMarriedCalc)
+            if(isMarriedCalc) {
+                score += data.spouseEdu;
+                score += data.spouseCdnExp;
+                score += (data.spouseLang * 5); // 配偶语言满分20 (5*4)
+            }
+
+            // 2. 交叉项 (Transferability) - 上限100分
+            let clb7Count = 0; let clb9Count = 0; 
+            [data.langSpeak, data.langListen, data.langRead, data.langWrite].forEach(val => {
+                if(val >= 31) clb9Count++; // CLB 9
+                if(val >= 17) clb7Count++; // CLB 7
+            });
+
+            // 学历交叉项
+            let transferEdu = 0;
+            let eduHigh = (data.education >= 128); // 双学历及以上
+            let eduPostSec = (data.education >= 90); // 1年大专以上
+
+            // 学历 + 语言
+            if(eduHigh && clb9Count == 4) transferEdu += 50;
+            else if(eduHigh && clb7Count == 4) transferEdu += 25;
+            else if(eduPostSec && clb9Count == 4) transferEdu += 25;
+            else if(eduPostSec && clb7Count == 4) transferEdu += 13;
+
+            // 学历 + 加拿大工作
+            let cdn1yr = (data.cdnExp >= 40); 
+            let cdn2yr = (data.cdnExp >= 53); 
+
+            if(eduHigh && cdn2yr) transferEdu += 50;
+            else if(eduHigh && cdn1yr) transferEdu += 25;
+            else if(eduPostSec && cdn2yr) transferEdu += 25;
+            else if(eduPostSec && cdn1yr) transferEdu += 13;
+            if(transferEdu > 50) transferEdu = 50; // 学历类交叉项上限50
+
+            // 海外工作交叉项
+            let transferForeign = 0;
+            let for3yr = (data.foreignExp >= 3);
+            let for1yr = (data.foreignExp >= 1);
+
+            // 海外工作 + 语言
+            if(for3yr && clb9Count == 4) transferForeign += 50;
+            else if(for3yr && clb7Count == 4) transferForeign += 25;
+            else if(for1yr && clb9Count == 4) transferForeign += 25;
+            else if(for1yr && clb7Count == 4) transferForeign += 13;
+
+            // 海外工作 + 加拿大工作
+            if(for3yr && cdn2yr) transferForeign += 50;
+            else if(for3yr && cdn1yr) transferForeign += 25;
+            else if(for1yr && cdn2yr) transferForeign += 25;
+            else if(for1yr && cdn1yr) transferForeign += 13;
+            if(transferForeign > 50) transferForeign = 50;
+            
+            let totalTransfer = transferEdu + transferForeign;
+            if(totalTransfer > 100) totalTransfer = 100;
+            score += totalTransfer;
+
+            // 3. 额外加分项 (Additional) - 上限600
+            let addScore = 0;
+            addScore += data.pnp;
+            addScore += data.jobOffer;
+            addScore += data.sibling;
+            addScore += data.cdnEdu;
+
+            // 法语强力加分 (CLB 7+ in all 4 skills)
+            let french7Count = 0;
+            [data.lang2.s, data.lang2.l, data.lang2.r, data.lang2.w].forEach(val => { if(val >= 3) french7Count++; }); // 3对应CLB7
+            if(french7Count === 4) {
+                let engScore = data.langSpeak + data.langListen + data.langRead + data.langWrite;
+                if(engScore >= 24) addScore += 50; // 法语+英语
+                else addScore += 25; // 仅法语
+            }
+
+            if(addScore > 600) addScore = 600;
+            score += addScore;
+
+            return score;
         }
 
-        function calculateCRS() {
-            var isSingle = getIsSingle();
-            
-            // --- A. 年龄算分 (单身 vs 已婚) ---
-            var ageIdx = parseInt(document.getElementById('age').value || 0);
-            // 单身表 (最高110) vs 已婚表 (最高100)
-            var ageMapSingle = {12:110, 11:105, 10:99, 9:94, 8:88, 7:83, 6:77, 5:72, 4:66, 3:61, 2:55, 1:45, 0:0};
-            var ageMapMarried = {12:100, 11:95, 10:90, 9:85, 8:80, 7:75, 6:70, 5:65, 4:60, 3:55, 2:50, 1:40, 0:0};
-            
-            var ageScore = isSingle ? (ageMapSingle[ageIdx]||0) : (ageMapMarried[ageIdx]||0);
-
-            // --- B. 学历算分 (单身 vs 已婚) ---
-            var eduVal = document.getElementById('education').value;
-            // 单身最高150, 已婚最高140
-            var eduPoints = {
-                "phd": [150, 140], "master": [135, 126], "two-certs": [128, 119],
-                "bachelor": [120, 112], "2yr": [98, 91], "1yr": [90, 84], "hs": [30, 28]
+        // --- 核心驱动函数 ---
+        function runCalculations() {
+            // 收集当前数据
+            let currentData = {
+                maritalStatus: document.getElementById('maritalStatus').value,
+                spouseCanadian: document.getElementById('spouseCanadian').value,
+                age: getVal('age'),
+                education: getVal('education'),
+                cdnExp: getVal('cdnExp'),
+                langSpeak: getVal('langSpeak'),
+                langListen: getVal('langListen'),
+                langRead: getVal('langRead'),
+                langWrite: getVal('langWrite'),
+                lang2: lang2Vals,
+                spouseEdu: getVal('spouseEdu'),
+                spouseCdnExp: getVal('spouseCdnExp'),
+                spouseLang: getVal('spouseLang'),
+                foreignExp: getVal('foreignExp'),
+                pnp: getVal('pnp'),
+                jobOffer: getVal('jobOffer'),
+                sibling: getVal('sibling'),
+                cdnEdu: getVal('cdnEdu')
             };
-            var eduScore = 0;
-            if(eduPoints[eduVal]) {
-                eduScore = isSingle ? eduPoints[eduVal][0] : eduPoints[eduVal][1];
+
+            let currentScore = calculateCRSFromData(currentData);
+            
+            // 动画跳动效果
+            let displayElem = document.getElementById('displayScore');
+            animateValue(displayElem, parseInt(displayElem.innerText), currentScore, 500);
+
+            // --- 潜能分析逻辑 (The Hook) ---
+            // 这是一个销售转化的关键：告诉客户“你可以更高”
+            
+            let potentialData = JSON.parse(JSON.stringify(currentData)); // 深拷贝
+            
+            // 假设：通过我们辅导，客户可以达到硕士学历、雅思8777 (CLB 9)、有一点法语基础
+            if(potentialData.education < 135) potentialData.education = 135; // 规划读硕
+            if(potentialData.langSpeak < 31) potentialData.langSpeak = 31; // 雅思刷到 8777
+            if(potentialData.langListen < 31) potentialData.langListen = 31;
+            if(potentialData.langRead < 31) potentialData.langRead = 31;
+            if(potentialData.langWrite < 31) potentialData.langWrite = 31;
+            if(potentialData.foreignExp < 1) potentialData.foreignExp = 1; // 凑一年海外经验
+
+            let potentialScore = calculateCRSFromData(potentialData);
+            let boost = potentialScore - currentScore;
+
+            let msg = "";
+            if(boost > 0) {
+                msg = `如果雅思刷到 8777 或提升学历，<br>您的分数可涨至 <span class="hook-highlight">${potentialScore} 分</span> (+${boost})`;
+            } else if(currentScore > 480) {
+                msg = `您的分数 <span class="hook-highlight">非常有竞争力</span>！<br>建议立即联系我们入池。`;
+            } else {
+                msg = "核心分数已近上限，建议考虑 <span class="hook-highlight">LMIA 或 PNP</span> 弯道超车。";
             }
-
-            // --- C. 语言算分 (单身 vs 已婚) ---
-            // 单身单项最高34, 已婚单项最高32
-            var l = parseFloat(document.getElementById('ielts-l').value)||0;
-            var r = parseFloat(document.getElementById('ielts-r').value)||0;
-            var w = parseFloat(document.getElementById('ielts-w').value)||0;
-            var s = parseFloat(document.getElementById('ielts-s').value)||0;
-            // 禁止负数
-            l=l<0?0:l; r=r<0?0:r; w=w<0?0:w; s=s<0?0:s;
-
-            function getLangScore(clb) {
-                if(isSingle) { // Max 34
-                    if(clb>=10) return 34; if(clb==9) return 31; if(clb==8) return 23; if(clb==7) return 17; return 0;
-                } else { // Max 32 (Married)
-                    if(clb>=10) return 32; if(clb==9) return 29; if(clb==8) return 22; if(clb==7) return 16; return 0;
-                }
-            }
-            // 辅助：IELTS转CLB
-            function toCLB(t, v){
-                if(t=='L'){ if(v>=8.5)return 10;if(v>=8)return 9;if(v>=7.5)return 8;if(v>=6)return 7;return 5;}
-                if(t=='R'){ if(v>=8)return 10;if(v>=7)return 9;if(v>=6.5)return 8;if(v>=6)return 7;return 5;}
-                if(t=='W'||t=='S'){ if(v>=7.5)return 10;if(v>=7)return 9;if(v>=6.5)return 8;if(v>=6)return 7;return 5;}
-                return 0;
-            }
-            
-            var clbL = toCLB('L',l); var clbR = toCLB('R',r); var clbW = toCLB('W',w); var clbS = toCLB('S',s);
-            var langScore = getLangScore(clbL) + getLangScore(clbR) + getLangScore(clbW) + getLangScore(clbS);
-
-            // --- D. 工作经验 (Transferability - 交叉项) ---
-            // 注意：交叉项规则对单身/已婚是一样的 (都是最高50或25等)，不需要区分
-            var canExp = parseInt(document.getElementById('can-exp').value||0);
-            var forExp = parseInt(document.getElementById('foreign-exp').value||0);
-            
-            // 简单处理加拿大工作分 (基础分)
-            // 单身最高80, 已婚最高70
-            var canWorkBase = 0;
-            var cwMapS = {0:0, 1:40, 2:53, 3:64, 4:72, 5:80};
-            var cwMapM = {0:0, 1:35, 2:46, 3:56, 4:63, 5:70};
-            canWorkBase = isSingle ? (cwMapS[canExp]||80) : (cwMapM[canExp]||70);
-
-            // 核心分汇总
-            var core = ageScore + eduScore + langScore + canWorkBase;
-
-            // --- E. 交叉项计算 (Skill Transferability) ---
-            // 这里的规则通用，不需要区分单身已婚
-            var transfer = 0;
-            var allCLB9 = (clbL>=9 && clbR>=9 && clbW>=9 && clbS>=9);
-            var allCLB7 = (clbL>=7 && clbR>=7 && clbW>=7 && clbS>=7);
-            var highEdu = (eduVal=='phd'||eduVal=='master'||eduVal=='two-certs'); // 双学历及以上
-
-            // 1. 学历+语言
-            if(highEdu && allCLB9) transfer+=50; 
-            else if(highEdu && allCLB7) transfer+=25;
-            else if(!highEdu && allCLB9) transfer+=25;
-            else if(!highEdu && allCLB7) transfer+=13;
-
-            // 2. 学历+加拿大工作 (2年以上=High, 1年=Mid)
-            var highCW = (canExp>=2); var midCW = (canExp==1);
-            if(highEdu && highCW) transfer+=50;
-            else if(highEdu && midCW) transfer+=25;
-            else if(!highEdu && highCW) transfer+=25;
-            else if(!highEdu && midCW) transfer+=13;
-            
-            if(transfer>50) transfer=50; // Cap at 50
-
-            // 3. 海外工作+语言
-            var foreignPoints = 0;
-            if(forExp>=3 && allCLB9) foreignPoints+=50;
-            else if(forExp>=3 && allCLB7) foreignPoints+=25;
-            else if(forExp>=1 && allCLB9) foreignPoints+=25;
-            else if(forExp>=1 && allCLB7) foreignPoints+=13;
-
-            // 4. 海外工作+加拿大工作
-            if(forExp>=3 && highCW) foreignPoints+=50;
-            else if(forExp>=3 && midCW) foreignPoints+=25;
-            else if(forExp>=1 && highCW) foreignPoints+=25;
-            else if(forExp>=1 && midCW) foreignPoints+=13;
-
-            if(foreignPoints>50) foreignPoints=50;
-            
-            var totalTransfer = transfer + foreignPoints;
-            if(totalTransfer>100) totalTransfer=100;
-
-            var total = core + totalTransfer;
-
-            // 显示结果
-            document.getElementById('result-area').style.display = 'block';
-            document.getElementById('total-score').innerText = total;
-            
-            // 状态提示
-            document.getElementById('status-display').innerText = isSingle ? 
-                "(当前按：单身/配偶是公民 标准计算)" : 
-                "(当前按：已婚且配偶随行 标准计算 - 主申部分)";
-            
-            // 建议文案
-            var advice = "";
-            if(total>=500) advice="🚀 分数极高！几乎锁定获邀。";
-            else if(total>=450) advice="✨ 很有希望！建议刷高雅思或考虑省提名。";
-            else advice="📈 建议联系我们规划 LMIA 工签或留学加分。";
-            document.getElementById('score-advice').innerText = advice;
+            document.getElementById('hookMessage').innerHTML = msg;
         }
+
+        // 数字滚动动画
+        function animateValue(obj, start, end, duration) {
+            let startTimestamp = null;
+            const step = (timestamp) => {
+                if (!startTimestamp) startTimestamp = timestamp;
+                const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+                obj.innerHTML = Math.floor(progress * (end - start) + start);
+                if (progress < 1) {
+                    window.requestAnimationFrame(step);
+                }
+            };
+            window.requestAnimationFrame(step);
+        }
+
+        // 初始化
+        toggleSpouseSection();
+        updateFrench();
+        runCalculations();
     </script>
 </body>
 </html>
