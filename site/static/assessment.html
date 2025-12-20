@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CRS 移民分数评估 | KOTO Immigration</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #C41E3A;
+            --secondary: #2C3E50;
+            --bg: #F5F7FA;
+        }
+        body { margin: 0; font-family: 'Noto Sans SC', sans-serif; background-color: var(--bg); color: #333; }
+        
+        /* 顶部导航 */
+        header { background: white; padding: 15px 5%; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+        .logo { font-weight: 700; font-size: 1.2rem; color: var(--secondary); text-decoration: none; }
+        .back-link { color: #666; text-decoration: none; font-size: 0.9rem; display: flex; align-items: center; }
+        .back-link:hover { color: var(--primary); }
+
+        /* 计算器容器 - 居中卡片设计 */
+        .container { max-width: 800px; margin: 40px auto; padding: 0 20px; }
+        .calc-card {
+            background: white;
+            border-radius: 20px;
+            padding: 50px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+        }
+
+        h1 { text-align: center; color: var(--secondary); margin-bottom: 40px; font-size: 1.8rem; }
+        
+        /* 表单美化 */
+        .form-section { margin-bottom: 30px; border-bottom: 1px solid #eee; padding-bottom: 30px; }
+        .form-section:last-child { border-bottom: none; }
+        
+        label { display: block; margin-bottom: 10px; font-weight: 600; color: var(--secondary); }
+        
+        /* 下拉框和输入框样式 */
+        select, input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #eee;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: 0.3s;
+            box-sizing: border-box;
+            font-family: inherit;
+        }
+        select:focus, input:focus { border-color: var(--primary); outline: none; background: #fffbfb; }
+        
+        /* 雅思输入网格 */
+        .ielts-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        
+        /* 按钮 */
+        .calc-btn {
+            width: 100%;
+            padding: 18px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+            margin-top: 20px;
+        }
+        .calc-btn:hover { background: #a0182f; transform: translateY(-2px); }
+
+        /* 结果展示 */
+        #result-area {
+            margin-top: 30px;
+            background: #2C3E50;
+            color: white;
+            padding: 30px;
+            border-radius: 12px;
+            text-align: center;
+            display: none;
+            animation: fadeIn 0.5s;
+        }
+        .score-big { font-size: 3rem; font-weight: bold; color: #FFD700; display: block; margin: 10px 0; }
+        
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* 默认灰字 */
+        select:invalid, select option[value=""] { color: #999; }
+        select { color: #333; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <a href="/" class="logo">KOTO <span style="color:var(--primary)">IMMIGRATION</span></a>
+        <a href="/" class="back-link">← 返回首页</a>
+    </header>
+
+    <div class="container">
+        <div class="calc-card">
+            <h1>Express Entry 移民分数自测</h1>
+            
+            <div class="form-section">
+                <label>1. 您的年龄</label>
+                <select id="age" required>
+                    <option value="" disabled selected>请选择您的年龄区间...</option>
+                    <option value="12">18-29岁 (110分)</option>
+                    <option value="11">30岁 (105分)</option>
+                    <option value="10">31岁 (99分)</option>
+                    <option value="9">32岁 (94分)</option>
+                    <option value="8">33岁 (88分)</option>
+                    <option value="7">34岁 (83分)</option>
+                    <option value="6">35岁 (77分)</option>
+                    <option value="5">36岁 (72分)</option>
+                    <option value="4">37岁 (66分)</option>
+                    <option value="3">38岁 (61分)</option>
+                    <option value="2">39岁 (55分)</option>
+                    <option value="1">40-44岁 (递减)</option>
+                    <option value="0">45岁及以上 (0分)</option>
+                </select>
+            </div>
+
+            <div class="form-section">
+                <label>2. 最高学历</label>
+                <select id="education" required>
+                    <option value="" disabled selected>请选择最高学历...</option>
+                    <option value="150">博士学位 (PhD)</option>
+                    <option value="135">硕士学位 (Master's)</option>
+                    <option value="128">双学历 (其中一个为3年以上)</option>
+                    <option value="120">本科 (3年以上) / 3年大专</option>
+                    <option value="98">2年大专/文凭</option>
+                    <option value="90">1年大专/文凭</option>
+                    <option value="30">高中毕业</option>
+                </select>
+            </div>
+
+            <div class="form-section">
+                <label>3. 雅思 G类成绩 (IELTS General)</label>
+                <div class="ielts-grid">
+                    <div>
+                        <input type="number" id="ielts-l" step="0.5" min="0" placeholder="听力 (Listening)" oninput="if(value<0)value=0">
+                    </div>
+                    <div>
+                        <input type="number" id="ielts-r" step="0.5" min="0" placeholder="阅读 (Reading)" oninput="if(value<0)value=0">
+                    </div>
+                    <div>
+                        <input type="number" id="ielts-w" step="0.5" min="0" placeholder="写作 (Writing)" oninput="if(value<0)value=0">
+                    </div>
+                    <div>
+                        <input type="number" id="ielts-s" step="0.5" min="0" placeholder="口语 (Speaking)" oninput="if(value<0)value=0">
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-section">
+                <label>4. 加拿大本地工作经验</label>
+                <select id="can-exp" required>
+                    <option value="" disabled selected>请选择年限...</option>
+                    <option value="0">无 / 不满1年</option>
+                    <option value="40">1年</option>
+                    <option value="53">2年</option>
+                    <option value="64">3年</option>
+                    <option value="72">4年</option>
+                    <option value="80">5年及以上</option>
+                </select>
+            </div>
+
+            <div class="form-section">
+                <label>5. 海外(中国)工作经验</label>
+                <select id="foreign-exp" required>
+                    <option value="" disabled selected>请选择年限...</option>
+                    <option value="0">无 / 不满1年</option>
+                    <option value="1">1-2年</option>
+                    <option value="3">3年及以上</option>
+                </select>
+            </div>
+
+            <button class="calc-btn" onclick="calculateCRS()">查看我的分数</button>
+
+            <div id="result-area">
+                <p>您的 CRS 预估总分</p>
+                <span class="score-big" id="total-score">0</span>
+                <p id="score-advice" style="opacity: 0.9; margin-top: 15px;">...</p>
+                <div style="margin-top:20px; padding-top:20px; border-top:1px solid rgba(255,255,255,0.2); font-size:0.9rem; text-align:left;">
+                    <p>得分详情：</p>
+                    <ul style="list-style:none; padding:0;">
+                        <li>• 核心人力资本: <span id="core-score">0</span></li>
+                        <li>• 交叉项加分 (学历+语言等): <span id="transfer-score">0</span></li>
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        function getCLB(type, score) {
+            if (type === 'L') { if (score >= 8.5) return 10; if (score >= 8.0) return 9; if (score >= 7.5) return 8; if (score >= 6.0) return 7; return 5; }
+            if (type === 'R') { if (score >= 8.0) return 10; if (score >= 7.0) return 9; if (score >= 6.5) return 8; if (score >= 6.0) return 7; return 5; }
+            if (type === 'W' || type === 'S') { if (score >= 7.5) return 10; if (score >= 7.0) return 9; if (score >= 6.5) return 8; if (score >= 6.0) return 7; return 5; }
+            return 0;
+        }
+        function getLangPoints(clb) { if (clb >= 10) return 34; if (clb === 9) return 31; if (clb === 8) return 23; if (clb === 7) return 17; return 0; }
+
+        function calculateCRS() {
+            // 防错处理
+            let ageVal = document.getElementById('age').value;
+            let ageIdx = (ageVal === "") ? 0 : parseInt(ageVal);
+            const ageMap = {12:110, 11:105, 10:99, 9:94, 8:88, 7:83, 6:77, 5:72, 4:66, 3:61, 2:55, 1:45, 0:0};
+            let ageScore = ageMap[ageIdx] || 0;
+
+            let eduVal = document.getElementById('education').value;
+            let eduScore = (eduVal === "") ? 0 : parseInt(eduVal);
+
+            let l = parseFloat(document.getElementById('ielts-l').value) || 0;
+            let r = parseFloat(document.getElementById('ielts-r').value) || 0;
+            let w = parseFloat(document.getElementById('ielts-w').value) || 0;
+            let s = parseFloat(document.getElementById('ielts-s').value) || 0;
+
+            // 再次确保非负数
+            l = l < 0 ? 0 : l; r = r < 0 ? 0 : r; w = w < 0 ? 0 : w; s = s < 0 ? 0 : s;
+
+            let clbL = getCLB('L', l); let clbR = getCLB('R', r); let clbW = getCLB('W', w); let clbS = getCLB('S', s);
+            let langScore = getLangPoints(clbL) + getLangPoints(clbR) + getLangPoints(clbW) + getLangPoints(clbS);
+
+            let canExpVal = document.getElementById('can-exp').value;
+            let canWorkScore = (canExpVal === "") ? 0 : parseInt(canExpVal);
+
+            let coreScore = ageScore + eduScore + langScore + canWorkScore;
+
+            let transferScore = 0;
+            let allCLB9 = (clbL>=9 && clbR>=9 && clbW>=9 && clbS>=9);
+            let allCLB7 = (clbL>=7 && clbR>=7 && clbW>=7 && clbS>=7);
+            let highEdu = (eduScore >= 128); 
+            
+            // 交叉项计算
+            let highCanWork = (canWorkScore >= 53); let midCanWork = (canWorkScore >= 40);
+            if (highEdu && allCLB9) transferScore += 50; else if (highEdu && allCLB7) transferScore += 25; else if (!highEdu && allCLB9) transferScore += 25; else if (!highEdu && allCLB7) transferScore += 13; 
+            if (highEdu && highCanWork) transferScore += 50; else if (highEdu && midCanWork) transferScore += 25; else if (!highEdu && highCanWork) transferScore += 25; else if (!highEdu && midCanWork) transferScore += 13;
+            if (transferScore > 50) transferScore = 50;
+
+            let forExpVal = document.getElementById('foreign-exp').value;
+            let foreignExp = (forExpVal === "") ? 0 : parseInt(forExpVal);
+            let foreignTransfer = 0;
+            if (foreignExp >= 3 && allCLB9) foreignTransfer += 50; else if (foreignExp >= 3 && allCLB7) foreignTransfer += 25; else if (foreignExp >= 1 && allCLB9) foreignTransfer += 25; else if (foreignExp >= 1 && allCLB7) foreignTransfer += 13;
+            if (foreignExp >= 3 && highCanWork) foreignTransfer += 50; else if (foreignExp >= 3 && midCanWork) foreignTransfer += 25; else if (foreignExp >= 1 && highCanWork) foreignTransfer += 25; else if (foreignExp >= 1 && midCanWork) foreignTransfer += 13;
+            if (foreignTransfer > 50) foreignTransfer = 50;
+
+            let totalTransfer = transferScore + foreignTransfer;
+            if (totalTransfer > 100) totalTransfer = 100;
+
+            let total = coreScore + totalTransfer;
+
+            document.getElementById('result-area').style.display = 'block';
+            document.getElementById('total-score').innerText = total;
+            document.getElementById('core-score').innerText = coreScore;
+            document.getElementById('transfer-score').innerText = totalTransfer;
+            
+            let advice = "";
+            if (total >= 500) advice = "🚀 您的分数极具竞争力，建议立即联系我们入池！";
+            else if (total >= 450) advice = "✨ 有机会获邀！建议考虑省提名增加把握。";
+            else advice = "📈 分数有提升空间，建议规划 LMIA 或留学加分。";
+            document.getElementById('score-advice').innerText = advice;
+        }
+    </script>
+</body>
+</html>
