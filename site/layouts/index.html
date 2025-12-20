@@ -1,98 +1,20 @@
-{{ define "main" }}
-
-<style>
-    /* 保持原有的 2D 商业风格配色 */
-    :root {
-        --primary: #C41E3A; /* 加拿大红 */
-        --secondary: #2C3E50; /* 深蓝 */
-        --bg: #FFFFFF;
-        --light-gray: #F5F7FA;
-        --text: #333333;
-    }
-
-    body { font-family: 'Noto Sans SC', sans-serif; color: var(--text); background: var(--bg); }
-
-    /* 布局样式 */
-    .hero-section {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        padding: 80px 10%;
-        background-color: var(--light-gray);
-    }
-    
-    .hero-text { flex: 1; padding-right: 50px; }
-    .hero-text h1 { font-size: 3rem; color: var(--secondary); margin-bottom: 20px; line-height: 1.2; }
-    .hero-image img { width: 500px; max-width: 100%; height: auto; }
-
-    .cta-button {
-        background-color: var(--primary);
-        color: white;
-        padding: 15px 35px;
-        border-radius: 5px;
-        text-decoration: none;
-        font-weight: bold;
-        display: inline-block;
-        transition: 0.2s;
-        border: none;
-        cursor: pointer;
-    }
-    .cta-button:hover { transform: translateY(-2px); box-shadow: 0 4px 10px rgba(196, 30, 58, 0.3); }
-
-    /* 计算器核心样式 */
-    .calculator-section { background: white; padding: 60px 0; }
-    .calculator-box {
-        background: #fff;
-        padding: 40px;
-        border-radius: 12px;
-        box-shadow: 0 10px 40px rgba(0,0,0,0.08);
-        max-width: 700px;
-        margin: 0 auto;
-        border: 1px solid #eee;
-    }
-    
-    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-    .form-full { grid-column: span 2; }
-    
-    .form-group label { display: block; margin-bottom: 8px; font-weight: 600; font-size: 0.9rem; color: var(--secondary); }
-    .form-group select, .form-group input {
-        width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 6px; font-size: 1rem;
-        box-sizing: border-box; /* 修复宽度溢出 */
-    }
-
-    .result-box {
-        margin-top: 30px;
-        padding: 25px;
-        background: #f8f9fa;
-        border-radius: 8px;
-        text-align: center;
-        display: none; /* 默认隐藏 */
-        border-left: 5px solid var(--primary);
-    }
-    .result-score { font-size: 2.5rem; font-weight: bold; color: var(--primary); display: block; margin: 10px 0; }
-    .breakdown { font-size: 0.9rem; color: #666; margin-top: 10px; text-align: left; background: white; padding: 15px; border-radius: 4px; }
-
-</style>
-
-<section class="hero-section">
-    <div class="hero-text">
-        <h1>KOTO Immigration<br>开泰移民留学</h1>
-        <p>基于官方 CRS 标准的精准评估。无论是 EE 快速通道还是 PNP 省提名，我们为您规划最优移民路径。</p>
-        <button onclick="document.getElementById('calculator').scrollIntoView({behavior: 'smooth'})" class="cta-button">立即免费评估</button>
-    </div>
-    <div class="hero-image">
-        <img src="/images/hero.png" alt="Immigration Consultant">
-    </div>
-</section>
-
 <section id="calculator" class="calculator-section">
     <div class="calculator-box">
         <h2 style="text-align: center; color: var(--secondary); margin-bottom: 30px;">Express Entry 快速通道自测 (单身版)</h2>
         
+        <style>
+            /* 新增样式：让默认的“请选择”显示为灰色，选中后变为黑色 */
+            select:invalid, select option[value=""] {
+                color: #999;
+            }
+            select { color: #333; } /* 正常选项颜色 */
+        </style>
+
         <div class="form-grid">
             <div class="form-group form-full">
                 <label>1. 您的年龄 (Age)</label>
-                <select id="age">
+                <select id="age" required>
+                    <option value="" disabled selected>请选择您的年龄区间...</option>
                     <option value="12">18-29岁 (110分)</option>
                     <option value="11">30岁 (105分)</option>
                     <option value="10">31岁 (99分)</option>
@@ -111,7 +33,8 @@
 
             <div class="form-group form-full">
                 <label>2. 最高学历 (Education)</label>
-                <select id="education">
+                <select id="education" required>
+                    <option value="" disabled selected>请选择您的最高学历...</option>
                     <option value="150">博士学位 (PhD)</option>
                     <option value="135">硕士学位 (Master's)</option>
                     <option value="128">双学历 (其中一个为3年以上)</option>
@@ -134,7 +57,8 @@
 
             <div class="form-group">
                 <label>4. 加拿大工作经验 (年)</label>
-                <select id="can-exp">
+                <select id="can-exp" required>
+                    <option value="" disabled selected>请选择加拿大工作年限...</option>
                     <option value="0">无 / 不满1年</option>
                     <option value="40">1年</option>
                     <option value="53">2年</option>
@@ -146,7 +70,8 @@
 
             <div class="form-group">
                 <label>5. 海外工作经验 (年)</label>
-                <select id="foreign-exp">
+                <select id="foreign-exp" required>
+                    <option value="" disabled selected>请选择海外(中国)工作年限...</option>
                     <option value="0">无 / 不满1年</option>
                     <option value="1">1-2年</option>
                     <option value="3">3年及以上</option>
@@ -166,7 +91,6 @@
                 <ul style="padding-left:20px; margin:0;">
                     <li>核心人力资本 (年龄/学历/语言): <span id="core-score">0</span></li>
                     <li>交叉项加分 (学历+语言等): <span id="transfer-score">0</span> (这是拉开差距的关键)</li>
-                    <li>配偶/其他加分: 暂未包含 (请联系咨询)</li>
                 </ul>
             </div>
         </div>
@@ -174,55 +98,37 @@
 </section>
 
 <script>
-    // 1. 辅助函数：将雅思分数转换为 CLB 级别
-    // 参考: https://www.canada.ca/en/immigration-refugees-citizenship/services/immigrate-canada/express-entry/documents/language-requirements/language-testing.html
+    // 这里的辅助函数保持不变
     function getCLB(type, score) {
-        if (type === 'L') { // 听力
-            if (score >= 8.5) return 10;
-            if (score >= 8.0) return 9;
-            if (score >= 7.5) return 8;
-            if (score >= 6.0) return 7;
-            return 5; // 简化处理，低分暂归为5
+        if (type === 'L') { 
+            if (score >= 8.5) return 10; if (score >= 8.0) return 9; if (score >= 7.5) return 8; if (score >= 6.0) return 7; return 5; 
         }
-        if (type === 'R') { // 阅读
-            if (score >= 8.0) return 10;
-            if (score >= 7.0) return 9;
-            if (score >= 6.5) return 8;
-            if (score >= 6.0) return 7;
-            return 5;
+        if (type === 'R') { 
+            if (score >= 8.0) return 10; if (score >= 7.0) return 9; if (score >= 6.5) return 8; if (score >= 6.0) return 7; return 5; 
         }
-        if (type === 'W' || type === 'S') { // 写作和口语
-            if (score >= 7.5) return 10;
-            if (score >= 7.0) return 9;
-            if (score >= 6.5) return 8;
-            if (score >= 6.0) return 7;
-            return 5;
+        if (type === 'W' || type === 'S') { 
+            if (score >= 7.5) return 10; if (score >= 7.0) return 9; if (score >= 6.5) return 8; if (score >= 6.0) return 7; return 5; 
         }
         return 0;
     }
 
-    // 2. 辅助函数：根据 CLB 级别计算单项得分 (单身标准)
     function getLangPoints(clb) {
-        if (clb >= 10) return 34;
-        if (clb === 9) return 31;
-        if (clb === 8) return 23;
-        if (clb === 7) return 17;
-        return 0; // CLB 7 以下通常分数为 0 或很低，此处简化
+        if (clb >= 10) return 34; if (clb === 9) return 31; if (clb === 8) return 23; if (clb === 7) return 17; return 0;
     }
 
     function calculateCRS() {
-        // --- A. 获取输入 ---
-        // 年龄分
-        let ageIdx = parseInt(document.getElementById('age').value);
-        let ageScore = 0;
-        // 年龄打分表 (20-29岁=110, 30=105, 31=99...)
-        const ageMap = {12:110, 11:105, 10:99, 9:94, 8:88, 7:83, 6:77, 5:72, 4:66, 3:61, 2:55, 1:45, 0:0}; // 简化版，40岁以上取概数
-        ageScore = ageMap[ageIdx] || 0;
+        // --- 修改点：防错逻辑 ---
+        // 如果用户没选，parseInt会返回NaN。我们用 || 0 把它强制变成 0，防止报错。
+        
+        let ageVal = document.getElementById('age').value;
+        let ageIdx = (ageVal === "") ? 0 : parseInt(ageVal);
+        const ageMap = {12:110, 11:105, 10:99, 9:94, 8:88, 7:83, 6:77, 5:72, 4:66, 3:61, 2:55, 1:45, 0:0};
+        let ageScore = ageMap[ageIdx] || 0;
 
-        // 学历分 (直接取 value)
-        let eduScore = parseInt(document.getElementById('education').value);
+        let eduVal = document.getElementById('education').value;
+        let eduScore = (eduVal === "") ? 0 : parseInt(eduVal);
 
-        // 语言分 (IELTS -> CLB -> Points)
+        // 语言分
         let l = parseFloat(document.getElementById('ielts-l').value) || 0;
         let r = parseFloat(document.getElementById('ielts-r').value) || 0;
         let w = parseFloat(document.getElementById('ielts-w').value) || 0;
@@ -232,69 +138,63 @@
         let clbR = getCLB('R', r);
         let clbW = getCLB('W', w);
         let clbS = getCLB('S', s);
-
         let langScore = getLangPoints(clbL) + getLangPoints(clbR) + getLangPoints(clbW) + getLangPoints(clbS);
 
-        // 加拿大工作分
-        let canWorkScore = parseInt(document.getElementById('can-exp').value);
+        // 工作经验
+        let canExpVal = document.getElementById('can-exp').value;
+        let canWorkScore = (canExpVal === "") ? 0 : parseInt(canExpVal);
 
-        // --- B. 计算核心分 (Core Human Capital) ---
+        // --- 计算核心分 ---
         let coreScore = ageScore + eduScore + langScore + canWorkScore;
 
-        // --- C. 计算交叉项 (Skill Transferability) - 重点! ---
-        // 参考: https://www.canada.ca/en/immigration-refugees-citizenship/services/immigrate-canada/express-entry/check-score/crs-criteria.html
+        // --- 计算交叉项 (Transferability) ---
         let transferScore = 0;
 
-        // C1. 学历 + 语言 (Education + Language)
-        // 规则：所有单项 CLB >= 9 且 (硕士/双学历) = 50分；CLB>=7 且 (硕士/双学历) = 25分...
         let allCLB9 = (clbL>=9 && clbR>=9 && clbW>=9 && clbS>=9);
         let allCLB7 = (clbL>=7 && clbR>=7 && clbW>=7 && clbS>=7);
-        let highEdu = (eduScore >= 128); // 128是双学历的分数线
+        let highEdu = (eduScore >= 128); 
 
+        // 1. 学历 + 语言
         if (highEdu && allCLB9) transferScore += 50;
         else if (highEdu && allCLB7) transferScore += 25;
-        else if (!highEdu && allCLB9) transferScore += 25; // 单学历 + CLB 9
-        else if (!highEdu && allCLB7) transferScore += 13; // 单学历 + CLB 7
+        else if (!highEdu && allCLB9) transferScore += 25; 
+        else if (!highEdu && allCLB7) transferScore += 13; 
 
-        // C2. 学历 + 加拿大工作 (Education + Canadian Work)
-        // 规则：2年加里经验 + 高学历 = 50分...
-        let highCanWork = (canWorkScore >= 53); // 53是2年工作分
-        let midCanWork = (canWorkScore >= 40); // 40是1年工作分
+        // 2. 学历 + 加拿大工作
+        let highCanWork = (canWorkScore >= 53); // 2年
+        let midCanWork = (canWorkScore >= 40); // 1年
 
         if (highEdu && highCanWork) transferScore += 50;
         else if (highEdu && midCanWork) transferScore += 25;
         else if (!highEdu && highCanWork) transferScore += 25;
         else if (!highEdu && midCanWork) transferScore += 13;
 
-        // 注意：C1 + C2 最多 50分 (官方规则：Education部分交叉项上限50)
         if (transferScore > 50) transferScore = 50;
 
-        // C3. 海外工作 + 语言 (Foreign Work + Language)
-        let foreignExp = parseInt(document.getElementById('foreign-exp').value); // 1=1-2年, 3=3年以上
-        let foreignTransfer = 0;
+        // 3. 海外工作 + 语言
+        let forExpVal = document.getElementById('foreign-exp').value;
+        let foreignExp = (forExpVal === "") ? 0 : parseInt(forExpVal);
         
+        let foreignTransfer = 0;
         if (foreignExp >= 3 && allCLB9) foreignTransfer += 50;
         else if (foreignExp >= 3 && allCLB7) foreignTransfer += 25;
         else if (foreignExp >= 1 && allCLB9) foreignTransfer += 25;
         else if (foreignExp >= 1 && allCLB7) foreignTransfer += 13;
 
-        // C4. 海外工作 + 加拿大工作 (Foreign + Canadian)
+        // 4. 海外工作 + 加拿大工作
         if (foreignExp >= 3 && highCanWork) foreignTransfer += 50;
         else if (foreignExp >= 3 && midCanWork) foreignTransfer += 25;
         else if (foreignExp >= 1 && highCanWork) foreignTransfer += 25;
         else if (foreignExp >= 1 && midCanWork) foreignTransfer += 13;
         
-        // 注意：C3 + C4 最多 50分
         if (foreignTransfer > 50) foreignTransfer = 50;
 
-        // 交叉项总分 (上限100)
         let totalTransfer = transferScore + foreignTransfer;
         if (totalTransfer > 100) totalTransfer = 100;
 
-        // --- D. 总分汇总 ---
         let total = coreScore + totalTransfer;
 
-        // --- E. 显示结果与建议 ---
+        // 结果展示
         document.getElementById('result-area').style.display = 'block';
         document.getElementById('total-score').innerText = total;
         document.getElementById('core-score').innerText = coreScore;
@@ -303,10 +203,8 @@
         let advice = "";
         if (total >= 500) advice = "恭喜！您的分数极具竞争力，大概率会被快速捞取。建议立即准备材料入池！";
         else if (total >= 450) advice = "您的分数不错，有机会获邀。建议刷高雅思或考虑省提名(PNP)以增加稳妥性。";
-        else advice = "目前分数稍低。建议：1. 提高雅思至8777；2. 积累更多工作经验；3. 规划LMIA或留学移民。联系我们定制提分方案！";
+        else advice = "目前分数稍低。建议：1. 提高雅思至8777；2. 积累更多工作经验；3. 规划LMIA或留学移民。";
         
         document.getElementById('score-advice').innerText = advice;
     }
 </script>
-
-{{ end }}
