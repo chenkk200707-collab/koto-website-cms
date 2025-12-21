@@ -1,22 +1,109 @@
 {{ define "main" }}
 <style>
-    /* 简单的容器样式 */
-    .page-container {
+    /* === 1. 暴力隐藏所有旧菜单 === */
+    /* 隐藏常见的 Hugo 主题导航栏类名 */
+    header, nav, .site-header, #header, .navbar, .koto-main-nav { 
+        display: none !important; 
+    }
+
+    /* === 2. 页面基础样式 === */
+    :root {
+        --k-red: #C41E3A;
+        --k-dark: #2C3E50;
+        --k-gray: #F5F7FA;
+    }
+    body {
+        margin: 0; padding: 0;
+        background-color: #fff;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        color: #333;
+    }
+    a { text-decoration: none; transition: 0.3s; }
+
+    /* === 3. 独立头部 (Back + Logo) === */
+    .sub-page-header {
+        display: flex; 
+        align-items: center; 
+        padding: 15px 5%; 
+        height: 70px;
+        background: rgba(255,255,255,0.98); 
+        border-bottom: 1px solid #eee; 
+        position: sticky; top: 0; z-index: 1000;
+    }
+
+    .back-link {
+        display: flex; align-items: center; gap: 6px;
+        font-size: 1rem; font-weight: 700; color: #666;
+        margin-right: 25px;
+    }
+    .back-link:hover { color: var(--k-red); transform: translateX(-3px); }
+
+    .header-logo {
+        height: 40px; /* 小巧一点 */
+        width: auto;
+        display: block;
+    }
+
+    /* === 4. 临时内容区域 (建设中) === */
+    .content-wrapper {
         max-width: 800px;
-        margin: 120px auto 50px; /* 顶部留出导航栏高度 */
+        margin: 100px auto;
         padding: 0 20px;
         text-align: center;
     }
-    h1 { color: #C41E3A; font-size: 2.5rem; }
-    p { color: #666; font-size: 1.2rem; margin-top: 20px; }
+    
+    .status-icon { font-size: 4rem; margin-bottom: 20px; display: block; }
+    
+    h1 { 
+        font-size: 2.5rem; 
+        color: var(--k-dark); 
+        margin-bottom: 20px; 
+        font-weight: 800;
+    }
+    
+    p { 
+        font-size: 1.1rem; 
+        color: #666; 
+        line-height: 1.6; 
+        margin-bottom: 40px; 
+    }
+
+    .contact-btn {
+        display: inline-block;
+        background-color: var(--k-red);
+        color: white;
+        padding: 12px 35px;
+        border-radius: 50px;
+        font-weight: bold;
+        box-shadow: 0 4px 15px rgba(196, 30, 58, 0.3);
+    }
+    .contact-btn:hover {
+        background-color: #a01830;
+        transform: translateY(-2px);
+    }
+
 </style>
 
-<div class="page-container">
-    <h1>{{ .Title }}</h1>
-    <p>🚧 该板块内容正在精心筹备中...</p>
-    <p>Expert content coming soon.</p>
+<div class="sub-page-header">
+    <a href="/" class="back-link">
+        <span>&larr;</span> 返回首页
+    </a>
+    <a href="/">
+        <img src="/images/logo-koto.png" alt="KOTO" class="header-logo">
+    </a>
+</div>
+
+<div class="content-wrapper">
+    <span class="status-icon">🚧</span>
     
-    <a href="/" style="display:inline-block; margin-top:40px; padding:10px 25px; background:#2C3E50; color:white; border-radius:50px; text-decoration:none;">返回首页</a>
+    <h1>{{ .Title }}</h1>
+    
+    <p>
+        我们正在梳理该板块的详细服务流程与成功案例。<br>
+        如需咨询相关业务，请直接联系我们的持牌顾问。
+    </p>
+
+    <a href="/contact/" class="contact-btn">预约一对一咨询</a>
 </div>
 
 {{ end }}
