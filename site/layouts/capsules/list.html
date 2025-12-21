@@ -11,7 +11,7 @@
         --k-text: #333;
         --k-border-radius: 12px;
     }
-    body { font-family: -apple-system, BlinkMacSystemFont, sans-serif; background-color: #fff; color: var(--k-text); margin: 0; padding: 0; }
+    body { font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif; background-color: #fff; color: var(--k-text); margin: 0; padding: 0; }
     * { box-sizing: border-box; }
 
     /* 3. 独立头部 */
@@ -69,7 +69,7 @@
     .card-category { font-size: 0.75rem; font-weight: bold; color: #999; text-transform: uppercase; margin-bottom: 15px; letter-spacing: 1px; }
     .card-icon { font-size: 2.5rem; margin-bottom: 15px; }
     .card-title { font-size: 1.3rem; font-weight: 800; color: var(--k-dark); margin: 0 0 10px 0; line-height: 1.3; }
-    .card-desc { font-size: 0.9rem; color: #666; line-height: 1.6; margin-bottom: 25px; flex-grow: 1; }
+    .card-desc { font-size: 0.95rem; color: #666; line-height: 1.6; margin-bottom: 25px; flex-grow: 1; }
     
     .inquire-btn {
         width: 100%; padding: 12px; background: var(--k-dark); color: white;
@@ -107,16 +107,16 @@
 </div>
 
 <div class="capsule-hero">
-    <span class="hero-badge">KOTO 10-Day Method</span>
-    <h1>Visual "Capsules" for<br>Language Mastery.</h1>
-    <p>Don't memorize dead scripts. Digest the logic.<br>Our visual mini-courses are designed to cure specific pains in just 10 days.</p>
+    <span class="hero-badge">KOTO 10天突破法</span>
+    <h1>英语思维“胶囊”：<br>视觉化重塑语言系统</h1>
+    <p>拒绝死记硬背。用视觉逻辑重塑语言系统。<br>专为解决雅思、思培、法语学习中的特定痛点设计，10天见效。</p>
 </div>
 
 <div class="capsule-filters">
-    <button class="filter-tag active" onclick="filterCapsules('all', this)">All Capsules</button>
-    <button class="filter-tag" onclick="filterCapsules('ielts', this)">IELTS 7.0+</button>
-    <button class="filter-tag" onclick="filterCapsules('celpip', this)">CELPIP & Life</button>
-    <button class="filter-tag" onclick="filterCapsules('vocab', this)">Vocab & French</button>
+    <button class="filter-tag active" onclick="filterCapsules('all', this)">全部课程</button>
+    <button class="filter-tag" onclick="filterCapsules('ielts', this)">雅思 7.0+</button>
+    <button class="filter-tag" onclick="filterCapsules('celpip', this)">思培 & 生活</button>
+    <button class="filter-tag" onclick="filterCapsules('vocab', this)">词汇 & 法语</button>
 </div>
 
 <div class="capsule-grid" id="capsuleGrid">
@@ -124,57 +124,57 @@
     <div class="course-card" data-category="ielts">
         <div class="card-category">IELTS SPEAKING</div>
         <div class="card-icon">🗣️</div>
-        <h3 class="card-title">IELTS Speaking 7.0+ Visual Logic</h3>
-        <p class="card-desc">Stop translating. Start visualizing. Learn the 3-step visual logic to answer any Part 2 & 3 question instantly.</p>
-        <button class="inquire-btn" onclick="openModal('雅思口语 7.0+ 视觉逻辑')">Get Capsule</button>
+        <h3 class="card-title">雅思口语 7.0+ 视觉逻辑课</h3>
+        <p class="card-desc">停止脑内翻译。学会 3 步视觉逻辑法，瞬间破解 Part 2 & 3 难题，告别中式英语思维。</p>
+        <button class="inquire-btn" onclick="openModal('雅思口语 7.0+ 视觉逻辑')">咨询获取</button>
     </div>
 
     <div class="course-card" data-category="ielts">
         <div class="card-category">IELTS WRITING</div>
         <div class="card-icon">📊</div>
-        <h3 class="card-title">Task 1: Data Decoder</h3>
-        <p class="card-desc">Visual capsules to master line graphs, bar charts, and maps. Precise vocabulary for trends and comparisons.</p>
-        <button class="inquire-btn" onclick="openModal('雅思小作文 Data Decoder')">Get Capsule</button>
+        <h3 class="card-title">小作文：数据解码器</h3>
+        <p class="card-desc">线图、柱状图、地图题的视觉化拆解。掌握精准的趋势描述词汇，快速抓住数据重点。</p>
+        <button class="inquire-btn" onclick="openModal('雅思小作文 Data Decoder')">咨询获取</button>
     </div>
 
     <div class="course-card" data-category="ielts">
         <div class="card-category">IELTS WRITING</div>
         <div class="card-icon">🏗️</div>
-        <h3 class="card-title">Task 2: Argument Builder</h3>
-        <p class="card-desc">The "Lego" method for essay structures. Build cohesive, high-scoring arguments without writer's block.</p>
-        <button class="inquire-btn" onclick="openModal('雅思大作文 Argument Builder')">Get Capsule</button>
+        <h3 class="card-title">大作文：逻辑积木</h3>
+        <p class="card-desc">独创“乐高积木”法构建论文结构。像搭积木一样组装论点，告别卡顿，轻松写出高分文章。</p>
+        <button class="inquire-btn" onclick="openModal('雅思大作文 Argument Builder')">咨询获取</button>
     </div>
 
     <div class="course-card gold-top" data-category="vocab">
         <div class="card-category">GENERAL ENGLISH</div>
         <div class="card-icon">🚀</div>
-        <h3 class="card-title">Vocab Upgrade: Simple to Elite</h3>
-        <p class="card-desc">Transform your language from "Good" to "Exceptional". Replace basic words with precise, high-level alternatives.</p>
-        <button class="inquire-btn" onclick="openModal('词汇升级 Vocab Upgrade')">Get Capsule</button>
+        <h3 class="card-title">词汇升级：从简单到高级</h3>
+        <p class="card-desc">让您的语言从“还行”变成“地道”。用精准的高级词汇替换基础词，瞬间提升表达质感。</p>
+        <button class="inquire-btn" onclick="openModal('词汇升级 Vocab Upgrade')">咨询获取</button>
     </div>
 
     <div class="course-card blue-top" data-category="celpip">
         <div class="card-category">CELPIP / LIFE</div>
         <div class="card-icon">🏡</div>
-        <h3 class="card-title">CELPIP Daily Scene Vocab</h3>
-        <p class="card-desc">300 Essential words for Canadian life. From banking to barbecues, know exactly what to say.</p>
-        <button class="inquire-btn" onclick="openModal('思培生活词汇')">Get Capsule</button>
+        <h3 class="card-title">思培/生活：高频场景词汇</h3>
+        <p class="card-desc">加拿大生活 300 核心词。从银行开户到烧烤聚会，掌握最地道的本地表达，永远有话可说。</p>
+        <button class="inquire-btn" onclick="openModal('思培生活词汇')">咨询获取</button>
     </div>
 
     <div class="course-card blue-top" data-category="celpip">
         <div class="card-category">CELPIP SPEAKING</div>
         <div class="card-icon">🖼️</div>
-        <h3 class="card-title">Image Narration Master</h3>
-        <p class="card-desc">A visual framework to describe any image in CELPIP Speaking Task 1. Structure your observation perfectly.</p>
-        <button class="inquire-btn" onclick="openModal('思培看图说话')">Get Capsule</button>
+        <h3 class="card-title">思培口语：看图说话大师</h3>
+        <p class="card-desc">万能看图框架。完美应对思培口语 Task 1，条理清晰地描述任何图片细节。</p>
+        <button class="inquire-btn" onclick="openModal('思培看图说话')">咨询获取</button>
     </div>
 
     <div class="course-card gold-top" data-category="vocab">
         <div class="card-category">FRENCH TEF/TCF</div>
         <div class="card-icon">🇫🇷</div>
-        <h3 class="card-title">French CLB 7 Accelerator</h3>
-        <p class="card-desc">Focused vocabulary and structures specifically designed to hit that CLB 7 bonus point threshold for Express Entry.</p>
-        <button class="inquire-btn" onclick="openModal('法语 CLB7 加速营')">Get Capsule</button>
+        <h3 class="card-title">法语 CLB 7 极速冲刺</h3>
+        <p class="card-desc">专为 EE 移民加分设计。聚焦核心词汇与句型，剔除无效内容，快速达到 CLB 7 门槛。</p>
+        <button class="inquire-btn" onclick="openModal('法语 CLB7 加速营')">咨询获取</button>
     </div>
 
 </div>
