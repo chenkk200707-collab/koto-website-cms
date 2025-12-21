@@ -72,63 +72,38 @@
 
     /* === 🆕 新增：横向滑动区域样式 === */
     .news-slider-container {
-        /* 这里的 padding-bottom 是为了给滚动条留位置，不让它挡住内容 */
         display: flex;
         overflow-x: auto; 
         gap: 30px;
         padding: 10px 5px 30px 5px; 
-        scroll-snap-type: x mandatory; /* 每次滑动自动对齐一张卡片 */
-        -webkit-overflow-scrolling: touch; /* iOS 顺滑滚动 */
+        scroll-snap-type: x mandatory;
+        -webkit-overflow-scrolling: touch;
     }
     
-    /* 美化滚动条 */
-    .news-slider-container::-webkit-scrollbar {
-        height: 8px;
-    }
-    .news-slider-container::-webkit-scrollbar-track {
-        background: #f1f1f1;
-        border-radius: 4px;
-    }
-    .news-slider-container::-webkit-scrollbar-thumb {
-        background: #ccc;
-        border-radius: 4px;
-    }
-    .news-slider-container::-webkit-scrollbar-thumb:hover {
-        background: #999;
-    }
+    .news-slider-container::-webkit-scrollbar { height: 8px; }
+    .news-slider-container::-webkit-scrollbar-track { background: #f1f1f1; border-radius: 4px; }
+    .news-slider-container::-webkit-scrollbar-thumb { background: #ccc; border-radius: 4px; }
+    .news-slider-container::-webkit-scrollbar-thumb:hover { background: #999; }
 
-    /* 卡片固定宽度，防止被压缩 */
     .news-card-slide {
-        min-width: 320px; /* 电脑端宽度 */
+        min-width: 320px; 
         max-width: 320px;
-        flex: 0 0 auto;   /* 禁止伸缩 */
-        scroll-snap-align: start; /* 对齐左边 */
+        flex: 0 0 auto;
+        scroll-snap-align: start;
         background: white; 
         border-radius: 12px; 
         overflow: hidden; 
         box-shadow: 0 4px 20px rgba(0,0,0,0.05); 
         transition: transform 0.3s ease;
     }
-    .news-card-slide:hover {
-        transform: translateY(-5px);
-    }
+    .news-card-slide:hover { transform: translateY(-5px); }
 
-    /* 移动端适配 */
     @media (max-width: 768px) {
-        .hero-section {
-            flex-direction: column;
-            padding: 60px 20px;
-            text-align: center;
-        }
+        .hero-section { flex-direction: column; padding: 60px 20px; text-align: center; }
         .hero-text { padding-right: 0; margin-bottom: 40px; }
         .hero-text h1 { font-size: 2.5rem; }
         .services-grid { padding: 60px 20px; }
-        
-        /* 移动端卡片稍微窄一点，方便露出下一张的边缘提示用户可以滑 */
-        .news-card-slide {
-            min-width: 280px;
-            max-width: 280px;
-        }
+        .news-card-slide { min-width: 280px; max-width: 280px; }
     }
 </style>
 
@@ -169,12 +144,13 @@
 </section>
 
 <section style="padding: 60px 20px; background: #fafafa;">
-    <div style="max-width: 1200px; margin: 0 auto;"> <h2 style="color: var(--secondary); margin-bottom: 30px; text-align: left; padding-left: 5px;">最新移民资讯</h2>
+    <div style="max-width: 1200px; margin: 0 auto;"> 
+        <h2 style="color: var(--secondary); margin-bottom: 30px; text-align: left; padding-left: 5px;">最新移民资讯</h2>
         
         <div class="news-slider-container">
             {{ range .Site.RegularPages }}
             
-            {{/* 📸 图片抓取逻辑 (V9.0 保留) */}}
+            {{/* Image Fetching Logic */}}
             {{ $imgName := .Params.image }}
             {{ $finalImg := "" }}
             {{ if $imgName }}
@@ -200,4 +176,24 @@
                 </a>
                 
                 <div style="padding: 25px;">
-                    <h3 style="margin: 0 0 10px 0; font-size: 1.1rem; line-height: 1.4; height: 3.2em
+                    {{/* This matches the style where your file got cut off */}}
+                    <h3 style="margin: 0 0 10px 0; font-size: 1.1rem; line-height: 1.4; height: 3.2em; overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;">
+                        <a href="{{ .Permalink }}" style="color: inherit; text-decoration: none;">
+                            {{ .Title }}
+                        </a>
+                    </h3>
+                    
+                    <p style="font-size: 0.9rem; color: #666; margin-bottom: 20px; line-height: 1.6;">
+                        {{ .Summary | truncate 80 }}
+                    </p>
+                    
+                    <a href="{{ .Permalink }}" style="color: var(--primary); font-weight: bold; text-decoration: none; font-size: 0.9rem;">
+                        Read More &rarr;
+                    </a>
+                </div>
+            </div>
+            {{ end }} {{/* Closes the Loop */}}
+        </div>
+    </div>
+</section>
+{{ end }} {{/* Closes the Main definition */}}
