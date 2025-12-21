@@ -1,50 +1,60 @@
-<footer class="bg-black ph3 pv4 white">
+<footer class="footer">
+  <div class="container">
+    
+    <div class="row">
+      <div class="col-lg-8 offset-lg-2 text-center">
+        <h2 style="color: #C5A059; font-weight: bold; margin-bottom: 20px;">KOTO IMMIGRATION</h2>
+        
+        <h4 class="text-muted">订阅最新移民资讯</h4>
+        <p style="color: #777; margin-bottom: 30px;">
+          第一时间获取加拿大移民局 (IRCC) 政策变动、EE 抽分情况及独家留学干货。<br>
+          我们要做的，是让您的移民之路少走弯路。
+        </p>
 
-	<div class="mw7 center pt3">
+        <form class="form-inline justify-content-center" action="#" method="POST" name="newsletter" netlify>
+          <div class="form-group mb-2">
+            <label for="email" class="sr-only">Email</label>
+            <input type="email" name="email" class="form-control" id="email" placeholder="请输入您的邮箱地址" required style="width: 300px; border-radius: 5px 0 0 5px; border: 1px solid #ddd;">
+          </div>
+          <button type="submit" class="btn btn-primary mb-2" style="background-color: #C41E3A; border: none; border-radius: 0 5px 5px 0;">订阅</button>
+        </form>
+      </div>
+    </div>
 
-		<div class="measure-narrow center mb4">
+    <hr style="margin: 50px 0; border-color: #eee;">
 
-			<img src="/img/logo.svg" alt="Kaldi logo" class="db w4 center mb4 br0">
-			<p class="f3 lh-title light-gray b tc mb2">{{ .Site.Data.footer.title }}</p>
-			<p>{{ .Site.Data.footer.blurb }}</p>
+    <div class="row">
+      
+      <div class="col-lg-4 col-md-4 col-sm-6 mb-4">
+        <h5 style="color: #2C3E50; font-weight: bold; margin-bottom: 20px;">快速导航</h5>
+        <ul class="list-unstyled">
+          <li class="mb-2"><a href="/" style="color: #666;">回到首页 (Home)</a></li>
+          <li class="mb-2"><a href="/assessment.html" style="color: #C41E3A; font-weight: bold;">CRS 算分器 (免费评估)</a></li>
+          <li class="mb-2"><a href="/#contact" style="color: #666;">预约咨询 (Book Consultation)</a></li>
+        </ul>
+      </div>
 
-			{{ partial "newsletter-form" . }}
+      <div class="col-lg-4 col-md-4 col-sm-6 mb-4">
+        <h5 style="color: #2C3E50; font-weight: bold; margin-bottom: 20px;">联系我们</h5>
+        <ul class="list-unstyled" style="color: #666; font-size: 0.9rem;">
+          <li class="mb-2"><strong>地址：</strong> Vancouver, BC, Canada</li>
+          <li class="mb-2"><strong>工作时间：</strong> 周一至周五 9:30 - 18:00</li>
+          <li class="mb-2"><strong>Email：</strong> info@kotoimmigration.com</li>
+        </ul>
+      </div>
 
-		</div>
+      <div class="col-lg-4 col-md-4 col-sm-12 mb-4 text-md-right text-sm-left">
+        <h5 style="color: #2C3E50; font-weight: bold; margin-bottom: 20px;">关注我们</h5>
+        <div class="social-links">
+          <a href="#" style="color:#C5A059; margin-right:15px; font-size:1.2rem;"><i class="fab fa-weixin"></i></a>
+          <a href="#" style="color:#C5A059; margin-right:15px; font-size:1.2rem;"><i class="fab fa-instagram"></i></a>
+          <a href="#" style="color:#C5A059; font-size:1.2rem;"><i class="fab fa-youtube"></i></a>
+        </div>
+        <p style="margin-top: 20px; font-size: 0.8rem; color: #999;">
+          © 2025 KOTO Immigration. <br>All Rights Reserved.
+        </p>
+      </div>
 
-		<div class="flex-ns justify-between">
-
-			<div>
-				<h3 class="f4 b lh-title mb1 primary">Kaldi</h3>
-				<ul class="mb3">
-					<li><a href="/" class="link">Home</a></li>
-					<li><a href="/products" class="link">Our products</a></li>
-					<li><a href="/values" class="link">About</a></li>
-					<li><a href="/post" class="link">Blog</a></li>
-					<li><a href="/contact" class="link">Contact</a></li>
-				</ul>
-			</div>
-
-			<div>
-				<h3 class="f4 b lh-title mb1 primary">Find out more</h3>
-				<ul class="mb3">
-					<li><a href="/post/jamaica-blue/" class="link">Latest offers</a></li>
-					<li><a href="/contact" class="link">Schedule an appointment</a></li>
-				</ul>
-			</div>
-
-			<div>
-				<h3 class="f4 b lh-title mb2 primary">Social media</h3>
-				<ul class="mhn2">
-					{{ partial "social-icon" (dict "link" "#" "svg" "icons-facebook" "alt" "Kaldi on Facebook") }}
-					{{ partial "social-icon" (dict "link" "#" "svg" "icons-twitter" "alt" "Kaldi on Twitter") }}
-					{{ partial "social-icon" (dict "link" "#" "svg" "icons-instagram" "alt" "Kaldi on Instagram") }}
-					{{ partial "social-icon" (dict "link" "#" "svg" "icons-vimeo" "alt" "Kaldi on Vimeo") }}
-				</ul>
-			</div>
-
-		</div>
-	</div>
-
+    </div>
+  </div>
 </footer>
-
