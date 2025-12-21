@@ -5,12 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Koto Immigration & Education - 首页</title>
     <style>
-        /* --- 全局样式 --- */
+        /* --- 全局样式：红白配色 --- */
         :root {
-            --primary-color: #004aad; /*以此为主色调*/
+            /* 核心修改：改回红色 (#D32F2F) 作为主色调 */
+            --primary-color: #D32F2F; 
             --text-color: #333;
-            --bg-light: #f9f9f9;
-            --placeholder-color: #e0e0e0; /* 图片占位符颜色 */
+            --bg-light: #fdfdfd;
+            --placeholder-color: #eeeeee; /* 灰色的图片占位符 */
         }
 
         body {
@@ -18,16 +19,17 @@
             margin: 0;
             padding: 0;
             color: var(--text-color);
+            background-color: #fff;
             line-height: 1.6;
         }
 
         a { text-decoration: none; color: inherit; }
         ul { list-style: none; padding: 0; margin: 0; }
 
-        /* --- 导航栏 --- */
+        /* --- 导航栏 (白底红字) --- */
         header {
             background: #fff;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            border-bottom: 2px solid var(--primary-color); /* 底部加一条红线 */
             position: sticky;
             top: 0;
             z-index: 1000;
@@ -43,9 +45,9 @@
         }
 
         .logo {
-            font-size: 1.5rem;
+            font-size: 1.8rem;
             font-weight: bold;
-            color: var(--primary-color);
+            color: var(--primary-color); /* Logo 红色 */
         }
 
         .nav-links {
@@ -53,17 +55,22 @@
             gap: 2rem;
         }
 
+        .nav-links a {
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
         .nav-links a:hover {
             color: var(--primary-color);
         }
 
-        /* --- 左右滑动的轮播图 (Hero Slider) --- */
+        /* --- 左右滑动的轮播图 (Slider) --- */
         .slider-container {
             position: relative;
             width: 100%;
-            height: 500px; /* 轮播图高度 */
+            height: 500px; 
             overflow: hidden;
-            background-color: #ddd;
+            background-color: #f0f0f0;
         }
 
         .slider-wrapper {
@@ -77,260 +84,65 @@
             min-width: 100%;
             height: 100%;
             position: relative;
-            /* 这里模拟图片占位 */
-            background-color: #ccc; 
-            background-size: cover;
-            background-position: center;
+            /* 灰色背景作为占位，等待您放图片 */
+            background-color: #ddd; 
             display: flex;
             align-items: center;
             justify-content: center;
         }
 
-        /* 为演示设置不同的背景色，实际使用时换成 background-image */
-        .slide:nth-child(1) { background-color: #b3cde0; }
-        .slide:nth-child(2) { background-color: #6497b1; }
-        .slide:nth-child(3) { background-color: #005b96; }
+        /* 这里我去掉了之前的蓝色背景，统一用灰色，避免颜色冲突 */
+        .slide:nth-child(1) { background-color: #e0e0e0; }
+        .slide:nth-child(2) { background-color: #d6d6d6; }
+        .slide:nth-child(3) { background-color: #cccccc; }
 
         .slide-content {
             text-align: center;
             color: #fff;
-            background: rgba(0,0,0,0.4);
-            padding: 2rem;
-            border-radius: 8px;
+            background: rgba(211, 47, 47, 0.85); /* 红色半透明背景块 */
+            padding: 2.5rem;
+            border-radius: 4px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
         }
 
-        .slide-content h2 { font-size: 2.5rem; margin-bottom: 0.5rem; }
-        .slide-content p { font-size: 1.2rem; }
+        .slide-content h2 { font-size: 2.5rem; margin: 0 0 1rem 0; }
+        .slide-content p { font-size: 1.2rem; margin: 0; }
 
-        /* 轮播图控制按钮 */
+        /* 轮播图按钮 */
         .slider-btn {
             position: absolute;
             top: 50%;
             transform: translateY(-50%);
-            background: rgba(0,0,0,0.5);
+            background: rgba(0,0,0,0.3);
             color: white;
             border: none;
             padding: 1rem;
             cursor: pointer;
             font-size: 1.5rem;
             z-index: 10;
+            transition: background 0.3s;
         }
-        .prev-btn { left: 10px; }
-        .next-btn { right: 10px; }
+        .slider-btn:hover { background: var(--primary-color); }
+        .prev-btn { left: 0; }
+        .next-btn { right: 0; }
 
-        /* --- 内容区域通用 --- */
+        /* --- 内容区域 --- */
         .section {
-            padding: 4rem 2rem;
+            padding: 5rem 2rem;
             max-width: 1200px;
             margin: 0 auto;
         }
 
         .section-title {
             text-align: center;
-            margin-bottom: 3rem;
-            font-size: 2rem;
-            color: var(--primary-color);
+            margin-bottom: 3.5rem;
+            font-size: 2.2rem;
+            color: var(--primary-color); /* 标题红色 */
+            position: relative;
         }
-
-        /* --- 图片占位符样式 --- */
-        .img-placeholder {
-            background-color: var(--placeholder-color);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #888;
-            font-weight: bold;
-            border-radius: 8px;
-            overflow: hidden;
-        }
-        /* 添加一个图标或文字提示 */
-        .img-placeholder::after {
-            content: "图片预留区域";
-        }
-
-        /* --- 业务介绍 (Grid布局) --- */
-        .services-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-        }
-
-        .service-card {
-            background: #fff;
-            border: 1px solid #eee;
-            border-radius: 8px;
-            overflow: hidden;
-            transition: transform 0.3s;
-        }
-
-        .service-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-        }
-
-        /* 卡片里的图片区域 */
-        .service-img {
-            width: 100%;
-            height: 200px; /* 固定高度，确保区域存在 */
-        }
-
-        .service-info {
-            padding: 1.5rem;
-            text-align: center;
-        }
-
-        /* --- 关于我们 (图文混排) --- */
-        .about-container {
-            display: flex;
-            align-items: center;
-            gap: 3rem;
-        }
-
-        .about-img {
-            flex: 1;
-            height: 350px; /* 确保关于我们的图片有高度 */
-        }
-
-        .about-text {
-            flex: 1;
-        }
-
-        /* --- 页脚 --- */
-        footer {
-            background: #333;
-            color: #fff;
-            text-align: center;
-            padding: 2rem;
-            margin-top: 4rem;
-        }
-
-        /* --- 响应式调整 --- */
-        @media (max-width: 768px) {
-            .about-container {
-                flex-direction: column;
-            }
-            .about-img {
-                width: 100%;
-                height: 250px;
-            }
-            .slide-content h2 { font-size: 1.8rem; }
-        }
-    </style>
-</head>
-<body>
-
-    <header>
-        <nav>
-            <div class="logo">Koto Immigration</div>
-            <div class="nav-links">
-                <a href="#">首页</a>
-                <a href="#">关于我们</a>
-                <a href="#">服务项目</a>
-                <a href="#">成功案例</a>
-                <a href="#">联系我们</a>
-            </div>
-        </nav>
-    </header>
-
-    <div class="slider-container">
-        <div class="slider-wrapper" id="sliderWrapper">
-            <div class="slide">
-                <div class="slide-content">
-                    <h2>专业移民规划</h2>
-                    <p>为您量身定制最合适的移民方案</p>
-                </div>
-            </div>
-            <div class="slide">
-                <div class="slide-content">
-                    <h2>留学教育咨询</h2>
-                    <p>连接世界名校，开启未来之旅</p>
-                </div>
-            </div>
-            <div class="slide">
-                <div class="slide-content">
-                    <h2>全程贴心服务</h2>
-                    <p>从申请到落地，我们始终在您身边</p>
-                </div>
-            </div>
-        </div>
-        <button class="slider-btn prev-btn" onclick="moveSlide(-1)">&#10094;</button>
-        <button class="slider-btn next-btn" onclick="moveSlide(1)">&#10095;</button>
-    </div>
-
-    <section class="section">
-        <h2 class="section-title">我们的服务</h2>
-        <div class="services-grid">
-            <div class="service-card">
-                <div class="img-placeholder service-img"></div> 
-                <div class="service-info">
-                    <h3>加拿大移民</h3>
-                    <p>技术移民、雇主担保、投资移民等全方位服务。</p>
-                </div>
-            </div>
-            <div class="service-card">
-                <div class="img-placeholder service-img"></div>
-                <div class="service-info">
-                    <h3>留学申请</h3>
-                    <p>涵盖小学、中学、本科及研究生申请。</p>
-                </div>
-            </div>
-            <div class="service-card">
-                <div class="img-placeholder service-img"></div>
-                <div class="service-info">
-                    <h3>签证服务</h3>
-                    <p>学签、工签、旅游签及拒签翻案。</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section class="section" style="background-color: var(--bg-light);">
-        <h2 class="section-title">关于 Koto</h2>
-        <div class="about-container">
-            <div class="img-placeholder about-img"></div>
-            <div class="about-text">
-                <h3>致力于您的未来</h3>
-                <p>Koto Immigration & Education Inc. 是一家专业的移民与教育咨询机构。我们拥有经验丰富的持牌顾问团队，致力于为每一位客户提供最专业、最诚信的咨询服务。</p>
-                <p>无论是留学规划还是移民安置，我们都将竭诚为您服务，助您在新的国度顺利开启新生活。</p>
-                <br>
-                <a href="#" style="color: var(--primary-color); font-weight: bold;">了解更多 &rarr;</a>
-            </div>
-        </div>
-    </section>
-
-    <footer>
-        <p>&copy; 2025 Koto Immigration & Education Inc. All Rights Reserved.</p>
-    </footer>
-
-    <script>
-        let currentSlide = 0;
-        const slides = document.querySelectorAll('.slide');
-        const wrapper = document.getElementById('sliderWrapper');
-        const totalSlides = slides.length;
-
-        // 自动播放间隔 (3000ms = 3秒)
-        let autoPlayInterval = setInterval(() => {
-            moveSlide(1);
-        }, 3000);
-
-        function moveSlide(direction) {
-            currentSlide += direction;
-
-            if (currentSlide >= totalSlides) {
-                currentSlide = 0;
-            } else if (currentSlide < 0) {
-                currentSlide = totalSlides - 1;
-            }
-
-            const offset = -currentSlide * 100;
-            wrapper.style.transform = `translateX(${offset}%)`;
-            
-            // 重置自动播放计时器，防止用户点击后立即自动切换
-            clearInterval(autoPlayInterval);
-            autoPlayInterval = setInterval(() => {
-                moveSlide(1);
-            }, 3000);
-        }
-    </script>
-</body>
-</html>
+        
+        /* 标题下的小红线装饰 */
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 60
