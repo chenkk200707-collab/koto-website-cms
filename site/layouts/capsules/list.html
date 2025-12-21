@@ -1,35 +1,45 @@
 {{ define "main" }}
 {{ partial "koto-header.html" . }}
 
-<div style="height: 120px; width: 100%; background: transparent;"></div>
-
 <style>
-    /* 基础字体设置 */
-    body { 
-        font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
-        background-color: #fff;
-        margin: 0; padding: 0; /* 重置 padding，改用上面的 div 占位 */
+    /* === 1. 布局核心修复 === */
+    /* 强力隐藏可能存在的旧菜单 */
+    header:not(.koto-main-nav), nav:not(.koto-main-nav), .navbar { 
+        display: none !important; 
     }
     
-    /* Hero 区域 */
-    .capsule-hero { text-align: center; padding: 20px 20px 40px; background-color: #F5F7FA; }
+    /* 强制重置 body */
+    body { 
+        margin: 0; padding: 0;
+        background-color: #fff;
+        font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
+    }
+
+    /* === 2. Hero 区域 (物理防遮挡) === */
+    .capsule-hero { 
+        text-align: center; 
+        /* [关键] 强制距离顶部 100px，确保不被菜单挡住 */
+        margin-top: 100px !important; 
+        padding: 40px 20px 40px; 
+        background-color: #F5F7FA; 
+    }
     .hero-badge { display: inline-block; background: #CFA45C; color: white; padding: 6px 15px; border-radius: 50px; font-weight: bold; margin-bottom: 20px; font-size: 0.85rem; }
     .capsule-hero h1 { font-size: 2.5rem; font-weight: 800; color: #2C3E50; margin: 0 0 20px 0; }
     .capsule-hero p { font-size: 1.1rem; color: #666; max-width: 600px; margin: 0 auto; line-height: 1.6; }
     
-    /* 筛选器 */
+    /* === 3. 筛选器 === */
     .capsule-filters { display: flex; justify-content: center; gap: 15px; flex-wrap: wrap; margin-bottom: 60px; margin-top: 30px; }
     .filter-tag { padding: 10px 25px; border-radius: 50px; background: #e0e0e0; color: #555; font-weight: 600; cursor: pointer; border: none; font-size: 0.95rem; transition: 0.3s; }
     .filter-tag:hover { background: #d0d0d0; transform: translateY(-2px); }
     .filter-tag.active { background: #2C3E50; color: white; box-shadow: 0 4px 10px rgba(44, 62, 80, 0.3); }
 
-    /* 网格布局 */
+    /* === 4. 网格布局 === */
     .capsule-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; max-width: 1200px; margin: 0 auto; padding: 0 20px 100px; }
     
-    /* 卡片样式 */
+    /* === 5. 卡片样式 === */
     .course-card { 
         background: white; border-radius: 12px; 
-        border-top: 5px solid #C41E3A; /* 默认红色顶条 */
+        border-top: 5px solid #C41E3A; /* 默认红色 */
         box-shadow: 0 5px 20px rgba(0,0,0,0.05); padding: 30px; 
         display: flex; flex-direction: column; align-items: flex-start;
         transition: all 0.3s ease; height: 100%;
@@ -47,7 +57,7 @@
     
     .inquire-btn { 
         width: 100%; padding: 12px; background: #2C3E50; color: white; 
-        text-align: center; border-radius: 8px; font-weight: bold; cursor: pointer; border: none; transition: 0.3s; margin-top: auto;
+        text-align: center; border-radius: 8px; font-weight: bold; cursor: pointer; border: none; transition: 0.3s; margin-top: auto; 
     }
     .inquire-btn:hover { background: #C41E3A; }
 </style>
