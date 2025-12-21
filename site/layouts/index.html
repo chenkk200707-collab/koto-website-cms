@@ -29,32 +29,31 @@
         position: fixed; top: 0; left: 0; width: 100%; z-index: 99999; 
     }
 
-    /* [修改] Logo 大小控制 */
     .nav-logo {
         height: 100%;
         display: flex; align-items: center;
     }
+    /* [修改] Logo 高度加大到 70px */
     .nav-logo img {
-        height: 45px; /* [调整] 缩小 Logo 高度，显得更精致 */
+        height: 70px; 
         width: auto;
-        max-width: 180px; /* 防止过宽 */
         object-fit: contain;
     }
 
     .nav-links { display: flex; gap: 30px; align-items: center; }
 
-    /* [修改] 菜单文字加大加粗 */
+    /* 菜单文字 */
     .nav-item {
-        font-size: 1.1rem; /* [调整] 加大字号 */
-        font-weight: 800;  /* [调整] 加粗 */
+        font-size: 1.1rem; 
+        font-weight: 800;
         color: var(--k-red); 
         position: relative; 
         padding: 5px 0; 
         cursor: pointer;
-        letter-spacing: 0.5px; /* 增加一点字间距 */
+        letter-spacing: 0.5px;
     }
     .nav-item::after {
-        content: ''; position: absolute; bottom: 0; left: 0; width: 0; height: 3px; /* 线条也稍微加粗 */
+        content: ''; position: absolute; bottom: 0; left: 0; width: 0; height: 3px;
         background: var(--k-red); transition: 0.3s;
     }
     .nav-item:hover::after { width: 100%; }
@@ -63,7 +62,7 @@
     .nav-btn-cta {
         background-color: var(--k-red); color: white !important;
         padding: 12px 28px; border-radius: 50px; 
-        font-weight: 800; /* 按钮文字也加粗 */
+        font-weight: 800;
         font-size: 1rem;
         box-shadow: 0 4px 12px rgba(196, 30, 58, 0.3);
     }
