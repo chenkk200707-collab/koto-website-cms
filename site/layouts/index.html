@@ -1,148 +1,199 @@
-<!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Koto Immigration & Education - 首页</title>
-    <style>
-        /* --- 全局样式：红白配色 --- */
-        :root {
-            /* 核心修改：改回红色 (#D32F2F) 作为主色调 */
-            --primary-color: #D32F2F; 
-            --text-color: #333;
-            --bg-light: #fdfdfd;
-            --placeholder-color: #eeeeee; /* 灰色的图片占位符 */
-        }
+{{ define "main" }}
+<style>
+    /* === 核心配色 === */
+    :root {
+        --primary: #C41E3A; 
+        --secondary: #2C3E50;
+        --bg: #FFFFFF;
+        --light-gray: #F5F7FA;
+    }
 
-        body {
-            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            color: var(--text-color);
-            background-color: #fff;
-            line-height: 1.6;
-        }
+    /* === Hero 区域 === */
+    .hero-section {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 80px 10%;
+        background-color: var(--light-gray);
+        min-height: 500px;
+    }
+    .hero-text { flex: 1; padding-right: 50px; }
+    .hero-text h1 { 
+        font-size: 3.5rem; 
+        color: var(--secondary); 
+        margin-bottom: 20px; 
+        line-height: 1.1; 
+        font-weight: 800;
+    }
+    .hero-image img { width: 550px; max-width: 100%; height: auto; }
 
-        a { text-decoration: none; color: inherit; }
-        ul { list-style: none; padding: 0; margin: 0; }
+    /* 按钮 */
+    .cta-button {
+        background-color: var(--primary);
+        color: white;
+        padding: 18px 40px;
+        border-radius: 50px;
+        text-decoration: none;
+        font-weight: bold;
+        font-size: 1.1rem;
+        display: inline-block;
+        transition: transform 0.2s, box-shadow 0.2s;
+        box-shadow: 0 4px 15px rgba(196, 30, 58, 0.3);
+    }
+    .cta-button:hover { 
+        transform: translateY(-3px); 
+        box-shadow: 0 8px 25px rgba(196, 30, 58, 0.4);
+    }
 
-        /* --- 导航栏 (白底红字) --- */
-        header {
-            background: #fff;
-            border-bottom: 2px solid var(--primary-color); /* 底部加一条红线 */
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-        }
+    /* === 服务卡片 === */
+    .services-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        gap: 40px;
+        padding: 80px 10%;
+        background: white;
+    }
+    .service-card {
+        padding: 30px;
+        border-radius: 20px;
+        background: white;
+        border: 1px solid #f0f0f0;
+        text-align: center;
+        transition: 0.3s;
+    }
+    .service-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 20px 40px rgba(0,0,0,0.08);
+        border-color: transparent;
+    }
+    .service-card img { width: 70px; margin-bottom: 20px; }
+    .service-card h3 { color: var(--secondary); margin-bottom: 10px; }
+    .service-card p { color: #666; font-size: 0.9rem; }
 
-        nav {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 1rem 2rem;
-        }
+    /* === 🆕 新增：横向滑动区域样式 === */
+    .news-slider-container {
+        display: flex;
+        overflow-x: auto; 
+        gap: 30px;
+        padding: 10px 5px 30px 5px; 
+        scroll-snap-type: x mandatory;
+        -webkit-overflow-scrolling: touch;
+    }
+    
+    .news-slider-container::-webkit-scrollbar { height: 8px; }
+    .news-slider-container::-webkit-scrollbar-track { background: #f1f1f1; border-radius: 4px; }
+    .news-slider-container::-webkit-scrollbar-thumb { background: #ccc; border-radius: 4px; }
+    .news-slider-container::-webkit-scrollbar-thumb:hover { background: #999; }
 
-        .logo {
-            font-size: 1.8rem;
-            font-weight: bold;
-            color: var(--primary-color); /* Logo 红色 */
-        }
+    .news-card-slide {
+        min-width: 320px; 
+        max-width: 320px;
+        flex: 0 0 auto;
+        scroll-snap-align: start;
+        background: white; 
+        border-radius: 12px; 
+        overflow: hidden; 
+        box-shadow: 0 4px 20px rgba(0,0,0,0.05); 
+        transition: transform 0.3s ease;
+    }
+    .news-card-slide:hover { transform: translateY(-5px); }
 
-        .nav-links {
-            display: flex;
-            gap: 2rem;
-        }
+    @media (max-width: 768px) {
+        .hero-section { flex-direction: column; padding: 60px 20px; text-align: center; }
+        .hero-text { padding-right: 0; margin-bottom: 40px; }
+        .hero-text h1 { font-size: 2.5rem; }
+        .services-grid { padding: 60px 20px; }
+        .news-card-slide { min-width: 280px; max-width: 280px; }
+    }
+</style>
 
-        .nav-links a {
-            font-weight: 500;
-            transition: color 0.3s;
-        }
+<section class="hero-section">
+    <div class="hero-text">
+        <h1>Expert Guidance for<br>Your Canadian Journey</h1>
+        <p style="font-size: 1.2rem; color: #555; margin-bottom: 40px; max-width: 500px;">
+            基于官方 CRS 标准的精准规划。从留学到移民，我们为您定制最优路径。
+        </p>
+        <a href="/assessment.html" class="cta-button">开始免费评估 &rarr;</a>
+    </div>
+    <div class="hero-image">
+        <img src="/images/hero.png" alt="Consultant">
+    </div>
+</section>
 
-        .nav-links a:hover {
-            color: var(--primary-color);
-        }
+<section class="services-grid">
+    <div class="service-card">
+        <img src="/images/icon-english.png" alt="English" style="width:60px; margin-bottom:15px;">
+        <h3>雅思/思培提分</h3>
+        <p>名师一对一精准指导，针对性突破口语写作瓶颈，助您快速达到移民分数要求。</p>
+    </div>
+    <div class="service-card">
+        <img src="/images/icon-study.png" alt="Study" style="width:60px; margin-bottom:15px;">
+        <h3>美加留学规划</h3>
+        <p>从小学到博士的全龄段申请服务。顶尖名校文书定制，学签办理及拒签翻案。</p>
+    </div>
+    <div class="service-card">
+        <img src="/images/icon-ca.png" alt="Canada" style="width:60px; margin-bottom:15px;">
+        <h3>加拿大移民</h3>
+        <p>快速通道 (Express Entry)、省提名 (PNP)、家庭团聚及配偶工签全类别办理。</p>
+    </div>
+    <div class="service-card">
+        <img src="/images/icon-us.png" alt="USA" style="width:60px; margin-bottom:15px;">
+        <h3>美国移民</h3>
+        <p>杰出人才 (EB-1)、国家利益豁免 (NIW) 及跨国高管移民 (L1/EB-1C) 专业咨询。</p>
+    </div>
+</section>
 
-        /* --- 左右滑动的轮播图 (Slider) --- */
-        .slider-container {
-            position: relative;
-            width: 100%;
-            height: 500px; 
-            overflow: hidden;
-            background-color: #f0f0f0;
-        }
-
-        .slider-wrapper {
-            display: flex;
-            width: 100%;
-            height: 100%;
-            transition: transform 0.5s ease-in-out;
-        }
-
-        .slide {
-            min-width: 100%;
-            height: 100%;
-            position: relative;
-            /* 灰色背景作为占位，等待您放图片 */
-            background-color: #ddd; 
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        /* 这里我去掉了之前的蓝色背景，统一用灰色，避免颜色冲突 */
-        .slide:nth-child(1) { background-color: #e0e0e0; }
-        .slide:nth-child(2) { background-color: #d6d6d6; }
-        .slide:nth-child(3) { background-color: #cccccc; }
-
-        .slide-content {
-            text-align: center;
-            color: #fff;
-            background: rgba(211, 47, 47, 0.85); /* 红色半透明背景块 */
-            padding: 2.5rem;
-            border-radius: 4px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-        }
-
-        .slide-content h2 { font-size: 2.5rem; margin: 0 0 1rem 0; }
-        .slide-content p { font-size: 1.2rem; margin: 0; }
-
-        /* 轮播图按钮 */
-        .slider-btn {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            background: rgba(0,0,0,0.3);
-            color: white;
-            border: none;
-            padding: 1rem;
-            cursor: pointer;
-            font-size: 1.5rem;
-            z-index: 10;
-            transition: background 0.3s;
-        }
-        .slider-btn:hover { background: var(--primary-color); }
-        .prev-btn { left: 0; }
-        .next-btn { right: 0; }
-
-        /* --- 内容区域 --- */
-        .section {
-            padding: 5rem 2rem;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .section-title {
-            text-align: center;
-            margin-bottom: 3.5rem;
-            font-size: 2.2rem;
-            color: var(--primary-color); /* 标题红色 */
-            position: relative;
-        }
+<section style="padding: 60px 20px; background: #fafafa;">
+    <div style="max-width: 1200px; margin: 0 auto;"> 
+        <h2 style="color: var(--secondary); margin-bottom: 30px; text-align: left; padding-left: 5px;">最新移民资讯</h2>
         
-        /* 标题下的小红线装饰 */
-        .section-title::after {
-            content: '';
-            display: block;
-            width: 60
+        <div class="news-slider-container">
+            {{ range .Site.RegularPages }}
+            
+            {{/* Image Fetching Logic */}}
+            {{ $imgName := .Params.image }}
+            {{ $finalImg := "" }}
+            {{ if $imgName }}
+                {{ $res := .Resources.GetMatch $imgName }}
+                {{ if $res }}{{ $finalImg = $res.RelPermalink }}{{ end }}
+            {{ end }}
+            {{ if not $finalImg }}
+                {{ if $imgName }}
+                     {{ if or (hasPrefix $imgName "http") (hasPrefix $imgName "/") }}{{ $finalImg = $imgName }}
+                     {{ else }}{{ $finalImg = printf "/images/%s" $imgName }}{{ end }}
+                {{ else }}
+                    {{ $imgMatches := findRE `(?i)src="([^"]+)"` .Content 1 }}
+                    {{ if gt (len $imgMatches) 0 }}
+                        {{ $finalImg = index $imgMatches 0 | replaceRE `src="` "" | replaceRE `"` "" }}
+                    {{ end }}
+                {{ end }}
+            {{ end }}
+            {{ if not $finalImg }}{{ $finalImg = "/images/logo-koto.png" }}{{ end }}
+
+            <div class="news-card-slide">
+                <a href="{{ .Permalink }}" style="display: block; overflow: hidden;">
+                    <img src="{{ $finalImg }}" style="width: 100%; height: 200px; object-fit: cover; transition: transform 0.5s ease;">
+                </a>
+                
+                <div style="padding: 25px;">
+                    {{/* This matches the style where your file got cut off */}}
+                    <h3 style="margin: 0 0 10px 0; font-size: 1.1rem; line-height: 1.4; height: 3.2em; overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;">
+                        <a href="{{ .Permalink }}" style="color: inherit; text-decoration: none;">
+                            {{ .Title }}
+                        </a>
+                    </h3>
+                    
+                    <p style="font-size: 0.9rem; color: #666; margin-bottom: 20px; line-height: 1.6;">
+                        {{ .Summary | truncate 80 }}
+                    </p>
+                    
+                    <a href="{{ .Permalink }}" style="color: var(--primary); font-weight: bold; text-decoration: none; font-size: 0.9rem;">
+                        Read More &rarr;
+                    </a>
+                </div>
+            </div>
+            {{ end }} {{/* Closes the Loop */}}
+        </div>
+    </div>
+</section>
+{{ end }} {{/* Closes the Main definition */}}
