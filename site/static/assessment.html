@@ -6,7 +6,7 @@
     <title>KOTO 官方 CRS 移民算分器 | 2025 旗舰版</title>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
-        /* --- 视觉系统 (保持不变) --- */
+        /* --- 视觉系统 --- */
         :root {
             --bg-cream: #F5F0E6;
             --brand-navy: #182B45;
@@ -24,18 +24,21 @@
             font-family: 'Noto Sans SC', sans-serif;
             margin: 0;
             padding: 0;
-            padding-bottom: 200px;
+            padding-bottom: 200px; /* 为底部悬浮条留出空间 */
         }
 
         .container { max-width: 850px; margin: 0 auto; padding: 20px; }
 
+        /* 顶部导航 */
         header { display: flex; justify-content: space-between; align-items: center; padding: 20px 0; margin-bottom: 20px; }
-        .logo { font-weight: 800; font-size: 1.5rem; color: var(--brand-navy); text-decoration: none; }
-        .back-link { color: #666; text-decoration: none; font-size: 0.9rem; }
+        .logo-img { height: 60px; width: auto; display: block; }
+        .back-link { color: #666; text-decoration: none; font-size: 0.9rem; font-weight: 500; transition: 0.2s; }
+        .back-link:hover { color: var(--brand-gold); }
 
-        h1 { text-align: center; color: var(--brand-navy); margin-bottom: 10px; }
+        h1 { text-align: center; color: var(--brand-navy); margin-bottom: 10px; font-weight: 800; }
         .subtitle { text-align: center; color: #666; font-size: 0.9rem; margin-bottom: 40px; }
 
+        /* --- 卡片样式 --- */
         .section-card {
             background: var(--card-white);
             border-radius: 20px;
@@ -43,17 +46,19 @@
             margin-bottom: 30px;
             box-shadow: var(--shadow-soft);
             border: 1px solid rgba(255,255,255,0.6);
+            transition: transform 0.2s;
         }
+        .section-card:hover { transform: translateY(-2px); }
 
         h2 { color: var(--brand-navy); font-size: 1.3rem; margin-top: 0; margin-bottom: 15px; border-bottom: 2px solid #eee; padding-bottom: 15px;}
         h3 { color: var(--brand-gold); font-size: 1.1rem; margin-top: 30px; margin-bottom: 15px; text-transform: uppercase; letter-spacing: 1px; }
 
         .section-intro {
             font-size: 0.95rem;
-            color: #666;
+            color: #555;
             margin-bottom: 25px;
             line-height: 1.6;
-            background: #f9f9f9;
+            background: #fdfcf8;
             padding: 15px;
             border-radius: 10px;
             border-left: 4px solid var(--brand-gold);
@@ -64,6 +69,7 @@
 
         label { display: block; font-weight: 700; margin-bottom: 10px; color: var(--brand-navy); }
         
+        /* --- 输入框样式 --- */
         select, input {
             width: 100%;
             padding: 14px;
@@ -76,10 +82,18 @@
             outline: none;
             cursor: pointer;
             transition: 0.2s;
+            appearance: none; /* 移除默认箭头 */
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23C5A059' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 15px center;
+            background-size: 16px;
         }
         select:focus { border: 1px solid var(--brand-gold); background: #fff; }
+        
+        /* 默认占位符颜色 */
         select:invalid, select option[value=""] { color: #999; }
 
+        /* --- 底部悬浮算分条 --- */
         .score-bar {
             position: fixed;
             bottom: 20px;
@@ -96,10 +110,13 @@
             justify-content: space-between;
             align-items: center;
             z-index: 999;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.1);
         }
         .score-left { display: flex; flex-direction: column; }
         .score-label { font-size: 0.9rem; opacity: 0.8; margin-bottom: 5px; }
-        .total-score { font-size: 2.5rem; font-weight: 800; color: var(--brand-gold); line-height: 1; }
+        .total-score { font-size: 2.5rem; font-weight: 800; color: var(--brand-gold); line-height: 1; text-shadow: 0 2px 10px rgba(0,0,0,0.2); }
+        
         .contact-btn {
             background: var(--brand-gold);
             color: var(--brand-navy);
@@ -108,15 +125,16 @@
             text-decoration: none;
             font-weight: bold;
             transition: 0.2s;
+            box-shadow: 0 4px 15px rgba(197, 160, 89, 0.4);
         }
-        .contact-btn:hover { background: #fff; }
+        .contact-btn:hover { background: #fff; transform: translateY(-2px); }
 
         .hidden { display: none; }
 
         @media (max-width: 768px) {
             .form-grid { grid-template-columns: 1fr; }
             .full-width { grid-column: span 1; }
-            .score-bar { flex-direction: column; gap: 15px; text-align: center; bottom: 10px; }
+            .score-bar { flex-direction: column; gap: 15px; text-align: center; bottom: 10px; width: 95%; }
         }
     </style>
 </head>
@@ -124,12 +142,14 @@
 
     <div class="container">
         <header>
-            <a href="/" class="logo">KOTO <span style="color:var(--brand-gold)">IMMIGRATION</span></a>
+            <a href="/">
+                <img src="/images/logo-koto.jpg" alt="KOTO Immigration" class="logo-img">
+            </a>
             <a href="/" class="back-link">← 返回首页</a>
         </header>
 
         <h1>官方 CRS 移民算分器</h1>
-        <p class="subtitle">基于 IRCC 2025 最新算法 • 含法语 & 技工加分</p>
+        <p class="subtitle">基于加拿大移民局 (IRCC) 2025 最新算法标准</p>
 
         <form id="crsForm">
             
@@ -325,8 +345,8 @@
                         <select id="jobOffer" onchange="runCalculations()" required>
                             <option value="" disabled selected>请选择...</option>
                             <option value="0">无</option>
-                            <option value="0">普通职位 (0分 - 暂停加分)</option>
-                            <option value="0">00类高管 (0分 - 暂停加分)</option>
+                            <option value="0">普通职位 (暂停加分)</option>
+                            <option value="0">00类高管 (暂停加分)</option>
                         </select>
                     </div>
                     <div>
@@ -431,7 +451,7 @@
             return parseInt(el.value); 
         }
 
-        // 更新法语分数对象
+        // 更新法语分数
         function updateFrench() {
             const level = document.getElementById('lang2Select').value;
             if(level === 'clb7') lang2Vals = {s:6, l:6, r:6, w:6}; // CLB 7+
@@ -519,13 +539,13 @@
             }
             score += cdnScore;
 
-            // 配偶加分逻辑同步
+            // 配偶加分逻辑 (更新后)
             if(isMarriedCalc) {
                 score += getVal('spouseEdu');
                 score += getVal('spouseCdnExp');
-                // 配偶语言分：单项分 * 4 (假设四项能力均衡，这是单下拉框的简化算法)
-                let spLangVal = getVal('spouseLang');
-                score += (spLangVal * 4);
+                // 语言：单项分 x 4
+                let spLang = getVal('spouseLang');
+                score += (spLang * 4);
             }
 
             // --- 2. 交叉项 (Transferability) ---
