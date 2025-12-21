@@ -127,23 +127,28 @@
         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px;">
             {{ range first 3 .Site.RegularPages }}
             
-            {{/* 1. 获取图片路径 */}}
+            {{/* 1. 获取图片 */}}
             {{ $img := .Params.image }}
-            {{/* 2. 自动抓取逻辑 */}}
+
+            {{/* 2. 自动抓取逻辑 (如果没设置封面) */}}
             {{ if not $img }}
                 {{ $imgMatches := findRE `(?i)src="([^"]+)"` .Content 1 }}
                 {{ if gt (len $imgMatches) 0 }}
                     {{ $img = index $imgMatches 0 | replaceRE `src="` "" | replaceRE `"` "" }}
                 {{ end }}
             {{ end }}
+
             {{/* 3. 兜底逻辑 */}}
             {{ if not $img }}
                 {{ $img = "/images/logo-koto.png" }}
             {{ end }}
 
-            {{/* 🛠️ 关键修复：强制检查并添加斜杠 */}}
-            {{ if and $img (not (hasPrefix $img "/")) (not (hasPrefix $img "http")) }}
-                {{ $img = printf "/%s" $img }}
+            {{/* 🛠️ 关键修复 V5.0：智能修正路径 */}}
+            {{/* 如果图片不是以 http 开头，也不是以 /images/ 开头，说明它只是个光秃秃的文件名 */}}
+            {{ if and $img (not (hasPrefix $img "http")) (not (hasPrefix $img "/images/")) }}
+                {{/* 帮它加上常见的 CMS 上传文件夹前缀 */}}
+                {{ $img = printf "/images/uploads/%s" $img }}
+                {{/* 如果你的图片是直接放在 images 下的，就把上面那行改成 printf "/images/%s" */}}
             {{ end }}
 
             <div style="background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.05); transition: transform 0.3s ease;">
@@ -157,7 +162,7 @@
                     </h3>
                     <a href="{{ .Permalink }}" style="color: var(--primary); font-weight: bold; font-size: 0.9rem; text-decoration: none; display: inline-block; margin-top: 10px;">阅读全文 &rarr;</a>
                     
-                    <p style="color: red; font-size: 0.7rem; margin-top: 5px;">Debug: {{ $img }}</p>
+                    <p style="color: #999; font-size: 0.7rem; margin-top: 5px;">Source: {{ $img }}</p>
                 </div>
             </div>
             {{ end }}
