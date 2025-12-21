@@ -1,301 +1,207 @@
 {{ define "main" }}
 <style>
-    /* === 1. 核心变量 (Koto Brand) === */
+    /* 1. 隐藏通用导航 */
+    header, nav, .koto-nav-wrapper { display: none !important; }
+
+    /* 2. 核心样式 */
     :root {
         --k-red: #C41E3A;
         --k-dark: #2C3E50;
         --k-gray: #F5F7FA;
         --k-text: #333;
-        --k-light-text: #666;
         --k-border-radius: 12px;
     }
-
-    /* === 2. 基础重置 & 隐藏主导航 === */
-    header, nav, .koto-nav-wrapper { display: none !important; }
-
-    body {
-        margin: 0; padding: 0;
-        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-        background-color: #fff; color: var(--k-text);
-        overflow-x: hidden;
-    }
+    body { font-family: -apple-system, BlinkMacSystemFont, sans-serif; background-color: #fff; color: var(--k-text); margin: 0; padding: 0; }
     * { box-sizing: border-box; }
-    a { text-decoration: none; color: inherit; transition: 0.3s; }
 
-    /* === 3. 独立沉浸式头部 (Standalone Header) === */
+    /* 3. 独立头部 (无“我的课程”) */
     .capsule-header {
         display: flex; justify-content: space-between; align-items: center;
         padding: 15px 5%; height: 70px;
-        background: rgba(255,255,255,0.95);
-        backdrop-filter: blur(10px);
-        border-bottom: 1px solid #eee;
-        position: sticky; top: 0; z-index: 100;
+        background: rgba(255,255,255,0.95); backdrop-filter: blur(10px);
+        border-bottom: 1px solid #eee; position: sticky; top: 0; z-index: 100;
     }
-
-    /* 左侧：返回首页 + Logo */
     .header-left { display: flex; align-items: center; gap: 20px; }
-    .back-link {
-        font-size: 0.9rem; color: #999; display: flex; align-items: center; gap: 5px; font-weight: 500;
-    }
+    .back-link { font-size: 0.9rem; color: #999; display: flex; align-items: center; gap: 5px; font-weight: 500; text-decoration: none; }
     .back-link:hover { color: var(--k-red); }
-    .brand-logo { font-size: 1.4rem; font-weight: 800; color: var(--k-dark); letter-spacing: -0.5px; }
+    .brand-logo { font-size: 1.4rem; font-weight: 800; color: var(--k-dark); }
     .brand-logo span { color: var(--k-red); }
 
-    /* 右侧：我的课程按钮 */
-    .my-course-btn {
-        padding: 8px 20px;
-        border: 1px solid var(--k-dark);
-        border-radius: 50px;
-        color: var(--k-dark);
-        font-size: 0.9rem; font-weight: 600;
-        display: flex; align-items: center; gap: 8px;
-        transition: 0.3s;
-    }
-    .my-course-btn:hover {
-        background-color: var(--k-dark); color: white;
-    }
-
-    /* === 4. Hero 区域 === */
-    .capsule-hero {
-        text-align: center; padding: 80px 20px 40px; background-color: var(--k-gray);
-    }
+    /* 4. Hero */
+    .capsule-hero { text-align: center; padding: 60px 20px 40px; background-color: var(--k-gray); }
     .hero-badge {
-        display: inline-block; background: rgba(196, 30, 58, 0.1); color: var(--k-red);
-        font-size: 0.85rem; font-weight: bold; padding: 6px 12px; border-radius: 4px;
-        margin-bottom: 20px; text-transform: uppercase; letter-spacing: 1px;
+        display: inline-block; background: #CFA45C; /* 图中那个金色的颜色 */
+        color: white; font-size: 0.85rem; font-weight: bold; padding: 6px 15px; border-radius: 50px;
+        margin-bottom: 20px;
     }
-    .capsule-hero h1 { font-size: 2.8rem; font-weight: 800; color: var(--k-dark); margin: 0 0 20px 0; line-height: 1.2; }
-    .capsule-hero p { font-size: 1.15rem; color: var(--k-light-text); max-width: 600px; margin: 0 auto; line-height: 1.6; }
+    .capsule-hero h1 { font-size: 2.5rem; font-weight: 800; color: var(--k-dark); margin: 0 0 20px 0; }
+    .capsule-hero p { font-size: 1.1rem; color: #666; max-width: 600px; margin: 0 auto; line-height: 1.6; }
 
-    /* === 5. 筛选标签 === */
-    .capsule-filters {
-        display: flex; justify-content: center; gap: 15px; flex-wrap: wrap; margin-bottom: 60px; padding: 0 20px;
-    }
-    .filter-tag {
-        padding: 10px 25px; border-radius: 50px; background: #fff; border: 1px solid #eee;
-        color: #666; font-weight: 600; cursor: pointer; transition: 0.3s;
-    }
-    .filter-tag:hover { border-color: #ddd; }
-    .filter-tag.active { background: var(--k-red); color: white; border-color: var(--k-red); box-shadow: 0 4px 12px rgba(196,30,58,0.3); }
+    /* 5. 筛选器 */
+    .capsule-filters { display: flex; justify-content: center; gap: 15px; flex-wrap: wrap; margin-bottom: 60px; padding: 0 20px; margin-top: 30px; }
+    .filter-tag { padding: 10px 25px; border-radius: 50px; background: #e0e0e0; color: #555; font-weight: 600; cursor: pointer; transition: 0.3s; }
+    .filter-tag:hover { background: #d0d0d0; }
+    .filter-tag.active { background: var(--k-dark); color: white; }
 
-    /* === 6. 课程卡片网格 === */
+    /* 6. 卡片网格 */
     .capsule-grid {
-        display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-        gap: 35px; max-width: 1200px; margin: 0 auto; padding: 0 20px 80px;
+        display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 30px; max-width: 1200px; margin: 0 auto; padding: 0 20px 100px;
     }
-
     .course-card {
-        background: white; border-radius: var(--k-border-radius);
-        border-top: 5px solid var(--k-red); /* Koto 特征红线 */
-        box-shadow: 0 5px 20px rgba(0,0,0,0.05);
-        padding: 35px 30px;
+        background: white; border-radius: 12px;
+        border-top: 5px solid var(--k-red); /* 雅思红 */
+        box-shadow: 0 5px 20px rgba(0,0,0,0.05); padding: 30px;
         display: flex; flex-direction: column; align-items: flex-start;
-        transition: transform 0.3s, box-shadow 0.3s;
-        position: relative;
+        transition: 0.3s; position: relative; height: 100%;
     }
+    .course-card.blue-top { border-top-color: #3b82f6; } /* 思培蓝 */
+    .course-card.gold-top { border-top-color: #CFA45C; } /* 法语金 */
+
     .course-card:hover { transform: translateY(-5px); box-shadow: 0 15px 40px rgba(0,0,0,0.1); }
-
-    .card-icon { font-size: 2.5rem; margin-bottom: 20px; }
-    .card-category { font-size: 0.75rem; font-weight: bold; color: #999; text-transform: uppercase; margin-bottom: 10px; letter-spacing: 1px; }
-    .card-title { font-size: 1.4rem; font-weight: 800; color: var(--k-dark); margin: 0 0 15px 0; line-height: 1.3; }
-    .card-desc { font-size: 0.95rem; color: var(--k-light-text); line-height: 1.6; margin-bottom: 30px; flex-grow: 1; }
-
-    /* 咨询按钮 */
+    .card-category { font-size: 0.75rem; font-weight: bold; color: #999; text-transform: uppercase; margin-bottom: 15px; letter-spacing: 1px; }
+    .card-icon { font-size: 2.5rem; margin-bottom: 15px; }
+    .card-title { font-size: 1.3rem; font-weight: 800; color: var(--k-dark); margin: 0 0 10px 0; line-height: 1.3; }
+    .card-desc { font-size: 0.9rem; color: #666; line-height: 1.6; margin-bottom: 25px; flex-grow: 1; }
+    
     .inquire-btn {
-        width: 100%; padding: 14px;
-        background: var(--k-red); color: white;
-        text-align: center; border-radius: 8px; font-weight: bold; font-size: 1rem;
-        cursor: pointer; border: none; transition: 0.3s;
+        width: 100%; padding: 12px; background: var(--k-dark); color: white;
+        text-align: center; border-radius: 8px; font-weight: bold; cursor: pointer; border: none; transition: 0.3s;
     }
-    .inquire-btn:hover { background: #a01830; }
+    .inquire-btn:hover { background: var(--k-red); }
 
-    /* === 7. 弹窗样式 (Modal) === */
+    /* 7. 弹窗 */
     .modal-overlay {
         position: fixed; top: 0; left: 0; width: 100%; height: 100%;
         background: rgba(0,0,0,0.6); backdrop-filter: blur(5px);
-        z-index: 1000;
-        display: none; /* 默认隐藏 */
-        align-items: center; justify-content: center;
-        opacity: 0; transition: opacity 0.3s;
+        z-index: 1000; display: none; align-items: center; justify-content: center;
     }
-    .modal-overlay.show { display: flex; opacity: 1; }
-
+    .modal-overlay.show { display: flex; }
     .modal-box {
-        background: white; width: 90%; max-width: 450px;
-        border-radius: 16px; padding: 40px; text-align: center;
-        position: relative; transform: scale(0.9); transition: transform 0.3s;
-        box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+        background: white; width: 90%; max-width: 400px; border-radius: 16px; padding: 40px; text-align: center; position: relative;
     }
-    .modal-overlay.show .modal-box { transform: scale(1); }
-
-    .modal-close {
-        position: absolute; top: 15px; right: 20px; font-size: 1.5rem; color: #999; cursor: pointer;
-    }
-    .modal-close:hover { color: #333; }
-
-    /* 咨询弹窗内容 */
-    .modal-icon { font-size: 3rem; margin-bottom: 15px; }
-    .modal-title { font-size: 1.5rem; font-weight: 800; color: var(--k-dark); margin-bottom: 10px; }
-    .modal-subtitle { font-size: 1rem; color: #666; margin-bottom: 25px; }
-    .course-highlight { color: var(--k-red); font-weight: bold; background: #fff0f0; padding: 2px 8px; border-radius: 4px; }
+    .modal-close { position: absolute; top: 15px; right: 20px; font-size: 1.5rem; color: #999; cursor: pointer; }
     
-    .qr-placeholder {
-        width: 200px; height: 200px; background: #f0f0f0; margin: 0 auto 20px;
-        display: flex; align-items: center; justify-content: center; 
-        border-radius: 8px; overflow: hidden; /* 防止图片溢出圆角 */
+    .qr-box {
+        width: 100%; aspect-ratio: 1/1; background: #f9f9f9; margin: 20px 0; border-radius: 8px;
+        display: flex; align-items: center; justify-content: center; overflow: hidden;
     }
-    /* 二维码图片适配 */
-    .qr-placeholder img { width: 100%; height: 100%; object-fit: contain; }
+    .qr-box img { width: 100%; height: 100%; object-fit: contain; }
 
-    .wechat-id-box {
-        background: #f9f9f9; padding: 12px; border-radius: 8px; font-family: monospace; font-size: 1.1rem; color: #333;
-        display: flex; justify-content: center; align-items: center; gap: 10px; cursor: pointer; border: 1px dashed #ccc;
+    .wechat-copy {
+        background: #f0f0f0; padding: 10px; border-radius: 6px; font-family: monospace; font-size: 1.1rem; cursor: pointer; border: 1px dashed #ccc;
     }
-    .wechat-id-box:active { background: #e0e0e0; }
-
-    /* 登录弹窗内容 */
-    .login-input {
-        width: 100%; padding: 12px; border: 2px solid #eee; border-radius: 8px; font-size: 1rem; margin-bottom: 20px; text-align: center; outline: none; transition: 0.3s;
-    }
-    .login-input:focus { border-color: var(--k-red); }
-    .login-btn {
-        width: 100%; padding: 12px; background: var(--k-dark); color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer;
-    }
-    .login-btn:hover { background: #444; }
-
 </style>
 
 <div class="capsule-header">
     <div class="header-left">
-        <a href="/" class="back-link">
-            <span>&larr;</span> 返回首页
-        </a>
+        <a href="/" class="back-link"><span>&larr;</span> 返回首页</a>
         <div class="brand-logo">KOTO<span>.</span></div>
     </div>
-    <button class="my-course-btn" onclick="openLoginModal()">
-        <span>🎓</span> 我的课程
-    </button>
-</div>
+    </div>
 
 <div class="capsule-hero">
     <span class="hero-badge">KOTO 10-Day Method</span>
-    <h1>Visual "Capsules" for Language Mastery</h1>
-    <p>拒绝死记硬背。用视觉逻辑重塑语言系统。<br>专为解决雅思、思培、法语学习中的特定痛点设计。</p>
+    <h1>Visual "Capsules" for<br>Language Mastery.</h1>
+    <p>Don't memorize dead scripts. Digest the logic.<br>Our visual mini-courses are designed to cure specific pains in just 10 days.</p>
 </div>
 
 <div class="capsule-filters">
-    <div class="filter-tag active">全部课程</div>
-    <div class="filter-tag">雅思 IELTS</div>
-    <div class="filter-tag">思培 CELPIP</div>
-    <div class="filter-tag">法语 TEF</div>
+    <div class="filter-tag active">All Capsules</div>
+    <div class="filter-tag">IELTS 7.0+</div>
+    <div class="filter-tag">CELPIP & Life</div>
+    <div class="filter-tag">Vocab & French</div>
 </div>
 
 <div class="capsule-grid">
-    
-    {{ $capsules := where .Site.RegularPages "Section" "capsules" }}
-    
-    {{ if gt (len $capsules) 0 }}
-        {{ range $capsules }}
-        <div class="course-card">
-            <div class="card-category">{{ .Params.category | default "COURSE" }}</div>
-            <div class="card-icon">{{ .Params.icon | default "🚀" }}</div>
-            <h3 class="card-title">{{ .Title }}</h3>
-            <p class="card-desc">{{ .Params.description | default .Summary | truncate 80 }}</p>
-            <button class="inquire-btn" onclick="openInquireModal('{{ .Title }}')">咨询获取</button>
-        </div>
-        {{ end }}
-    {{ else }}
-        <div class="course-card">
-            <div class="card-category">IELTS SPEAKING</div>
-            <div class="card-icon">🗣️</div>
-            <h3 class="card-title">雅思口语 7.0+ 视觉逻辑课</h3>
-            <p class="card-desc">学会3步视觉逻辑法，瞬间破解 Part 2 & 3 难题，告别中式翻译思维。</p>
-            <button class="inquire-btn" onclick="openInquireModal('雅思口语 7.0+ 视觉逻辑课')">咨询获取</button>
-        </div>
-        
-        <div class="course-card">
-            <div class="card-category">CELPIP</div>
-            <div class="card-icon">🖼️</div>
-            <h3 class="card-title">思培：看图说话大师</h3>
-            <p class="card-desc">万能看图框架，从容应对思培口语 Task 1，永远有话可说。</p>
-            <button class="inquire-btn" onclick="openInquireModal('思培：看图说话大师')">咨询获取</button>
-        </div>
-        
-        <div class="course-card">
-            <div class="card-category">IELTS WRITING</div>
-            <div class="card-icon">📊</div>
-            <h3 class="card-title">小作文：数据解码器</h3>
-            <p class="card-desc">线图、柱状图、地图题的视觉化拆解。掌握精准的趋势描述词汇。</p>
-            <button class="inquire-btn" onclick="openInquireModal('小作文：数据解码器')">咨询获取</button>
-        </div>
-    {{ end }}
 
-</div>
-
-<div class="modal-overlay" id="inquireModal">
-    <div class="modal-box">
-        <div class="modal-close" onclick="closeModals()">&times;</div>
-        <div class="modal-icon">💬</div>
-        <div class="modal-title">获取课程指引</div>
-        <p class="modal-subtitle">您正在咨询：<br><span class="course-highlight" id="targetCourseName">...</span></p>
-        
-        <div class="qr-placeholder">
-            <img src="/images/qr-code1.png" alt="客服二维码" onerror="this.style.display='none'; this.parentNode.innerText='[ 图片未找到: 请检查 /static/images/qr-code1.png ]'">
-        </div>
-        
-        <p style="font-size:0.9rem; color:#888; margin-bottom:10px;">点击下方复制微信号添加客服</p>
-        <div class="wechat-id-box" onclick="copyWechat()">
-            <span id="wechatId">KotoHelp2025</span> 📋
-        </div>
+    <div class="course-card">
+        <div class="card-category">IELTS SPEAKING</div>
+        <div class="card-icon">🗣️</div>
+        <h3 class="card-title">IELTS Speaking 7.0+ Visual Logic</h3>
+        <p class="card-desc">Stop translating. Start visualizing. Learn the 3-step visual logic to answer any Part 2 & 3 question instantly.</p>
+        <button class="inquire-btn" onclick="openModal('雅思口语 7.0+ 视觉逻辑')">Get Capsule</button>
     </div>
+
+    <div class="course-card">
+        <div class="card-category">IELTS WRITING</div>
+        <div class="card-icon">📊</div>
+        <h3 class="card-title">Task 1: Data Decoder</h3>
+        <p class="card-desc">Visual capsules to master line graphs, bar charts, and maps. Precise vocabulary for trends and comparisons.</p>
+        <button class="inquire-btn" onclick="openModal('雅思小作文 Data Decoder')">Get Capsule</button>
+    </div>
+
+    <div class="course-card">
+        <div class="card-category">IELTS WRITING</div>
+        <div class="card-icon">🏗️</div>
+        <h3 class="card-title">Task 2: Argument Builder</h3>
+        <p class="card-desc">The "Lego" method for essay structures. Build cohesive, high-scoring arguments without writer's block.</p>
+        <button class="inquire-btn" onclick="openModal('雅思大作文 Argument Builder')">Get Capsule</button>
+    </div>
+
+    <div class="course-card gold-top" style="border-top-color:#CFA45C">
+        <div class="card-category">GENERAL ENGLISH</div>
+        <div class="card-icon">🚀</div>
+        <h3 class="card-title">Vocab Upgrade: Simple to Elite</h3>
+        <p class="card-desc">Transform your language from "Good" to "Exceptional". Replace basic words with precise, high-level alternatives.</p>
+        <button class="inquire-btn" onclick="openModal('词汇升级 Vocab Upgrade')">Get Capsule</button>
+    </div>
+
+    <div class="course-card blue-top">
+        <div class="card-category">CELPIP / LIFE</div>
+        <div class="card-icon">🏡</div>
+        <h3 class="card-title">CELPIP Daily Scene Vocab</h3>
+        <p class="card-desc">300 Essential words for Canadian life. From banking to barbecues, know exactly what to say.</p>
+        <button class="inquire-btn" onclick="openModal('思培生活词汇')">Get Capsule</button>
+    </div>
+
+    <div class="course-card blue-top">
+        <div class="card-category">CELPIP SPEAKING</div>
+        <div class="card-icon">🖼️</div>
+        <h3 class="card-title">Image Narration Master</h3>
+        <p class="card-desc">A visual framework to describe any image in CELPIP Speaking Task 1. Structure your observation perfectly.</p>
+        <button class="inquire-btn" onclick="openModal('思培看图说话')">Get Capsule</button>
+    </div>
+
+    <div class="course-card gold-top">
+        <div class="card-category">FRENCH TEF/TCF</div>
+        <div class="card-icon">🇫🇷</div>
+        <h3 class="card-title">French CLB 7 Accelerator</h3>
+        <p class="card-desc">Focused vocabulary and structures specifically designed to hit that CLB 7 bonus point threshold for Express Entry.</p>
+        <button class="inquire-btn" onclick="openModal('法语 CLB7 加速营')">Get Capsule</button>
+    </div>
+
 </div>
 
-<div class="modal-overlay" id="loginModal">
+<div class="modal-overlay" id="contactModal">
     <div class="modal-box">
-        <div class="modal-close" onclick="closeModals()">&times;</div>
-        <div class="modal-icon">🔒</div>
-        <div class="modal-title">学员登录</div>
-        <p class="modal-subtitle">请输入您的课程通行密码</p>
+        <div class="modal-close" onclick="closeModal()">&times;</div>
+        <h3>获取课程指引</h3>
+        <p style="color:#666; margin-bottom:5px;">您正在咨询：</p>
+        <p style="color:var(--k-red); font-weight:bold; margin-top:0;" id="modalCourseName">...</p>
         
-        <input type="password" id="coursePwd" class="login-input" placeholder="输入密码 (试一试: koto)">
-        <button class="login-btn" onclick="checkLogin()">解锁课程</button>
-        <p id="loginMsg" style="color:red; font-size:0.85rem; margin-top:10px; display:none;">密码错误，请联系客服获取。</p>
+        <div class="qr-box">
+            <img src="/images/qr-code1.png" alt="客服二维码" onerror="this.parentElement.innerText='[未找到图片 /images/qr-code1.png]'">
+        </div>
+        
+        <p style="font-size:0.9rem; color:#999;">点击下方复制微信号</p>
+        <div class="wechat-copy" onclick="copyWx()">KotoHelp2025 📋</div>
     </div>
 </div>
 
 <script>
-    function openInquireModal(courseName) {
-        document.getElementById('targetCourseName').innerText = courseName;
-        document.getElementById('inquireModal').classList.add('show');
+    function openModal(name) {
+        document.getElementById('modalCourseName').innerText = name;
+        document.getElementById('contactModal').classList.add('show');
     }
-    function openLoginModal() {
-        document.getElementById('loginModal').classList.add('show');
-        document.getElementById('loginMsg').style.display = 'none';
+    function closeModal() {
+        document.querySelector('.modal-overlay').classList.remove('show');
     }
-    function closeModals() {
-        document.querySelectorAll('.modal-overlay').forEach(el => el.classList.remove('show'));
-    }
-    document.querySelectorAll('.modal-overlay').forEach(el => {
-        el.addEventListener('click', function(e) {
-            if (e.target === this) closeModals();
-        });
+    document.querySelector('.modal-overlay').addEventListener('click', function(e){
+        if(e.target === this) closeModal();
     });
-    function copyWechat() {
-        const wxId = document.getElementById('wechatId').innerText;
-        navigator.clipboard.writeText(wxId).then(() => {
-            alert('微信号 ' + wxId + ' 已复制！请打开微信添加好友。');
-        });
-    }
-    function checkLogin() {
-        const pwd = document.getElementById('coursePwd').value;
-        const msg = document.getElementById('loginMsg');
-        if (pwd === 'koto' || pwd === 'koto2025') {
-            alert('密码正确！正在跳转至课程页面...');
-            closeModals();
-        } else {
-            msg.style.display = 'block';
-            document.getElementById('coursePwd').style.borderColor = 'red';
-        }
+    function copyWx() {
+        navigator.clipboard.writeText('KotoHelp2025').then(() => alert('微信号已复制'));
     }
 </script>
 
