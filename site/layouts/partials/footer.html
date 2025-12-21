@@ -45,10 +45,16 @@
       <div style="flex: 1; min-width: 250px;">
         <h5 style="color: #182B45; font-weight: bold; margin-bottom: 20px; font-size: 1.1rem;">快速导航</h5>
         <ul style="list-style: none; padding: 0; line-height: 2.2;">
-          <li><a href="/" style="color: #666; text-decoration: none; transition: 0.3s;">回到首页 (Home)</a></li>
-          <li><a href="/assessment.html" style="color: #C41E3A; font-weight: bold; text-decoration: none;">CRS 算分器 (免费评估)</a></li>
-          <li><a href="#" style="color: #C5A059; font-weight: bold; text-decoration: none;">视频课程 (Video Courses)</a></li>
-          <li><a href="/#contact" style="color: #4CAF50; font-weight: bold; text-decoration: none;">预约咨询 (Consultation)</a></li>
+          <li>
+            <a href="{{ if .IsHome }}#{{ else }}/{{ end }}" style="color: #666; text-decoration: none; transition: 0.3s;">
+                回到首页 (Home)
+            </a>
+          </li>
+          <li>
+            <a href="/assessment" style="color: #C41E3A; font-weight: bold; text-decoration: none;">
+                CRS 算分器 (免费评估)
+            </a>
+          </li>
         </ul>
       </div>
 
@@ -56,7 +62,7 @@
         <h5 style="color: #182B45; font-weight: bold; margin-bottom: 20px; font-size: 1.1rem;">联系我们</h5>
         
         <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 15px;">
-            <img src="/images/qrcode.png" alt="WeChat QR Code" style="width: 100px; height: 100px; border-radius: 8px; border: 1px solid #eee;">
+            <img src="/images/qr-code1.png" alt="WeChat QR Code" style="width: 100px; height: 100px; border-radius: 8px; border: 1px solid #eee;">
             <div style="font-size: 0.9rem; color: #666; line-height: 1.5;">
                 <span style="color: #182B45; font-weight: bold;">扫码添加顾问</span><br>
                 一对一免费评估<br>
