@@ -1,123 +1,99 @@
 {{ define "main" }}
 <style>
-    /* === 1. 全局变量 (Koto Brand) === */
-    :root {
-        --k-red: #C41E3A;       /* 品牌红 */
-        --k-dark: #2C3E50;      /* 深色文字 */
-        --k-gray: #F5F7FA;      /* 浅灰背景 */
-        --k-white: #FFFFFF;
+    /* === 1. 强力隐藏旧菜单栏 (CSS Hack) === */
+    /* 我们尝试隐藏常见的 Hugo 主题导航栏类名 */
+    /* 注意：如果您的旧菜单还在，请告诉我旧菜单的 HTML class 是什么 */
+    body > header, 
+    .site-header, 
+    #header, 
+    .navbar-default,
+    div[class*="nav"], /* 激进隐藏：隐藏所有带 nav 字样的顶部容器，除了我们自己的 */
+    nav:not(.koto-main-nav) {
+        display: none !important;
     }
 
-    body {
-        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-        margin: 0; padding: 0; color: #333;
+    /* === 2. Koto 品牌变量 === */
+    :root {
+        --k-red: #C41E3A;
+        --k-dark: #2C3E50;
+        --k-gray: #F5F7FA;
     }
+
+    body { margin: 0; padding: 0; font-family: system-ui, sans-serif; color: #333; }
     a { text-decoration: none; color: inherit; transition: 0.3s; }
     * { box-sizing: border-box; }
 
-    /* === 2. 主页导航栏 (Main Menu) - 红色醒目版 === */
+    /* === 3. 新版红色导航栏 === */
     .koto-main-nav {
         background-color: white;
         height: 80px;
         padding: 0 5%;
-        display: flex;
+        display: flex !important; /* 强制显示 */
         justify-content: space-between;
         align-items: center;
         box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-        position: sticky; top: 0; z-index: 1000;
+        position: sticky; top: 0; z-index: 9999;
     }
 
-    /* Logo */
-    .nav-logo {
-        font-size: 1.8rem; font-weight: 800; color: #333; letter-spacing: -1px;
-    }
-    /* 这里可以直接换成 <img src="/images/logo-koto.png" height="50"> */
-    
-    /* 菜单区域 */
-    .nav-links {
-        display: flex; gap: 30px; align-items: center;
+    /* Logo 图片适配 */
+    .nav-logo img {
+        height: 50px; /* 根据您的 Logo 实际大小调整 */
+        width: auto;
+        display: block;
     }
 
-    /* 红色文字链接 */
+    .nav-links { display: flex; gap: 30px; align-items: center; }
+
     .nav-item {
-        font-size: 1rem;
-        font-weight: 700;
-        color: var(--k-red); /* 核心：红色文字 */
-        position: relative;
-        padding: 5px 0;
+        font-size: 1rem; font-weight: 700; color: var(--k-red); position: relative; padding: 5px 0;
     }
-    
-    /* 悬停下划线效果 */
     .nav-item::after {
         content: ''; position: absolute; bottom: 0; left: 0; width: 0; height: 2px;
         background: var(--k-red); transition: 0.3s;
     }
     .nav-item:hover::after { width: 100%; }
 
-    /* 预约咨询按钮 (红底白字) */
     .nav-btn-cta {
-        background-color: var(--k-red);
-        color: white !important;
-        padding: 10px 25px;
-        border-radius: 50px;
-        font-weight: bold;
+        background-color: var(--k-red); color: white !important;
+        padding: 10px 25px; border-radius: 50px; font-weight: bold;
         box-shadow: 0 4px 12px rgba(196, 30, 58, 0.3);
     }
     .nav-btn-cta:hover { transform: scale(1.05); }
 
-    /* === 3. Hero 轮播图 (保持不变) === */
-    .koto-hero-wrapper {
-        position: relative; width: 100%; height: 550px; background-color: var(--k-gray); overflow: hidden;
-    }
-    .koto-hero-slide {
-        position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-        opacity: 0; transition: opacity 0.8s; display: flex; align-items: center; justify-content: center;
-        z-index: 1; background-size: cover; background-position: center;
-    }
+    /* === 4. 轮播图与内容 (保持不变) === */
+    .koto-hero-wrapper { position: relative; width: 100%; height: 550px; background-color: var(--k-gray); overflow: hidden; }
+    .koto-hero-slide { position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; transition: opacity 0.8s; display: flex; align-items: center; justify-content: center; z-index: 1; background-size: cover; background-position: center; }
     .koto-hero-slide.active { opacity: 1; z-index: 2; }
-    
-    .koto-hero-content {
-        background: rgba(196, 30, 58, 0.95); padding: 40px 60px; border-radius: 12px;
-        text-align: center; color: white; max-width: 700px;
-    }
+    .koto-hero-content { background: rgba(196, 30, 58, 0.95); padding: 40px 60px; border-radius: 12px; text-align: center; color: white; max-width: 700px; }
     .koto-hero-content h1 { font-size: 2.5rem; margin: 0 0 15px 0; color: white !important; }
     .koto-hero-content p { font-size: 1.1rem; margin-bottom: 30px; color: #f0f0f0 !important; }
-    .koto-hero-btn {
-        background: white !important; color: var(--k-red) !important;
-        padding: 12px 35px; border-radius: 50px; font-weight: bold; display: inline-block;
-    }
-    
+    .koto-hero-btn { background: white !important; color: var(--k-red) !important; padding: 12px 35px; border-radius: 50px; font-weight: bold; display: inline-block; }
     .koto-dots { position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%); z-index: 10; display: flex; gap: 12px; }
     .koto-dot { width: 12px; height: 12px; background: rgba(255,255,255,0.4); border-radius: 50%; cursor: pointer; }
     .koto-dot.active { background: white; }
 
-    /* === 4. 服务卡片 (保持不变) === */
     .koto-services-section { padding: 60px 10%; background: white; }
     .koto-services-header { text-align: center; margin-bottom: 50px; }
     .koto-services-header h2 { color: var(--k-red); font-size: 2.2rem; font-weight: bold; }
     .koto-services-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 30px; }
-    .koto-card {
-        background: white; border: 1px solid #eee; border-radius: 16px; overflow: hidden;
-        display: flex; flex-direction: column; align-items: center; text-align: center; padding-bottom: 30px;
-        transition: 0.3s;
-    }
+    .koto-card { background: white; border: 1px solid #eee; border-radius: 16px; overflow: hidden; display: flex; flex-direction: column; align-items: center; text-align: center; padding-bottom: 30px; transition: 0.3s; }
     .koto-card:hover { transform: translateY(-5px); box-shadow: 0 15px 30px rgba(0,0,0,0.08); }
     .koto-card-img { width: 100%; height: 200px; background: #e0e0e0; display: flex; align-items: center; justify-content: center; color: #999; margin-bottom: 25px; }
     .koto-card-img img { width: 100%; height: 100%; object-fit: cover; }
     .koto-card-pill { background: var(--k-red); color: white !important; padding: 10px 30px; border-radius: 50px; font-weight: bold; margin-bottom: 20px; }
     .koto-card-desc { color: #666; font-size: 0.95rem; padding: 0 20px; }
 
-    /* === 5. 新闻滑块 (保持不变) === */
     .koto-news-section { padding: 60px 20px; background: #fafafa; }
     .koto-news-container { max-width: 1200px; margin: 0 auto; }
     .koto-news-scroll { display: flex; overflow-x: auto; gap: 30px; padding: 10px 5px 30px 5px; scroll-snap-type: x mandatory; }
     .koto-news-card { min-width: 300px; scroll-snap-align: start; background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.05); display: block; }
-
 </style>
 
 <nav class="koto-main-nav">
     <div class="nav-logo">
-        KOTO<span>.</span>
+        <a href="/">
+            <img src="/images/logo-koto.png" alt="KOTO Logo">
+        </a>
     </div>
     
     <div class="nav-links">
@@ -125,11 +101,8 @@
         <a href="/study/" class="nav-item">北美留学</a>
         <a href="/canada/" class="nav-item">加拿大移民</a>
         <a href="/usa/" class="nav-item">美国移民</a>
-        
         <a href="/contact/" class="nav-btn-cta">预约咨询</a>
-        
-        <div style="font-size:1.5rem; cursor:pointer;">🇨🇳</div>
-    </div>
+        </div>
 </nav>
 
 <div class="koto-hero-wrapper" id="kotoHero">
@@ -239,5 +212,4 @@
         };
     });
 </script>
-
 {{ end }}
