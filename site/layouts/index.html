@@ -1,289 +1,218 @@
 {{ define "main" }}
 <style>
-    /* === 1. 安全配色变量 (只在当前组件内生效) === */
-    .koto-wrapper {
-        --koto-red: #C41E3A;       /* 您的品牌红 */
-        --koto-dark: #2C3E50;      /* 深色文字 */
-        --koto-bg: #FFFFFF;
-        --koto-gray: #F5F7FA;
+    /* === 1. 核心配色 === */
+    :root {
+        --primary: #C41E3A;   /* 您的品牌红 */
+        --secondary: #2C3E50; /* 深蓝色 */
+        --bg: #FFFFFF;
+        --light-gray: #F5F7FA;
     }
 
-    /* === 2. Hero 轮播图 (复刻截图布局：居中方块) === */
-    .koto-hero-container {
+    /* === 2. Hero 轮播图 (防崩坏：淡入淡出版) === */
+    .hero-wrapper {
         position: relative;
         width: 100%;
-        height: 600px; /* 固定高度，防止页面跳动 */
+        height: 550px;
+        background-color: var(--light-gray);
         overflow: hidden;
-        background-color: var(--koto-gray);
     }
 
-    .koto-slide {
+    .hero-slide {
         position: absolute;
         top: 0;
         left: 0;
         width: 100%;
         height: 100%;
-        opacity: 0; /* 默认隐藏 */
-        transition: opacity 0.8s ease-in-out; /* 柔和的淡入淡出 */
+        opacity: 0;
+        transition: opacity 1s ease-in-out;
         display: flex;
         align-items: center;
         justify-content: center;
-        background-size: cover;
-        background-position: center;
         z-index: 1;
     }
 
-    /* 激活状态的幻灯片 */
-    .koto-slide.active {
-        opacity: 1;
-        z-index: 2;
-    }
+    .hero-slide.active { opacity: 1; z-index: 2; }
 
-    /* 居中内容方块 (仿照您截图的样式，但是红色版) */
-    .koto-hero-box {
-        background: rgba(196, 30, 58, 0.9); /* 红色半透明背景 */
-        color: white;
-        padding: 3rem 4rem;
-        border-radius: 12px;
+    /* 轮播图中间的大红框 */
+    .hero-content {
+        background: rgba(196, 30, 58, 0.95);
+        padding: 40px 60px;
+        border-radius: 8px;
         text-align: center;
-        max-width: 600px;
-        box-shadow: 0 15px 35px rgba(0,0,0,0.2);
-        backdrop-filter: blur(5px); /* 毛玻璃质感 */
-        transform: translateY(20px);
-        opacity: 0;
-        transition: all 0.8s 0.3s; /* 内容比背景晚一点出现，更有质感 */
-    }
-
-    .koto-slide.active .koto-hero-box {
-        transform: translateY(0);
-        opacity: 1;
-    }
-
-    .koto-hero-box h2 {
-        font-size: 2.5rem;
-        margin: 0 0 1rem 0;
-        font-weight: 800;
-        line-height: 1.2;
         color: white;
+        max-width: 700px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.15);
     }
+    .hero-content h1 { font-size: 2.8rem; margin: 0 0 20px 0; color: white; }
+    .hero-content p { font-size: 1.2rem; margin-bottom: 30px; color: #f1f1f1; }
+    .hero-btn {
+        display: inline-block; background: white; color: var(--primary);
+        padding: 15px 40px; border-radius: 50px; font-weight: bold; text-decoration: none;
+    }
+    .hero-btn:hover { transform: scale(1.05); }
 
-    .koto-hero-box p {
-        font-size: 1.1rem;
-        margin-bottom: 2rem;
-        opacity: 0.9;
-        line-height: 1.6;
-        color: #ffeaea;
+    /* 轮播圆点 */
+    .slider-dots {
+        position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%); z-index: 10; display: flex; gap: 12px;
     }
+    .dot {
+        width: 12px; height: 12px; background: rgba(255,255,255,0.4); border-radius: 50%; cursor: pointer;
+    }
+    .dot.active { background: white; transform: scale(1.2); }
 
-    .koto-hero-btn {
-        display: inline-block;
-        background: white;
-        color: var(--koto-red);
-        padding: 12px 35px;
-        border-radius: 50px;
-        font-weight: bold;
-        text-decoration: none;
-        transition: transform 0.2s;
-    }
-    .koto-hero-btn:hover {
-        transform: scale(1.05);
-        background: #fff0f0;
-    }
-
-    /* 轮播指示器 (底部小圆点) */
-    .koto-indicators {
-        position: absolute;
-        bottom: 30px;
-        left: 50%;
-        transform: translateX(-50%);
-        z-index: 10;
-        display: flex;
-        gap: 12px;
-    }
-    .koto-dot {
-        width: 12px;
-        height: 12px;
-        background: rgba(255,255,255,0.5);
-        border-radius: 50%;
-        cursor: pointer;
-        transition: all 0.3s;
-    }
-    .koto-dot.active {
-        background: var(--koto-red);
-        transform: scale(1.2);
-    }
-
-    /* === 3. 服务卡片区 (保持您喜欢的原版) === */
-    .koto-section {
-        padding: 80px 10%;
-        background: #fff;
-    }
-    
-    .koto-grid {
+    /* === 3. 服务卡片 (重点修改：红底白字标题) === */
+    .services-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
         gap: 40px;
-    }
-
-    .koto-card {
-        background: #fff;
-        padding: 30px;
-        border-radius: 16px;
-        border: 1px solid #eee;
-        text-align: center;
-        transition: transform 0.3s, box-shadow 0.3s;
-    }
-    .koto-card:hover {
-        transform: translateY(-8px);
-        box-shadow: 0 15px 30px rgba(0,0,0,0.08);
-        border-color: var(--koto-red);
-    }
-    .koto-card img { width: 64px; margin-bottom: 20px; }
-    .koto-card h3 { color: var(--koto-dark); margin-bottom: 12px; font-size: 1.2rem; }
-    .koto-card p { color: #666; font-size: 0.95rem; line-height: 1.5; }
-
-    /* === 4. 新闻滑块 (横向滚动版) === */
-    .koto-news-wrapper {
-        display: flex;
-        overflow-x: auto;
-        gap: 25px;
-        padding: 10px 5px 30px 5px;
-        scroll-snap-type: x mandatory;
-    }
-    .koto-news-item {
-        min-width: 300px;
-        max-width: 300px;
+        padding: 80px 10%;
         background: white;
-        border-radius: 12px;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-        overflow: hidden;
-        flex-shrink: 0;
-        scroll-snap-align: start;
-        transition: transform 0.3s;
     }
-    .koto-news-item:hover { transform: translateY(-5px); }
+    .service-card {
+        padding: 30px;
+        border-radius: 20px;
+        background: white;
+        border: 1px solid #f0f0f0;
+        text-align: center;
+        transition: 0.3s;
+    }
+    .service-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 20px 40px rgba(0,0,0,0.08);
+    }
+    .service-card img { width: 70px; margin-bottom: 20px; }
+    
+    /* ▼▼▼▼▼ 核心修改点：红底白字标签样式 ▼▼▼▼▼ */
+    .service-card h3 { 
+        background-color: var(--primary); /* 红底 */
+        color: white;               /* 白字 */
+        display: inline-block;      /* 包裹文字，变成块状 */
+        padding: 8px 25px;          /* 内边距：撑开红色区域 */
+        border-radius: 50px;        /* 圆角：像按钮一样 */
+        margin-bottom: 20px;        /* 下方留白 */
+        font-size: 1.1rem;
+        box-shadow: 0 4px 10px rgba(196, 30, 58, 0.2); /* 淡淡的红色阴影，增加立体感 */
+    }
+    /* ▲▲▲▲▲ 修改结束 ▲▲▲▲▲ */
+
+    .service-card p { color: #666; font-size: 0.9rem; line-height: 1.6; }
+
+    /* === 4. 新闻滑块 (保持不变) === */
+    .news-section { padding: 60px 20px; background: #fafafa; }
+    .news-wrapper { max-width: 1200px; margin: 0 auto; }
+    .news-slider {
+        display: flex; overflow-x: auto; gap: 30px; padding: 10px 5px 30px 5px; scroll-snap-type: x mandatory;
+    }
+    .news-slider::-webkit-scrollbar { height: 6px; }
+    .news-slider::-webkit-scrollbar-thumb { background: #ddd; border-radius: 3px; }
+    .news-card {
+        min-width: 320px; max-width: 320px; flex: 0 0 auto; scroll-snap-align: start;
+        background: white; border-radius: 12px; overflow: hidden;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.05); transition: transform 0.3s ease;
+    }
+    .news-card:hover { transform: translateY(-5px); }
 </style>
 
-<div class="koto-wrapper">
-    
-    <div class="koto-hero-container" id="kotoHero">
-        
-        <div class="koto-slide active" style="background-color: #f3f4f6;">
-            <div class="koto-hero-box">
-                <h2>专业移民规划</h2>
-                <p>基于官方 CRS 标准的精准打分，为您量身定制最稳妥的移民路径。</p>
-                <a href="/assessment" class="koto-hero-btn">免费评估 &rarr;</a>
-            </div>
-        </div>
-
-        <div class="koto-slide" style="background-color: #e5e7eb;">
-            <div class="koto-hero-box">
-                <h2>美加名校直通车</h2>
-                <p>从选校到文书，从申请到学签，我们助您叩开世界名校的大门。</p>
-                <a href="/services" class="koto-hero-btn">查看留学服务</a>
-            </div>
-        </div>
-
-        <div class="koto-slide" style="background-color: #d1d5db;">
-            <div class="koto-hero-box">
-                <h2>疑难签证专家</h2>
-                <p>曾经被拒签？不用担心。我们的持牌顾问擅长处理各类疑难杂症。</p>
-                <a href="/contact" class="koto-hero-btn">预约咨询</a>
-            </div>
-        </div>
-
-        <div class="koto-indicators">
-            <span class="koto-dot active" onclick="setSlide(0)"></span>
-            <span class="koto-dot" onclick="setSlide(1)"></span>
-            <span class="koto-dot" onclick="setSlide(2)"></span>
+<div class="hero-wrapper" id="heroSlider">
+    <div class="hero-slide active">
+        <div class="hero-content">
+            <h1>Expert Guidance for<br>Your Canadian Journey</h1>
+            <p>基于官方 CRS 标准的精准规划，从留学到移民，为您定制最优路径。</p>
+            <a href="/assessment" class="hero-btn">开始免费评估 &rarr;</a>
         </div>
     </div>
-
-    <section class="koto-section">
-        <h2 style="text-align:center; color: var(--koto-red); margin-bottom: 50px; font-size: 2rem;">我们的核心服务</h2>
-        <div class="koto-grid">
-            <div class="koto-card">
-                <img src="/images/icon-ca.png" alt="Icon" onerror="this.src='https://via.placeholder.com/64'">
-                <h3>加拿大移民</h3>
-                <p>快速通道 (EE)、省提名 (PNP)、家庭团聚及配偶工签全类别办理。</p>
-            </div>
-            <div class="koto-card">
-                <img src="/images/icon-study.png" alt="Icon" onerror="this.src='https://via.placeholder.com/64'">
-                <h3>留学规划</h3>
-                <p>涵盖K-12、本科、硕博申请，以及陪读签证办理。</p>
-            </div>
-            <div class="koto-card">
-                <img src="/images/icon-english.png" alt="Icon" onerror="this.src='https://via.placeholder.com/64'">
-                <h3>语言培训</h3>
-                <p>雅思、思培、多邻国名师一对一，短期快速提分。</p>
-            </div>
-            <div class="koto-card">
-                <img src="/images/icon-us.png" alt="Icon" onerror="this.src='https://via.placeholder.com/64'">
-                <h3>美国业务</h3>
-                <p>EB-1A 杰出人才、NIW 国家利益豁免及 L1 跨国高管签证。</p>
-            </div>
+    <div class="hero-slide">
+        <div class="hero-content">
+            <h1>美加名校直通车</h1>
+            <p>顶尖名校文书定制，从小学到博士的全龄段申请服务。</p>
+            <a href="/services" class="hero-btn">查看留学服务</a>
         </div>
-    </section>
+    </div>
+    <div class="hero-slide">
+        <div class="hero-content">
+            <h1>疑难签证专家</h1>
+            <p>学签、工签、旅游签及拒签翻案，持牌顾问全程跟进。</p>
+            <a href="/contact" class="hero-btn">联系我们</a>
+        </div>
+    </div>
+    <div class="slider-dots">
+        <span class="dot active" onclick="switchHero(0)"></span>
+        <span class="dot" onclick="switchHero(1)"></span>
+        <span class="dot" onclick="switchHero(2)"></span>
+    </div>
+</div>
 
-    <section class="koto-section" style="background: #fafafa;">
-        <h2 style="color: var(--koto-dark); margin-bottom: 30px;">最新移民资讯</h2>
-        <div class="koto-news-wrapper">
-            {{ range first 8 .Site.RegularPages }}
-            <div class="koto-news-item">
-                {{ $image := .Resources.GetMatch .Params.image }}
-                {{ if $image }}
-                    <img src="{{ $image.RelPermalink }}" style="height: 180px; width: 100%; object-fit: cover;">
-                {{ else }}
-                    <div style="height: 180px; background: #eee; display:flex; align-items:center; justify-content:center; color:#999;">Koto News</div>
+<h2 style="text-align: center; margin-top: 60px; color: var(--primary); font-size: 2rem; font-weight: bold;">我们的核心服务</h2>
+
+<section class="services-grid">
+    <div class="service-card">
+        <img src="/images/icon-english.png" alt="English" onerror="this.src='https://via.placeholder.com/70'">
+        <h3>雅思/思培提分</h3>
+        <p>名师一对一精准指导，针对性突破口语写作瓶颈，助您快速达到移民分数要求。</p>
+    </div>
+    <div class="service-card">
+        <img src="/images/icon-study.png" alt="Study" onerror="this.src='https://via.placeholder.com/70'">
+        <h3>美加留学规划</h3>
+        <p>从小学到博士的全龄段申请服务。顶尖名校文书定制，学签办理及拒签翻案。</p>
+    </div>
+    <div class="service-card">
+        <img src="/images/icon-ca.png" alt="Canada" onerror="this.src='https://via.placeholder.com/70'">
+        <h3>加拿大移民</h3>
+        <p>快速通道 (Express Entry)、省提名 (PNP)、家庭团聚及配偶工签全类别办理。</p>
+    </div>
+    <div class="service-card">
+        <img src="/images/icon-us.png" alt="USA" onerror="this.src='https://via.placeholder.com/70'">
+        <h3>美国移民</h3>
+        <p>杰出人才 (EB-1)、国家利益豁免 (NIW) 及跨国高管移民 (L1/EB-1C) 专业咨询。</p>
+    </div>
+</section>
+
+<section class="news-section">
+    <div class="news-wrapper">
+        <h2 style="color: var(--secondary); margin-bottom: 30px;">最新移民资讯</h2>
+        <div class="news-slider">
+            {{ range first 6 .Site.RegularPages }}
+            <div class="news-card">
+                {{ $img := "" }}
+                {{ if .Params.image }}
+                    {{ $res := .Resources.GetMatch .Params.image }}
+                    {{ if $res }}{{ $img = $res.RelPermalink }}{{ else }}{{ $img = .Params.image }}{{ end }}
                 {{ end }}
-                <div style="padding: 20px;">
-                    <small style="color: #888; display:block; margin-bottom:5px;">📅 {{ .Date.Format "2006-01-02" }}</small>
-                    <h3 style="font-size: 1.1rem; margin:0 0 10px 0; line-height: 1.4;">
-                        <a href="{{ .Permalink }}" style="color: #2C3E50; text-decoration: none;">{{ .Title }}</a>
+                {{ if $img }}
+                    <img src="{{ $img }}" style="width: 100%; height: 200px; object-fit: cover;">
+                {{ else }}
+                    <div style="width:100%; height:200px; background:#eee;"></div>
+                {{ end }}
+                <div style="padding: 25px;">
+                    <h3 style="margin: 0 0 10px 0; font-size: 1.1rem; line-height: 1.4;">
+                        <a href="{{ .Permalink }}" style="color: #333; text-decoration: none;">{{ .Title }}</a>
                     </h3>
-                    <p style="font-size: 0.9rem; color: #666; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;">{{ .Summary }}</p>
+                    <p style="font-size: 0.9rem; color: #666;">{{ .Summary | truncate 60 }}</p>
+                    <a href="{{ .Permalink }}" style="color: var(--primary); font-weight: bold; font-size: 0.9rem; text-decoration: none;">阅读全文 &rarr;</a>
                 </div>
             </div>
             {{ end }}
         </div>
-    </section>
-
-</div>
+    </div>
+</section>
 
 <script>
-    document.addEventListener("DOMContentLoaded", function() {
-        let slides = document.querySelectorAll('.koto-slide');
-        let dots = document.querySelectorAll('.koto-dot');
-        let current = 0;
-        let timer;
+    let heroIndex = 0;
+    const heroSlides = document.querySelectorAll('.hero-slide');
+    const heroDots = document.querySelectorAll('.dot');
+    
+    function switchHero(n) {
+        heroSlides.forEach(s => s.classList.remove('active'));
+        heroDots.forEach(d => d.classList.remove('active'));
+        
+        heroIndex = n;
+        if (heroIndex >= heroSlides.length) heroIndex = 0;
+        if (heroIndex < 0) heroIndex = heroSlides.length - 1;
+        
+        heroSlides[heroIndex].classList.add('active');
+        heroDots[heroIndex].classList.add('active');
+    }
 
-        function showSlide(index) {
-            // 移除所有激活状态
-            slides.forEach(s => s.classList.remove('active'));
-            dots.forEach(d => d.classList.remove('active'));
-            
-            // 激活当前
-            if (index >= slides.length) index = 0;
-            if (index < 0) index = slides.length - 1;
-            
-            slides[index].classList.add('active');
-            dots[index].classList.add('active');
-            current = index;
-        }
-
-        function nextSlide() {
-            showSlide(current + 1);
-        }
-
-        // 启动自动播放
-        timer = setInterval(nextSlide, 4000);
-
-        // 绑定点击事件 (安全暴露给全局)
-        window.setSlide = function(index) {
-            clearInterval(timer); // 用户点击后暂停一下自动播放
-            showSlide(index);
-            timer = setInterval(nextSlide, 4000);
-        };
-    });
+    setInterval(() => { switchHero(heroIndex + 1); }, 4000);
 </script>
 {{ end }}
