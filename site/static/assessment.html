@@ -30,7 +30,8 @@
         .container { max-width: 850px; margin: 0 auto; padding: 20px; }
 
         header { display: flex; justify-content: space-between; align-items: center; padding: 20px 0; margin-bottom: 20px; }
-        .logo-img { height: 60px; width: auto; display: block; }
+        /* Logo 样式微调，防止变形 */
+        .logo-img { height: 60px; width: auto; display: block; object-fit: contain; }
         .back-link { color: #666; text-decoration: none; font-size: 0.9rem; font-weight: 500; transition: 0.2s; }
         .back-link:hover { color: var(--brand-gold); }
 
@@ -148,4 +149,492 @@
         <form id="crsForm">
             
             <div class="section-card">
-                <h2>1. 婚姻状况 (Marital
+                <h2>1. 婚姻状况 (Marital Status)</h2>
+                <p class="section-intro">
+                    您的婚姻状况决定算分基准。如配偶不随行或已是加拿大公民/PR，您将按“单身标准”算分（通常更有利）。
+                </p>
+                <div class="form-grid">
+                    <div class="full-width">
+                        <label>您的婚姻状况？</label>
+                        <select id="maritalStatus" onchange="toggleSpouseSection(); runCalculations();" required>
+                            <option value="" disabled selected>请选择...</option>
+                            <option value="single">单身 / 离异 / 丧偶</option>
+                            <option value="married">已婚 / 同居伴侣</option>
+                        </select>
+                    </div>
+                    <div class="full-width hidden" id="spouseComeDiv">
+                        <label style="color:var(--brand-gold);">您的配偶是加拿大公民或永久居民吗？</label>
+                        <select id="spouseCanadian" onchange="toggleSpouseSection(); runCalculations();">
+                            <option value="" disabled selected>请选择...</option>
+                            <option value="no">否 (配偶将随行移民)</option>
+                            <option value="yes">是 (配偶已经是加拿大人)</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section-card">
+                <h2>2. 核心背景 (Core Factors)</h2>
+                <p class="section-intro">
+                    年龄、学历和加拿大工作经验是三大支柱。20-29岁年龄分满分；双学历比单学历更有优势。
+                </p>
+                <div class="form-grid">
+                    <div>
+                        <label>年龄 (Age)</label>
+                        <select id="age" onchange="runCalculations()" required>
+                            <option value="" disabled selected>请选择...</option>
+                            <option value="17">17 岁及以下</option>
+                            <option value="18">18 岁</option>
+                            <option value="19">19 岁</option>
+                            <option value="20">20-29 岁 (满分黄金期)</option>
+                            <option value="30">30 岁</option>
+                            <option value="31">31 岁</option>
+                            <option value="32">32 岁</option>
+                            <option value="33">33 岁</option>
+                            <option value="34">34 岁</option>
+                            <option value="35">35 岁</option>
+                            <option value="36">36 岁</option>
+                            <option value="37">37 岁</option>
+                            <option value="38">38 岁</option>
+                            <option value="39">39 岁</option>
+                            <option value="40">40 岁</option>
+                            <option value="41">41 岁</option>
+                            <option value="42">42 岁</option>
+                            <option value="43">43 岁</option>
+                            <option value="44">44 岁</option>
+                            <option value="45">45 岁及以上</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label>最高学历</label>
+                        <select id="education" onchange="runCalculations()" required>
+                            <option value="" disabled selected>请选择...</option>
+                            <option value="0">高中及以下</option>
+                            <option value="30">高中毕业</option>
+                            <option value="90">1年制大专/证书</option>
+                            <option value="98">2年制大专/文凭</option>
+                            <option value="120">本科 (3年以上) / 3年大专</option>
+                            <option value="128">双学历 (其中一个为3年以上)</option>
+                            <option value="135">硕士学位 (Master's)</option>
+                            <option value="150">博士学位 (PhD)</option>
+                        </select>
+                    </div>
+                    <div class="full-width">
+                        <label>加拿大本地工作经验</label>
+                        <select id="cdnExp" onchange="runCalculations()" required>
+                            <option value="" disabled selected>请选择...</option>
+                            <option value="0">无 / 不满1年</option>
+                            <option value="40">1 年</option>
+                            <option value="53">2 年</option>
+                            <option value="64">3 年</option>
+                            <option value="72">4 年</option>
+                            <option value="80">5 年及以上</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section-card">
+                <h2>3. 语言能力 (Language)</h2>
+                <p class="section-intro">
+                    第一语言推荐雅思 (IELTS-G)。**CLB 9 (8777)** 是高分关键。
+                    如有法语能力，即使是基础水平，也能带来 **额外 25-50 分** 的巨大优势！
+                </p>
+                
+                <h3>第一官方语言 (英语 / 雅思 G类)</h3>
+                <div class="form-grid">
+                    <div>
+                        <label>听力 (Listening)</label>
+                        <select id="langListen" onchange="runCalculations()" required>
+                            <option value="" disabled selected>请选择...</option>
+                            <option value="0">CLB 4 以下 (雅思听力 &lt; 4.5)</option>
+                            <option value="6">CLB 4-5 (雅思听力 4.5-5.5)</option>
+                            <option value="9">CLB 6 (雅思听力 5.5)</option>
+                            <option value="17">CLB 7 (雅思听力 6.0-7.0)</option>
+                            <option value="23">CLB 8 (雅思听力 7.5)</option>
+                            <option value="31">CLB 9 (雅思听力 8.0)</option>
+                            <option value="34">CLB 10 (雅思听力 8.5+)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label>口语 (Speaking)</label>
+                        <select id="langSpeak" onchange="runCalculations()" required>
+                            <option value="" disabled selected>请选择...</option>
+                            <option value="0">CLB 4 以下 (雅思口语 &lt; 4.0)</option>
+                            <option value="6">CLB 4-5 (雅思口语 4.0-5.5)</option>
+                            <option value="9">CLB 6 (雅思口语 6.0)</option>
+                            <option value="17">CLB 7 (雅思口语 6.0)</option>
+                            <option value="23">CLB 8 (雅思口语 6.5)</option>
+                            <option value="31">CLB 9 (雅思口语 7.0)</option>
+                            <option value="34">CLB 10 (雅思口语 7.5+)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label>阅读 (Reading)</label>
+                        <select id="langRead" onchange="runCalculations()" required>
+                            <option value="" disabled selected>请选择...</option>
+                            <option value="0">CLB 4 以下 (雅思阅读 &lt; 3.5)</option>
+                            <option value="6">CLB 4-5 (雅思阅读 3.5-5.5)</option>
+                            <option value="9">CLB 6 (雅思阅读 6.0)</option>
+                            <option value="17">CLB 7 (雅思阅读 6.0)</option>
+                            <option value="23">CLB 8 (雅思阅读 6.5)</option>
+                            <option value="31">CLB 9 (雅思阅读 7.0)</option>
+                            <option value="34">CLB 10 (雅思阅读 8.0+)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label>写作 (Writing)</label>
+                        <select id="langWrite" onchange="runCalculations()" required>
+                            <option value="" disabled selected>请选择...</option>
+                            <option value="0">CLB 4 以下 (雅思写作 &lt; 4.0)</option>
+                            <option value="6">CLB 4-5 (雅思写作 4.0-5.5)</option>
+                            <option value="9">CLB 6 (雅思写作 6.0)</option>
+                            <option value="17">CLB 7 (雅思写作 6.0)</option>
+                            <option value="23">CLB 8 (雅思写作 6.5)</option>
+                            <option value="31">CLB 9 (雅思写作 7.0)</option>
+                            <option value="34">CLB 10 (雅思写作 7.5+)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <h3>第二官方语言 (法语 / TEF Canada)</h3>
+                <div class="form-grid">
+                    <div class="full-width">
+                        <label>您的法语水平？</label>
+                        <select id="lang2Select" onchange="updateFrench(); runCalculations();" required>
+                            <option value="" disabled selected>请选择...</option>
+                            <option value="none">无法语成绩 / 低于 CLB 5</option>
+                            <option value="clb5">基础水平 (四项均达 CLB 5-6)</option>
+                            <option value="clb7">中高级水平 (四项均达 CLB 7+)</option>
+                        </select>
+                        <p style="font-size:0.8rem; color:#888; margin-top:5px;">* 法语达到 CLB 7 可获得额外 50 分加分！</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section-card">
+                <h2>4. 额外加分项 (Additional Points)</h2>
+                <p class="section-intro">
+                    海外工作经验需配合雅思 CLB 9 才能触发高额加分。技工证书需配合雅思 CLB 5 才能生效。
+                </p>
+                <div class="form-grid">
+                    <div class="full-width">
+                        <label>海外(中国)工作经验</label>
+                        <select id="foreignExp" onchange="runCalculations()" required>
+                            <option value="" disabled selected>请选择...</option>
+                            <option value="0">无</option>
+                            <option value="1">1 或 2 年</option>
+                            <option value="3">3 年及以上</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label>省提名 (PNP)</label>
+                        <select id="pnp" onchange="runCalculations()" required>
+                            <option value="" disabled selected>请选择...</option>
+                            <option value="0">无</option>
+                            <option value="600">是 (+600分)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label>LMIA 雇主担保 (Job Offer)</label>
+                        <select id="jobOffer" onchange="runCalculations()" required>
+                            <option value="" disabled selected>请选择...</option>
+                            <option value="0">无</option>
+                            <option value="0">普通职位 (暂停加分)</option>
+                            <option value="0">00类高管 (暂停加分)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label>兄弟姐妹在加拿大</label>
+                        <select id="sibling" onchange="runCalculations()" required>
+                            <option value="" disabled selected>请选择...</option>
+                            <option value="0">无</option>
+                            <option value="15">有 (+15)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label>加拿大本地学历</label>
+                        <select id="cdnEdu" onchange="runCalculations()" required>
+                            <option value="" disabled selected>请选择...</option>
+                            <option value="0">无</option>
+                            <option value="15">1或2年文凭</option>
+                            <option value="30">3年以上学位/硕士/博士 (+30)</option>
+                        </select>
+                    </div>
+                    <div class="full-width">
+                        <label>加拿大技工证书 (Certificate of Qualification)</label>
+                        <select id="tradeCert" onchange="runCalculations()" required>
+                            <option value="" disabled selected>请选择...</option>
+                            <option value="no">无</option>
+                            <option value="yes">有 (需满足语言 CLB 5 要求)</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section-card hidden" id="spouseFactorsSection">
+                <h2>5. 配偶条件 (Spouse Factors)</h2>
+                <div class="form-grid">
+                    <div>
+                        <label>配偶学历</label>
+                        <select id="spouseEdu" onchange="runCalculations()">
+                            <option value="" disabled selected>请选择...</option>
+                            <option value="0">高中及以下 (0分)</option>
+                            <option value="2">中学/高中毕业 (2分)</option>
+                            <option value="6">1年制大专/证书 (6分)</option>
+                            <option value="7">2年制大专/文凭 (7分)</option>
+                            <option value="8">3年以上学位 (8分)</option>
+                            <option value="9">双学历 (9分)</option>
+                            <option value="10">硕士 (10分)</option>
+                            <option value="10">博士 (10分)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label>配偶加拿大工作经验</label>
+                        <select id="spouseCdnExp" onchange="runCalculations()">
+                            <option value="" disabled selected>请选择...</option>
+                            <option value="0">无 / 不满1年 (0分)</option>
+                            <option value="5">1 年 (5分)</option>
+                            <option value="7">2 年 (7分)</option>
+                            <option value="8">3 年 (8分)</option>
+                            <option value="9">4 年 (9分)</option>
+                            <option value="10">5 年及以上 (10分)</option>
+                        </select>
+                    </div>
+                    <div class="full-width">
+                        <label>配偶语言水平 (第一官方语言)</label>
+                        <select id="spouseLang" onchange="runCalculations()">
+                            <option value="" disabled selected>请选择...</option>
+                            <option value="0">CLB 4 或更低 (0分)</option>
+                            <option value="1">CLB 5 或 6 (每项1分)</option>
+                            <option value="3">CLB 7 或 8 (每项3分)</option>
+                            <option value="5">CLB 9 或以上 (每项5分)</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+        </form>
+    </div>
+
+    <div class="score-bar">
+        <div class="score-left">
+            <span class="score-label">您的 CRS 预估总分</span>
+            <span class="total-score" id="displayScore">0</span>
+        </div>
+        <div>
+            <a href="/#contact" class="contact-btn">免费预约咨询 →</a>
+        </div>
+    </div>
+
+    <script>
+        // --- 1. 强制重置表单 ---
+        window.onload = function() {
+            document.getElementById("crsForm").reset();
+            runCalculations(); 
+        };
+
+        // --- 数据字典 ---
+        const agePointsSingle = {17:0, 18:99, 19:105, 20:110, 21:110, 22:110, 23:110, 24:110, 25:110, 26:110, 27:110, 28:110, 29:110, 30:105, 31:99, 32:94, 33:88, 34:83, 35:77, 36:72, 37:66, 38:61, 39:55, 40:50, 41:39, 42:28, 43:17, 44:6, 45:0};
+        const agePointsMarried = {17:0, 18:90, 19:95, 20:100, 21:100, 22:100, 23:100, 24:100, 25:100, 26:100, 27:100, 28:100, 29:100, 30:95, 31:90, 32:85, 33:80, 34:75, 35:70, 36:65, 37:60, 38:55, 39:50, 40:45, 41:35, 42:25, 43:15, 44:5, 45:0};
+
+        let lang2Vals = {s:0, l:0, r:0, w:0};
+
+        function getVal(id) { 
+            let el = document.getElementById(id);
+            if (!el || el.value === "") return 0; 
+            return parseInt(el.value); 
+        }
+
+        // 更新法语分数
+        function updateFrench() {
+            const level = document.getElementById('lang2Select').value;
+            if(level === 'clb7') lang2Vals = {s:6, l:6, r:6, w:6}; // CLB 7+
+            else if(level === 'clb5') lang2Vals = {s:1, l:1, r:1, w:1}; // CLB 5
+            else lang2Vals = {s:0, l:0, r:0, w:0};
+        }
+
+        function toggleSpouseSection() {
+            const status = document.getElementById('maritalStatus').value;
+            const spouseDiv = document.getElementById('spouseComeDiv');
+            const factorsDiv = document.getElementById('spouseFactorsSection');
+            
+            if(status === 'married') {
+                spouseDiv.classList.remove('hidden');
+                const isCdn = document.getElementById('spouseCanadian').value === 'yes';
+                if(!isCdn && document.getElementById('spouseCanadian').value !== "") {
+                    factorsDiv.classList.remove('hidden');
+                } else {
+                    factorsDiv.classList.add('hidden');
+                }
+            } else {
+                spouseDiv.classList.add('hidden');
+                factorsDiv.classList.add('hidden');
+            }
+        }
+
+        function calculateScore() {
+            let score = 0;
+            let mStatus = document.getElementById('maritalStatus').value;
+            let spCdn = document.getElementById('spouseCanadian').value;
+            let isMarriedCalc = (mStatus === 'married' && spCdn === 'no');
+
+            // --- 1. 核心人力资本 ---
+            // A. 年龄
+            let age = getVal('age');
+            if(age >= 20 && age <= 29) age = 29; 
+            let ageScore = 0;
+            if (document.getElementById('age').value !== "") {
+                ageScore = isMarriedCalc ? (agePointsMarried[age] || 0) : (agePointsSingle[age] || 0);
+            }
+            score += ageScore;
+
+            // B. 学历
+            let eduScore = getVal('education');
+            if(isMarriedCalc) {
+                if(eduScore == 150) eduScore = 140; 
+                else if(eduScore == 135) eduScore = 126; 
+                else if(eduScore == 128) eduScore = 119; 
+                else if(eduScore == 120) eduScore = 112; 
+                else if(eduScore == 98) eduScore = 91; 
+                else if(eduScore == 90) eduScore = 84; 
+                else if(eduScore == 30) eduScore = 28; 
+            }
+            score += eduScore;
+
+            // C. 语言
+            let lSpeak = getVal('langSpeak');
+            let lListen = getVal('langListen');
+            let lRead = getVal('langRead');
+            let lWrite = getVal('langWrite');
+            
+            let langTotal = 0;
+            if(isMarriedCalc) {
+                let adjust = (val) => {
+                    if(val==34) return 32; if(val==31) return 29; 
+                    if(val==23) return 22; if(val==17) return 16; 
+                    if(val==9) return 6; return 0;
+                };
+                langTotal = adjust(lSpeak) + adjust(lListen) + adjust(lRead) + adjust(lWrite);
+            } else {
+                langTotal = lSpeak + lListen + lRead + lWrite;
+            }
+            score += langTotal;
+            score += (lang2Vals.s + lang2Vals.l + lang2Vals.r + lang2Vals.w);
+
+            // D. 加拿大工作
+            let cdnExp = getVal('cdnExp');
+            let cdnScore = cdnExp;
+            if(isMarriedCalc) {
+                if(cdnExp == 80) cdnScore = 70;
+                else if(cdnExp == 72) cdnScore = 63;
+                else if(cdnExp == 64) cdnScore = 56;
+                else if(cdnExp == 53) cdnScore = 46;
+                else if(cdnExp == 40) cdnScore = 35;
+            }
+            score += cdnScore;
+
+            // 配偶加分逻辑 (更新后)
+            if(isMarriedCalc) {
+                score += getVal('spouseEdu');
+                score += getVal('spouseCdnExp');
+                // 语言：单项分 x 4
+                let spLang = getVal('spouseLang');
+                score += (spLang * 4);
+            }
+
+            // --- 2. 交叉项 (Transferability) ---
+            let clb9Count = 0; 
+            let clb7Count = 0;
+            let clb5Count = 0; 
+            [lSpeak, lListen, lRead, lWrite].forEach(val => {
+                if(val >= 31) clb9Count++; 
+                if(val >= 17) clb7Count++;
+                if(val >= 6) clb5Count++; 
+            });
+
+            // 学历交叉
+            let transEdu = 0;
+            let eduHigh = (getVal('education') >= 128); 
+            let eduPostSec = (getVal('education') >= 90);
+
+            if(eduHigh && clb9Count == 4) transEdu += 50;
+            else if(eduHigh && clb7Count == 4) transEdu += 25;
+            else if(eduPostSec && clb9Count == 4) transEdu += 25;
+            else if(eduPostSec && clb7Count == 4) transEdu += 13;
+
+            let cdn1yr = (getVal('cdnExp') >= 40); 
+            let cdn2yr = (getVal('cdnExp') >= 53); 
+
+            if(eduHigh && cdn2yr) transEdu += 50;
+            else if(eduHigh && cdn1yr) transEdu += 25;
+            else if(eduPostSec && cdn2yr) transEdu += 25;
+            else if(eduPostSec && cdn1yr) transEdu += 13;
+            if(transEdu > 50) transEdu = 50; 
+            score += transEdu;
+
+            // 海外工作交叉
+            let transFor = 0;
+            let forExp = getVal('foreignExp');
+            let for3yr = (forExp >= 3);
+            let for1yr = (forExp >= 1);
+
+            if(for3yr && clb9Count == 4) transFor += 50;
+            else if(for3yr && clb7Count == 4) transFor += 25;
+            else if(for1yr && clb9Count == 4) transFor += 25;
+            else if(for1yr && clb7Count == 4) transFor += 13;
+
+            if(for3yr && cdn2yr) transFor += 50;
+            else if(for3yr && cdn1yr) transFor += 25;
+            else if(for1yr && cdn2yr) transFor += 25;
+            else if(for1yr && cdn1yr) transFor += 13;
+
+            if(transFor > 50) transFor = 50;
+            score += transFor;
+
+            // 技工证书交叉
+            let transTrade = 0;
+            let hasTrade = (document.getElementById('tradeCert').value === 'yes');
+            if(hasTrade && clb5Count == 4) {
+                transTrade = 50;
+            }
+            score += transTrade;
+
+            if((transEdu + transFor + transTrade) > 100) {
+                score -= (transEdu + transFor + transTrade - 100);
+            }
+
+            // --- 3. 额外加分 ---
+            let addScore = 0;
+            addScore += getVal('pnp');
+            addScore += getVal('jobOffer'); // 这里的 value 已经是 0
+            addScore += getVal('sibling');
+            addScore += getVal('cdnEdu');
+            
+            // 法语强力交叉加分
+            if(document.getElementById('lang2Select').value === 'clb7') {
+                let engScore = lSpeak + lListen + lRead + lWrite;
+                if(engScore >= 24) addScore += 50; 
+                else addScore += 25; 
+            }
+
+            if(addScore > 600) addScore = 600;
+            score += addScore;
+
+            return score;
+        }
+
+        function runCalculations() {
+            let score = calculateScore();
+            let displayElem = document.getElementById('displayScore');
+            let currentDisplay = parseInt(displayElem.innerText);
+            
+            if(score !== currentDisplay) {
+                displayElem.innerText = score;
+                displayElem.style.transform = "scale(1.2)";
+                setTimeout(() => { displayElem.style.transform = "scale(1)"; }, 200);
+            }
+        }
+    </script>
+</body>
+</html>
