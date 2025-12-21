@@ -1,60 +1,82 @@
-<footer class="footer">
-  <div class="container">
+<footer style="background-color: #f9f9f9; padding: 60px 0; border-top: 1px solid #eee; font-family: sans-serif;">
+  <div style="max-width: 1100px; margin: 0 auto; padding: 0 20px;">
     
-    <div class="row">
-      <div class="col-lg-8 offset-lg-2 text-center">
-        <h2 style="color: #C5A059; font-weight: bold; margin-bottom: 20px;">KOTO IMMIGRATION</h2>
-        
-        <h4 class="text-muted">订阅最新移民资讯</h4>
-        <p style="color: #777; margin-bottom: 30px;">
-          第一时间获取加拿大移民局 (IRCC) 政策变动、EE 抽分情况及独家留学干货。<br>
-          我们要做的，是让您的移民之路少走弯路。
-        </p>
+    <div style="text-align: center; max-width: 600px; margin: 0 auto 50px auto;">
+      <h2 style="color: #C5A059; font-weight: 800; margin-bottom: 15px; font-size: 1.5rem;">KOTO IMMIGRATION</h2>
+      
+      <h4 style="color: #333; margin-bottom: 10px; font-size: 1.1rem;">订阅最新移民资讯</h4>
+      <p style="color: #666; font-size: 0.9rem; line-height: 1.6; margin-bottom: 25px;">
+        第一时间获取加拿大移民局 (IRCC) 政策变动、EE 抽分情况及独家留学干货。<br>
+        我们要做的，是让您的移民之路少走弯路。
+      </p>
 
-        <form class="form-inline justify-content-center" action="#" method="POST" name="newsletter" netlify>
-          <div class="form-group mb-2">
-            <label for="email" class="sr-only">Email</label>
-            <input type="email" name="email" class="form-control" id="email" placeholder="请输入您的邮箱地址" required style="width: 300px; border-radius: 5px 0 0 5px; border: 1px solid #ddd;">
-          </div>
-          <button type="submit" class="btn btn-primary mb-2" style="background-color: #C41E3A; border: none; border-radius: 0 5px 5px 0;">订阅</button>
-        </form>
-      </div>
+      <form style="display: flex; justify-content: center; gap: 0;" action="#" method="POST" name="newsletter" netlify>
+        <input type="email" name="email" placeholder="请输入您的邮箱地址" required 
+               style="padding: 12px 15px; width: 70%; border: 1px solid #ccc; border-radius: 5px 0 0 5px; outline: none; font-size: 1rem;">
+        <button type="submit" 
+                style="padding: 12px 25px; background-color: #C41E3A; color: white; border: none; border-radius: 0 5px 5px 0; cursor: pointer; font-weight: bold; font-size: 1rem;">
+          订阅
+        </button>
+      </form>
     </div>
 
-    <hr style="margin: 50px 0; border-color: #eee;">
+    <hr style="border: 0; border-top: 1px solid #e0e0e0; margin-bottom: 50px;">
 
-    <div class="row">
+    <div style="display: flex; flex-wrap: wrap; justify-content: space-between; text-align: left; gap: 40px;">
       
-      <div class="col-lg-4 col-md-4 col-sm-6 mb-4">
-        <h5 style="color: #2C3E50; font-weight: bold; margin-bottom: 20px;">快速导航</h5>
-        <ul class="list-unstyled">
-          <li class="mb-2"><a href="/" style="color: #666;">回到首页 (Home)</a></li>
-          <li class="mb-2"><a href="/assessment.html" style="color: #C41E3A; font-weight: bold;">CRS 算分器 (免费评估)</a></li>
-          <li class="mb-2"><a href="/#contact" style="color: #666;">预约咨询 (Book Consultation)</a></li>
+      <div style="flex: 1; min-width: 250px;">
+        <h5 style="color: #182B45; font-weight: bold; margin-bottom: 20px; font-size: 1.1rem;">快速导航</h5>
+        <ul style="list-style: none; padding: 0; line-height: 2.2;">
+          <li><a href="/" style="color: #666; text-decoration: none; transition: 0.3s;">回到首页 (Home)</a></li>
+          <li><a href="/assessment.html" style="color: #C41E3A; font-weight: bold; text-decoration: none;">CRS 算分器 (免费评估)</a></li>
+          <li><a href="#" style="color: #C5A059; font-weight: bold; text-decoration: none;">🎥 视频课程 (Video Courses)</a></li>
+          <li><a href="/#contact" style="color: #666; text-decoration: none;">预约咨询 (Consultation)</a></li>
         </ul>
       </div>
 
-      <div class="col-lg-4 col-md-4 col-sm-6 mb-4">
-        <h5 style="color: #2C3E50; font-weight: bold; margin-bottom: 20px;">联系我们</h5>
-        <ul class="list-unstyled" style="color: #666; font-size: 0.9rem;">
-          <li class="mb-2"><strong>地址：</strong> Vancouver, BC, Canada</li>
-          <li class="mb-2"><strong>工作时间：</strong> 周一至周五 9:30 - 18:00</li>
-          <li class="mb-2"><strong>Email：</strong> info@kotoimmigration.com</li>
+      <div style="flex: 1; min-width: 250px;">
+        <h5 style="color: #182B45; font-weight: bold; margin-bottom: 20px; font-size: 1.1rem;">联系我们</h5>
+        <ul style="list-style: none; padding: 0; line-height: 2; color: #666; font-size: 0.9rem;">
+          <li style="margin-bottom: 10px;"><strong>📍 地址：</strong><br>Vancouver, BC, Canada</li>
+          <li style="margin-bottom: 10px;"><strong>⏰ 工作时间：</strong><br>周一至周五 9:30 - 18:00</li>
+          <li><strong>📧 Email：</strong><br>info@kotoimmigration.com</li>
         </ul>
       </div>
 
-      <div class="col-lg-4 col-md-4 col-sm-12 mb-4 text-md-right text-sm-left">
-        <h5 style="color: #2C3E50; font-weight: bold; margin-bottom: 20px;">关注我们</h5>
-        <div class="social-links">
-          <a href="#" style="color:#C5A059; margin-right:15px; font-size:1.2rem;"><i class="fab fa-weixin"></i></a>
-          <a href="#" style="color:#C5A059; margin-right:15px; font-size:1.2rem;"><i class="fab fa-instagram"></i></a>
-          <a href="#" style="color:#C5A059; font-size:1.2rem;"><i class="fab fa-youtube"></i></a>
+      <div style="flex: 1; min-width: 250px;">
+        <h5 style="color: #182B45; font-weight: bold; margin-bottom: 20px; font-size: 1.1rem;">关注我们</h5>
+        <p style="color: #666; font-size: 0.9rem; line-height: 1.6;">
+          关注我们的小红书和公众号，获取每日干货分享。
+        </p>
+        <div style="margin-top: 15px;">
+            <span style="color:#C5A059; font-weight:bold;">小红书 / WeChat / Instagram</span>
         </div>
-        <p style="margin-top: 20px; font-size: 0.8rem; color: #999;">
-          © 2025 KOTO Immigration. <br>All Rights Reserved.
+        <p style="margin-top: 30px; font-size: 0.8rem; color: #999;">
+          © 2025 KOTO Immigration.<br>All Rights Reserved.
         </p>
       </div>
 
     </div>
   </div>
 </footer>
+
+<style>
+  @media (max-width: 768px) {
+    footer div[style*="display: flex"] {
+      flex-direction: column;
+    }
+    footer form {
+      flex-direction: column;
+      align-items: center;
+    }
+    footer input {
+      width: 100% !important;
+      border-radius: 5px !important;
+      margin-bottom: 10px;
+    }
+    footer button {
+      width: 100% !important;
+      border-radius: 5px !important;
+    }
+  }
+</style>
