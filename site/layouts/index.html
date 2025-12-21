@@ -8,7 +8,6 @@
     }
 
     /* === 2. 基础设置 === */
-    /* [新增] 让全站的滚动都变成丝滑模式 */
     html {
         scroll-behavior: smooth;
     }
@@ -39,7 +38,7 @@
         display: flex; align-items: center;
     }
     .nav-logo img {
-        height: 70px; /* 保持您满意的大 Logo */
+        height: 70px; 
         width: auto;
         object-fit: contain;
     }
@@ -90,17 +89,34 @@
     .koto-services-section { 
         padding: 60px 10%; 
         background: white; 
-        /* [新增] 这是一个偏移量，防止滑动时标题被导航栏挡住 */
         scroll-margin-top: 100px; 
     }
     .koto-services-header { text-align: center; margin-bottom: 50px; }
     .koto-services-header h2 { color: var(--k-red); font-size: 2.2rem; font-weight: bold; }
     .koto-services-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 30px; }
+    
     .koto-card { background: white; border: 1px solid #eee; border-radius: 16px; overflow: hidden; display: flex; flex-direction: column; align-items: center; text-align: center; padding-bottom: 30px; transition: 0.3s; }
     .koto-card:hover { transform: translateY(-5px); box-shadow: 0 15px 30px rgba(0,0,0,0.08); }
+    
     .koto-card-img { width: 100%; height: 200px; background: #e0e0e0; display: flex; align-items: center; justify-content: center; color: #999; margin-bottom: 25px; }
     .koto-card-img img { width: 100%; height: 100%; object-fit: cover; }
-    .koto-card-pill { background: var(--k-red); color: white !important; padding: 10px 30px; border-radius: 50px; font-weight: bold; margin-bottom: 20px; }
+    
+    /* [修改] 药丸按钮改为 inline-block 以支持 padding 和 transform */
+    .koto-card-pill { 
+        display: inline-block;
+        background: var(--k-red); 
+        color: white !important; 
+        padding: 10px 30px; 
+        border-radius: 50px; 
+        font-weight: bold; 
+        margin-bottom: 20px; 
+        transition: transform 0.2s;
+    }
+    .koto-card-pill:hover {
+        transform: scale(1.05); /* 悬停微放大 */
+        box-shadow: 0 5px 15px rgba(196, 30, 58, 0.2);
+    }
+    
     .koto-card-desc { color: #666; font-size: 0.95rem; padding: 0 20px; }
 
     .koto-news-section { padding: 60px 20px; background: #fafafa; }
@@ -126,7 +142,6 @@
 </nav>
 
 <div class="koto-hero-wrapper" id="kotoHero">
-    
     <div class="koto-hero-slide active" style="background-color: #ddd; background-image: url('');">
         <div class="koto-hero-content">
             <h1>Expert Guidance for<br>Your Canadian Journey</h1>
@@ -134,7 +149,6 @@
             <a href="/assessment" class="koto-hero-btn">开始免费评估 &rarr;</a>
         </div>
     </div>
-    
     <div class="koto-hero-slide" style="background-color: #ccc; background-image: url('');">
         <div class="koto-hero-content">
             <h1>美加名校直通车</h1>
@@ -142,7 +156,6 @@
             <a href="#core-services" class="koto-hero-btn">查看留学服务</a>
         </div>
     </div>
-    
     <div class="koto-hero-slide" style="background-color: #bbb; background-image: url('');">
         <div class="koto-hero-content">
             <h1>疑难签证专家</h1>
@@ -150,7 +163,6 @@
             <a href="#page-bottom" class="koto-hero-btn">联系我们</a>
         </div>
     </div>
-
     <div class="koto-dots">
         <span class="koto-dot active" onclick="setKotoHero(0)"></span>
         <span class="koto-dot" onclick="setKotoHero(1)"></span>
@@ -161,26 +173,31 @@
 <section class="koto-services-section" id="core-services">
     <div class="koto-services-header"><h2>我们的核心服务</h2></div>
     <div class="koto-services-grid">
+        
         <div class="koto-card">
             <div class="koto-card-img">雅思图片位</div>
-            <div class="koto-card-pill">雅思/思培提分</div>
+            <a href="/capsules/" class="koto-card-pill">雅思/思培提分</a>
             <p class="koto-card-desc">名师一对一精准指导，针对性突破口语写作瓶颈，助您快速达到移民分数要求。</p>
         </div>
+
         <div class="koto-card">
             <div class="koto-card-img">留学图片位</div>
-            <div class="koto-card-pill">美加留学规划</div>
+            <a href="/study/" class="koto-card-pill">美加留学规划</a>
             <p class="koto-card-desc">从小学到博士的全龄段申请服务。顶尖名校文书定制，学签办理及拒签翻案。</p>
         </div>
+
         <div class="koto-card">
             <div class="koto-card-img">加移民图片位</div>
-            <div class="koto-card-pill">加拿大移民</div>
+            <a href="/canada/" class="koto-card-pill">加拿大移民</a>
             <p class="koto-card-desc">快速通道 (Express Entry)、省提名 (PNP)、家庭团聚及配偶工签全类别办理。</p>
         </div>
+
         <div class="koto-card">
             <div class="koto-card-img">美移民图片位</div>
-            <div class="koto-card-pill">美国移民</div>
+            <a href="/usa/" class="koto-card-pill">美国移民</a>
             <p class="koto-card-desc">杰出人才 (EB-1)、国家利益豁免 (NIW) 及跨国高管移民 (L1/EB-1C) 专业咨询。</p>
         </div>
+
     </div>
 </section>
 
