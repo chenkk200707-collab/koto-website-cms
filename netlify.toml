@@ -2,7 +2,7 @@
   NETLIFY_USE_YARN = "true"
   YARN_VERSION = "1.22.17"
   NODE_VERSION = "16"
-  
+
 [build]
   command = "yarn build"
   publish = "dist"
@@ -13,4 +13,3 @@
 [dev]
   framework = "hugo"
   targetPort = 3000
-
