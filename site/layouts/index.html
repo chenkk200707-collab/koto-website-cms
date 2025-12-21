@@ -90,7 +90,7 @@
     }
     .koto-card-desc { color: #666; font-size: 0.95rem; line-height: 1.6; padding: 0 20px; margin: 0; }
 
-    /* === 4. 新闻滑块 (保持原样) === */
+    /* === 4. 新闻滑块 (横向滚动) === */
     .koto-news-section { padding: 60px 20px; background: #fafafa; }
     .koto-news-slider {
         display: flex; overflow-x: auto; gap: 30px; padding: 10px 5px 30px 5px; scroll-snap-type: x mandatory;
@@ -150,76 +150,3 @@
         </div>
         <div class="koto-card">
             <div class="koto-card-img">加移民图片位</div>
-            <div class="koto-card-title">加拿大移民</div>
-            <p class="koto-card-desc">快速通道 (Express Entry)、省提名 (PNP)、家庭团聚及配偶工签全类别办理。</p>
-        </div>
-        <div class="koto-card">
-            <div class="koto-card-img">美移民图片位</div>
-            <div class="koto-card-title">美国移民</div>
-            <p class="koto-card-desc">杰出人才 (EB-1)、国家利益豁免 (NIW) 及跨国高管移民 (L1/EB-1C) 专业咨询。</p>
-        </div>
-    </div>
-</section>
-
-<section class="koto-news-section">
-    <div style="max-width: 1200px; margin: 0 auto;">
-        <h2 style="color: var(--koto-dark); margin-bottom: 30px;">最新移民资讯</h2>
-        <div class="koto-news-slider">
-            {{ range first 6 .Site.RegularPages }}
-            <a href="{{ .Permalink }}" class="koto-news-card" style="text-decoration: none;">
-                
-                {{/* === 图片获取逻辑修正开始 === */}}
-                {{ $img := "" }}
-                {{ if .Params.image }}
-                    {{ $res := .Resources.GetMatch .Params.image }}
-                    {{ if $res }}{{ $img = $res.RelPermalink }}{{ else }}{{ $img = .Params.image }}{{ end }}
-                {{ end }}
-                
-                {{/* 如果没有找到图片，强制使用 Logo 作为兜底 */}}
-                {{ if not $img }}
-                    {{ $img = "/images/logo-koto.png" }}
-                {{ end }}
-                {{/* === 图片获取逻辑修正结束 === */}}
-                
-                {{/* 现在一定有图片地址了，直接显示 img 标签 */}}
-                <img src="{{ $img }}" style="width: 100%; height: 200px; object-fit: cover; display:block;">
-                
-                <div style="padding: 20px;">
-                    <h3 style="margin: 0 0 10px 0; font-size: 1.1rem; line-height: 1.4; color: #333;">{{ .Title }}</h3>
-                    <p style="font-size: 0.9rem; color: #666; margin:0;">{{ .Summary | truncate 60 }}</p>
-                    <span style="color: var(--koto-red); font-weight: bold; font-size: 0.9rem; display:block; margin-top:15px;">阅读全文 &rarr;</span>
-                </div>
-            </a>
-            {{ end }}
-        </div>
-    </div>
-</section>
-
-<script>
-    document.addEventListener("DOMContentLoaded", function() {
-        let idx = 0;
-        const slides = document.querySelectorAll('.koto-hero-slide');
-        const dots = document.querySelectorAll('.koto-dot');
-        
-        function updateHero(n) {
-            slides.forEach(s => s.classList.remove('active'));
-            dots.forEach(d => d.classList.remove('active'));
-            
-            idx = n;
-            if (idx >= slides.length) idx = 0;
-            if (idx < 0) idx = slides.length - 1;
-            
-            if (slides[idx]) slides[idx].classList.add('active');
-            if (dots[idx]) dots[idx].classList.add('active');
-        }
-
-        let timer = setInterval(() => { updateHero(idx + 1); }, 4000);
-
-        window.setHero = function(n) {
-            clearInterval(timer);
-            updateHero(n);
-            timer = setInterval(() => { updateHero(idx + 1); }, 4000);
-        };
-    });
-</script>
-{{ end }}
