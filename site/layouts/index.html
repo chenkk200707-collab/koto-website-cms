@@ -8,9 +8,7 @@
     }
 
     /* === 2. 基础设置 === */
-    html {
-        scroll-behavior: smooth;
-    }
+    html { scroll-behavior: smooth; }
 
     body {
         margin: 0; padding: 0;
@@ -38,12 +36,16 @@
         display: flex; align-items: center;
     }
     .nav-logo img {
-        height: 70px; 
+        height: 70px; /* 保持大气尺寸 */
         width: auto;
         object-fit: contain;
     }
 
-    .nav-links { display: flex; gap: 30px; align-items: center; }
+    .nav-links { 
+        display: flex; 
+        gap: 25px; /* [调整]稍微收紧间距，容纳更多菜单 */
+        align-items: center; 
+    }
 
     .nav-item {
         font-size: 1.1rem; 
@@ -53,6 +55,7 @@
         padding: 5px 0; 
         cursor: pointer;
         letter-spacing: 0.5px;
+        white-space: nowrap; /* 防止文字换行 */
     }
     .nav-item::after {
         content: ''; position: absolute; bottom: 0; left: 0; width: 0; height: 3px;
@@ -66,6 +69,7 @@
         font-weight: 800;
         font-size: 1rem;
         box-shadow: 0 4px 12px rgba(196, 30, 58, 0.3);
+        white-space: nowrap;
     }
     .nav-btn-cta:hover { transform: scale(1.05); }
 
@@ -101,7 +105,6 @@
     .koto-card-img { width: 100%; height: 200px; background: #e0e0e0; display: flex; align-items: center; justify-content: center; color: #999; margin-bottom: 25px; }
     .koto-card-img img { width: 100%; height: 100%; object-fit: cover; }
     
-    /* [修改] 药丸按钮改为 inline-block 以支持 padding 和 transform */
     .koto-card-pill { 
         display: inline-block;
         background: var(--k-red); 
@@ -112,10 +115,7 @@
         margin-bottom: 20px; 
         transition: transform 0.2s;
     }
-    .koto-card-pill:hover {
-        transform: scale(1.05); /* 悬停微放大 */
-        box-shadow: 0 5px 15px rgba(196, 30, 58, 0.2);
-    }
+    .koto-card-pill:hover { transform: scale(1.05); box-shadow: 0 5px 15px rgba(196, 30, 58, 0.2); }
     
     .koto-card-desc { color: #666; font-size: 0.95rem; padding: 0 20px; }
 
@@ -137,6 +137,9 @@
         <a href="/study/" class="nav-item">北美留学</a>
         <a href="/canada/" class="nav-item">加拿大移民</a>
         <a href="/usa/" class="nav-item">美国移民</a>
+        
+        <a href="/cases/" class="nav-item">成功案例</a>
+        
         <a href="#page-bottom" class="nav-btn-cta">预约咨询</a>
     </div>
 </nav>
@@ -173,7 +176,6 @@
 <section class="koto-services-section" id="core-services">
     <div class="koto-services-header"><h2>我们的核心服务</h2></div>
     <div class="koto-services-grid">
-        
         <div class="koto-card">
             <div class="koto-card-img">雅思图片位</div>
             <a href="/capsules/" class="koto-card-pill">雅思/思培提分</a>
@@ -197,7 +199,6 @@
             <a href="/usa/" class="koto-card-pill">美国移民</a>
             <p class="koto-card-desc">杰出人才 (EB-1)、国家利益豁免 (NIW) 及跨国高管移民 (L1/EB-1C) 专业咨询。</p>
         </div>
-
     </div>
 </section>
 
