@@ -2,32 +2,85 @@
 {{ partial "koto-header.html" . }}
 
 <style>
-    body { padding-top: 80px; font-family: sans-serif; } /* 避开导航栏 */
+    /* === 1. 布局修复 (强力版) === */
+    /* 使用 !important 确保不被主题样式覆盖 */
+    body { 
+        padding-top: 100px !important; /* 增加到 100px，留出更多呼吸空间 */
+        font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
+        background-color: #fff;
+        margin: 0;
+    }
     
-    /* 英雄区 & 筛选器 */
-    .capsule-hero { text-align: center; padding: 60px 20px 40px; background-color: #F5F7FA; }
-    .hero-badge { display: inline-block; background: #CFA45C; color: white; padding: 6px 15px; border-radius: 50px; font-weight: bold; margin-bottom: 20px; font-size: 0.85rem; }
-    .capsule-hero h1 { font-size: 2.5rem; font-weight: 800; color: #2C3E50; margin: 0 0 20px 0; }
+    /* 2. Hero 区域 */
+    .capsule-hero { 
+        text-align: center; 
+        padding: 40px 20px 40px; /* 顶部内边距稍微减小，因为 body 已经有了 padding */
+        background-color: #F5F7FA; 
+    }
+    .hero-badge { 
+        display: inline-block; background: #CFA45C; color: white; 
+        padding: 6px 15px; border-radius: 50px; font-weight: bold; 
+        margin-bottom: 20px; font-size: 0.85rem; 
+    }
+    .capsule-hero h1 { 
+        font-size: 2.5rem; font-weight: 800; color: #2C3E50; 
+        margin: 0 0 20px 0; 
+    }
+    .capsule-hero p { 
+        font-size: 1.1rem; color: #666; max-width: 600px; 
+        margin: 0 auto; line-height: 1.6; 
+    }
     
-    .capsule-filters { display: flex; justify-content: center; gap: 15px; flex-wrap: wrap; margin-bottom: 60px; margin-top: 30px; }
-    .filter-tag { padding: 10px 25px; border-radius: 50px; background: #e0e0e0; color: #555; font-weight: 600; cursor: pointer; border: none; font-size: 0.95rem; transition: 0.3s; }
-    .filter-tag.active { background: #2C3E50; color: white; }
+    /* 3. 筛选器 */
+    .capsule-filters { 
+        display: flex; justify-content: center; gap: 15px; flex-wrap: wrap; 
+        margin-bottom: 60px; margin-top: 30px; 
+    }
+    .filter-tag { 
+        padding: 10px 25px; border-radius: 50px; background: #e0e0e0; color: #555; 
+        font-weight: 600; cursor: pointer; border: none; font-size: 0.95rem; transition: 0.3s; 
+    }
+    .filter-tag:hover { background: #d0d0d0; transform: translateY(-2px); }
+    .filter-tag.active { background: #2C3E50; color: white; box-shadow: 0 4px 10px rgba(44, 62, 80, 0.3); }
 
-    /* 网格 */
-    .capsule-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; max-width: 1200px; margin: 0 auto; padding: 0 20px 100px; }
-    .course-card { background: white; border-radius: 12px; border-top: 5px solid #C41E3A; box-shadow: 0 5px 20px rgba(0,0,0,0.05); padding: 30px; transition: 0.3s; }
-    .course-card.hidden { display: none; }
-    .course-card.blue-top { border-top-color: #3b82f6; }
-    .course-card.gold-top { border-top-color: #CFA45C; }
+    /* 4. 网格布局 */
+    .capsule-grid { 
+        display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); 
+        gap: 30px; max-width: 1200px; margin: 0 auto; padding: 0 20px 100px; 
+    }
     
-    .inquire-btn { width: 100%; padding: 12px; background: #2C3E50; color: white; border-radius: 8px; font-weight: bold; cursor: pointer; border: none; margin-top: 20px; }
+    /* 5. 卡片样式 */
+    .course-card { 
+        background: white; border-radius: 12px; 
+        border-top: 5px solid #C41E3A; /* 默认红色顶条 */
+        box-shadow: 0 5px 20px rgba(0,0,0,0.05); padding: 30px; 
+        display: flex; flex-direction: column; align-items: flex-start;
+        transition: all 0.3s ease; 
+        height: 100%; /* 确保卡片高度拉伸一致 */
+    }
+    .course-card.hidden { display: none; }
+    .course-card:hover { transform: translateY(-5px); box-shadow: 0 15px 40px rgba(0,0,0,0.1); }
+    
+    /* 不同类别的顶条颜色 */
+    .course-card.blue-top { border-top-color: #3b82f6; } /* 思培蓝色 */
+    .course-card.gold-top { border-top-color: #CFA45C; } /* 词汇金色 */
+    
+    .card-category { font-size: 0.75rem; font-weight: bold; color: #999; text-transform: uppercase; margin-bottom: 15px; letter-spacing: 1px; }
+    .card-icon { font-size: 2.5rem; margin-bottom: 15px; }
+    .card-title { font-size: 1.3rem; font-weight: 800; color: #2C3E50; margin: 0 0 10px 0; line-height: 1.3; }
+    .card-desc { font-size: 0.95rem; color: #666; line-height: 1.6; margin-bottom: 25px; flex-grow: 1; }
+    
+    .inquire-btn { 
+        width: 100%; padding: 12px; background: #2C3E50; color: white; 
+        text-align: center; border-radius: 8px; font-weight: bold; cursor: pointer; border: none; transition: 0.3s; margin-top: auto; /* 按钮沉底 */
+    }
     .inquire-btn:hover { background: #C41E3A; }
 </style>
 
 <div class="capsule-hero">
     <span class="hero-badge">KOTO 10天突破法</span>
     <h1>英语思维“胶囊”：<br>视觉化重塑语言系统</h1>
-    <p style="color:#666; max-width:600px; margin:0 auto; line-height:1.6;">拒绝死记硬背。用视觉逻辑重塑语言系统。<br>10天见效，专为解决雅思、思培、法语学习痛点设计。</p>
+    <p>拒绝死记硬背。用视觉逻辑重塑语言系统。<br>10天见效，专为解决雅思、思培、法语学习痛点设计。</p>
 </div>
 
 <div class="capsule-filters">
@@ -37,37 +90,87 @@
     <button class="filter-tag" onclick="filterCapsules('vocab', this)">词汇 & 法语</button>
 </div>
 
-<div class="capsule-grid">
+<div class="capsule-grid" id="capsuleGrid">
+
     <div class="course-card" data-category="ielts">
-        <h3 style="margin:0 0 10px 0;">雅思口语 7.0+ 视觉逻辑课</h3>
-        <p style="color:#666; font-size:0.9rem;">停止脑内翻译。学会 3 步视觉逻辑法，瞬间破解 Part 2 & 3 难题。</p>
+        <div class="card-category">IELTS SPEAKING</div>
+        <div class="card-icon">🗣️</div>
+        <h3 class="card-title">雅思口语 7.0+ 视觉逻辑课</h3>
+        <p class="card-desc">停止脑内翻译。学会 3 步视觉逻辑法，瞬间破解 Part 2 & 3 难题，告别中式英语思维。</p>
         <button class="inquire-btn" onclick="openGlobalModal('雅思口语 7.0+ 视觉逻辑')">咨询获取</button>
     </div>
+
+    <div class="course-card" data-category="ielts">
+        <div class="card-category">IELTS WRITING</div>
+        <div class="card-icon">📊</div>
+        <h3 class="card-title">小作文：数据解码器</h3>
+        <p class="card-desc">线图、柱状图、地图题的视觉化拆解。掌握精准的趋势描述词汇，快速抓住数据重点。</p>
+        <button class="inquire-btn" onclick="openGlobalModal('雅思小作文 Data Decoder')">咨询获取</button>
+    </div>
+
+    <div class="course-card" data-category="ielts">
+        <div class="card-category">IELTS WRITING</div>
+        <div class="card-icon">🏗️</div>
+        <h3 class="card-title">大作文：逻辑积木</h3>
+        <p class="card-desc">独创“乐高积木”法构建论文结构。像搭积木一样组装论点，告别卡顿，轻松写出高分文章。</p>
+        <button class="inquire-btn" onclick="openGlobalModal('雅思大作文 Argument Builder')">咨询获取</button>
+    </div>
+
+    <div class="course-card gold-top" data-category="vocab">
+        <div class="card-category">GENERAL ENGLISH</div>
+        <div class="card-icon">🚀</div>
+        <h3 class="card-title">词汇升级：从简单到高级</h3>
+        <p class="card-desc">让您的语言从“还行”变成“地道”。用精准的高级词汇替换基础词，瞬间提升表达质感。</p>
+        <button class="inquire-btn" onclick="openGlobalModal('词汇升级 Vocab Upgrade')">咨询获取</button>
+    </div>
+
     <div class="course-card blue-top" data-category="celpip">
-        <h3 style="margin:0 0 10px 0;">思培口语：看图说话大师</h3>
-        <p style="color:#666; font-size:0.9rem;">万能看图框架。完美应对思培口语 Task 1，条理清晰地描述细节。</p>
+        <div class="card-category">CELPIP / LIFE</div>
+        <div class="card-icon">🏡</div>
+        <h3 class="card-title">思培/生活：高频场景词汇</h3>
+        <p class="card-desc">加拿大生活 300 核心词。从银行开户到烧烤聚会，掌握最地道的本地表达，永远有话可说。</p>
+        <button class="inquire-btn" onclick="openGlobalModal('思培生活词汇')">咨询获取</button>
+    </div>
+
+    <div class="course-card blue-top" data-category="celpip">
+        <div class="card-category">CELPIP SPEAKING</div>
+        <div class="card-icon">🖼️</div>
+        <h3 class="card-title">思培口语：看图说话大师</h3>
+        <p class="card-desc">万能看图框架。完美应对思培口语 Task 1，条理清晰地描述任何图片细节。</p>
         <button class="inquire-btn" onclick="openGlobalModal('思培看图说话')">咨询获取</button>
     </div>
+
     <div class="course-card gold-top" data-category="vocab">
-        <h3 style="margin:0 0 10px 0;">词汇升级：从简单到高级</h3>
-        <p style="color:#666; font-size:0.9rem;">用精准的高级词汇替换基础词，瞬间提升表达质感。</p>
-        <button class="inquire-btn" onclick="openGlobalModal('词汇升级')">咨询获取</button>
+        <div class="card-category">FRENCH TEF/TCF</div>
+        <div class="card-icon">🇫🇷</div>
+        <h3 class="card-title">法语 CLB 7 极速冲刺</h3>
+        <p class="card-desc">专为 EE 移民加分设计。聚焦核心词汇与句型，剔除无效内容，快速达到 CLB 7 门槛。</p>
+        <button class="inquire-btn" onclick="openGlobalModal('法语 CLB7 加速营')">咨询获取</button>
     </div>
+
 </div>
 
 <script>
     function filterCapsules(category, btnElement) {
+        // 1. 切换按钮状态
         const buttons = document.querySelectorAll('.filter-tag');
         buttons.forEach(btn => btn.classList.remove('active'));
         btnElement.classList.add('active');
+        
+        // 2. 筛选卡片
         const cards = document.querySelectorAll('.course-card');
         cards.forEach(card => {
-            if (category === 'all') card.classList.remove('hidden');
-            else {
-                if (card.dataset.category === category) card.classList.remove('hidden');
-                else card.classList.add('hidden');
+            if (category === 'all') {
+                card.classList.remove('hidden');
+            } else {
+                if (card.dataset.category === category) {
+                    card.classList.remove('hidden');
+                } else {
+                    card.classList.add('hidden');
+                }
             }
         });
     }
 </script>
+
 {{ end }}
