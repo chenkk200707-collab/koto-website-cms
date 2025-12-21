@@ -13,9 +13,9 @@
         display: flex;
         align-items: center;
         justify-content: space-between;
-        padding: 80px 10%;
+        padding: 80px 10%; /* 默认宽屏 padding */
         background-color: var(--light-gray);
-        min-height: 500px; /* 保证视觉高度 */
+        min-height: 500px;
     }
     
     .hero-text { flex: 1; padding-right: 50px; }
@@ -32,8 +32,8 @@
     .cta-button {
         background-color: var(--primary);
         color: white;
-        padding: 18px 40px; /* 更大的按钮 */
-        border-radius: 50px; /* 圆角更现代 */
+        padding: 18px 40px;
+        border-radius: 50px;
         text-decoration: none;
         font-weight: bold;
         font-size: 1.1rem;
@@ -70,6 +70,18 @@
     .service-card img { width: 70px; margin-bottom: 20px; }
     .service-card h3 { color: var(--secondary); margin-bottom: 10px; }
     .service-card p { color: #666; font-size: 0.9rem; }
+
+    /* 移动端适配 */
+    @media (max-width: 768px) {
+        .hero-section {
+            flex-direction: column;
+            padding: 60px 20px;
+            text-align: center;
+        }
+        .hero-text { padding-right: 0; margin-bottom: 40px; }
+        .hero-text h1 { font-size: 2.5rem; }
+        .services-grid { padding: 60px 20px; }
+    }
 
 </style>
 
@@ -112,18 +124,38 @@
     </div>
 </section>
 
-<section style="padding: 80px 10%; background: #fafafa;">
-    <h2 style="color: var(--secondary); margin-bottom: 40px; text-align: center;">最新移民资讯</h2>
-    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px;">
-        {{ range first 3 .Site.RegularPages }}
-        <div style="background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.05);">
-            {{ if .Params.image }}<img src="{{ .Params.image }}" style="width: 100%; height: 200px; object-fit: cover;">{{ end }}
-            <div style="padding: 25px;">
-                <h3 style="margin: 0 0 10px 0; font-size: 1.1rem;"><a href="{{ .Permalink }}" style="text-decoration: none; color: var(--secondary);">{{ .Title }}</a></h3>
-                <a href="{{ .Permalink }}" style="color: var(--primary); font-weight: bold; font-size: 0.9rem; text-decoration: none;">阅读全文 &rarr;</a>
+<section style="padding: 80px 20px; background: #fafafa;">
+    <div style="max-width: 1100px; margin: 0 auto;">
+        
+        <h2 style="color: var(--secondary); margin-bottom: 40px; text-align: center;">最新移民资讯</h2>
+        
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px;">
+            {{ range first 3 .Site.RegularPages }}
+            
+            {{ $img := .Params.image }} {{ if not $img }}
+                {{ $imgMatches := findRE `(?i)src="([^"]+)"` .Content 1 }}
+                {{ if gt (len $imgMatches) 0 }}
+                    {{ $img = index $imgMatches 0 | replaceRE `src="` "" | replaceRE `"` "" }}
+                {{ end }}
+            {{ end }}
+            {{ if not $img }}
+                {{ $img = "/images/logo-koto.png" }}
+            {{ end }}
+            <div style="background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.05); transition: transform 0.3s ease;">
+                <a href="{{ .Permalink }}" style="display: block; overflow: hidden;">
+                    <img src="{{ $img }}" style="width: 100%; height: 200px; object-fit: cover; transition: transform 0.5s ease;">
+                </a>
+                
+                <div style="padding: 25px;">
+                    <h3 style="margin: 0 0 10px 0; font-size: 1.1rem; line-height: 1.4; height: 3.2em; overflow: hidden;">
+                        <a href="{{ .Permalink }}" style="text-decoration: none; color: var(--secondary);">{{ .Title }}</a>
+                    </h3>
+                    <a href="{{ .Permalink }}" style="color: var(--primary); font-weight: bold; font-size: 0.9rem; text-decoration: none; display: inline-block; margin-top: 10px;">阅读全文 &rarr;</a>
+                </div>
             </div>
+            {{ end }}
         </div>
-        {{ end }}
+
     </div>
 </section>
 {{ end }}
