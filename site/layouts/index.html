@@ -2,22 +2,21 @@
 <style>
     /* 核心配色 */
     :root {
-        --primary: #C41E3A; /* 加拿大红 */
-        --secondary: #2C3E50; /* 深蓝 */
+        --primary: #C41E3A; 
+        --secondary: #2C3E50;
         --bg: #FFFFFF;
         --light-gray: #F5F7FA;
     }
 
-    /* 1. Hero 区域 - 简洁大气 */
+    /* Hero 区域 */
     .hero-section {
         display: flex;
         align-items: center;
         justify-content: space-between;
-        padding: 80px 10%; /* 默认宽屏 padding */
+        padding: 80px 10%;
         background-color: var(--light-gray);
         min-height: 500px;
     }
-    
     .hero-text { flex: 1; padding-right: 50px; }
     .hero-text h1 { 
         font-size: 3.5rem; 
@@ -28,7 +27,7 @@
     }
     .hero-image img { width: 550px; max-width: 100%; height: auto; }
 
-    /* 按钮样式 */
+    /* 按钮 */
     .cta-button {
         background-color: var(--primary);
         color: white;
@@ -82,7 +81,6 @@
         .hero-text h1 { font-size: 2.5rem; }
         .services-grid { padding: 60px 20px; }
     }
-
 </style>
 
 <section class="hero-section">
@@ -104,19 +102,16 @@
         <h3>雅思/思培提分</h3>
         <p>名师一对一精准指导，针对性突破口语写作瓶颈，助您快速达到移民分数要求。</p>
     </div>
-
     <div class="service-card">
         <img src="/images/icon-study.png" alt="Study" style="width:60px; margin-bottom:15px;">
         <h3>美加留学规划</h3>
         <p>从小学到博士的全龄段申请服务。顶尖名校文书定制，学签办理及拒签翻案。</p>
     </div>
-
     <div class="service-card">
         <img src="/images/icon-ca.png" alt="Canada" style="width:60px; margin-bottom:15px;">
         <h3>加拿大移民</h3>
         <p>快速通道 (Express Entry)、省提名 (PNP)、家庭团聚及配偶工签全类别办理。</p>
     </div>
-
     <div class="service-card">
         <img src="/images/icon-us.png" alt="USA" style="width:60px; margin-bottom:15px;">
         <h3>美国移民</h3>
@@ -132,22 +127,18 @@
         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px;">
             {{ range first 3 .Site.RegularPages }}
             
-            {{ $img := .Params.image }} {{ if not $img }}
-                {{ $imgMatches := findRE `(?i)src="([^"]+)"` .Content 1 }}
-                {{ if gt (len $imgMatches) 0 }}
-                    {{ $img = index $imgMatches 0 | replaceRE `src="` "" | replaceRE `"` "" }}
-                {{ end }}
-            {{ end }}
+            {{ $img := .Params.image }}
             {{ if not $img }}
                 {{ $img = "/images/logo-koto.png" }}
             {{ end }}
-            <div style="background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.05); transition: transform 0.3s ease;">
-                <a href="{{ .Permalink }}" style="display: block; overflow: hidden;">
-                    <img src="{{ $img }}" style="width: 100%; height: 200px; object-fit: cover; transition: transform 0.5s ease;">
+
+            <div style="background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.05);">
+                <a href="{{ .Permalink }}" style="display: block;">
+                    <img src="{{ $img }}" style="width: 100%; height: 200px; object-fit: cover;">
                 </a>
                 
                 <div style="padding: 25px;">
-                    <h3 style="margin: 0 0 10px 0; font-size: 1.1rem; line-height: 1.4; height: 3.2em; overflow: hidden;">
+                    <h3 style="margin: 0 0 10px 0; font-size: 1.1rem; line-height: 1.4;">
                         <a href="{{ .Permalink }}" style="text-decoration: none; color: var(--secondary);">{{ .Title }}</a>
                     </h3>
                     <a href="{{ .Permalink }}" style="color: var(--primary); font-weight: bold; font-size: 0.9rem; text-decoration: none; display: inline-block; margin-top: 10px;">阅读全文 &rarr;</a>
