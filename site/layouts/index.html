@@ -1,196 +1,336 @@
-{{ define "main" }}
-<style>
-    /* === 1. 核心配色与基础样式 (保留原版美感) === */
-    :root {
-        --primary: #C41E3A; 
-        --secondary: #2C3E50;
-        --bg: #FFFFFF;
-        --light-gray: #F5F7FA;
-    }
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Koto Immigration & Education - 首页</title>
+    <style>
+        /* --- 全局样式 --- */
+        :root {
+            --primary-color: #004aad; /*以此为主色调*/
+            --text-color: #333;
+            --bg-light: #f9f9f9;
+            --placeholder-color: #e0e0e0; /* 图片占位符颜色 */
+        }
 
-    /* === 2. Hero 区域 (恢复了大图和文字布局) === */
-    .hero-section {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        padding: 80px 10%;
-        background-color: var(--light-gray);
-        min-height: 500px;
-    }
-    .hero-text { flex: 1; padding-right: 50px; }
-    .hero-text h1 { 
-        font-size: 3.5rem; 
-        color: var(--secondary); 
-        margin-bottom: 20px; 
-        line-height: 1.1; 
-        font-weight: 800;
-    }
-    /* 适配移动端 */
-    @media (max-width: 768px) {
-        .hero-section { flex-direction: column; text-align: center; padding: 60px 20px; }
-        .hero-text { padding-right: 0; margin-bottom: 40px; }
-        .hero-image img { width: 80% !important; margin: 0 auto; }
-    }
-    .hero-image img { width: 550px; max-width: 100%; height: auto; }
+        body {
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            color: var(--text-color);
+            line-height: 1.6;
+        }
 
-    /* 按钮样式 */
-    .cta-button {
-        background-color: var(--primary);
-        color: white;
-        padding: 18px 40px;
-        border-radius: 50px;
-        text-decoration: none;
-        font-weight: bold;
-        font-size: 1.1rem;
-        display: inline-block;
-        transition: transform 0.2s, box-shadow 0.2s;
-        box-shadow: 0 4px 15px rgba(196, 30, 58, 0.3);
-    }
-    .cta-button:hover { 
-        transform: translateY(-3px); 
-        box-shadow: 0 8px 25px rgba(196, 30, 58, 0.4);
-    }
+        a { text-decoration: none; color: inherit; }
+        ul { list-style: none; padding: 0; margin: 0; }
 
-    /* === 3. 服务卡片 (恢复原版 Grid) === */
-    .services-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-        gap: 40px;
-        padding: 80px 10%;
-        background: white;
-    }
-    .service-card {
-        padding: 30px;
-        border-radius: 20px;
-        background: white;
-        border: 1px solid #f0f0f0;
-        text-align: center;
-        transition: 0.3s;
-    }
-    .service-card:hover {
-        transform: translateY(-10px);
-        box-shadow: 0 20px 40px rgba(0,0,0,0.08);
-    }
-    .service-card img { width: 70px; margin-bottom: 20px; }
-    .service-card h3 { color: var(--secondary); margin-bottom: 10px; }
-    .service-card p { color: #666; font-size: 0.9rem; }
+        /* --- 导航栏 --- */
+        header {
+            background: #fff;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
 
-    /* === 4. 最新文章 (重点修改：左右滑动 + 显示时间) === */
-    .latest-news-section {
-        padding: 60px 0 80px 10%; /* 左侧留白对齐，右侧无限延伸 */
-        background: #fafafa;
-        overflow: hidden; /* 防止页面被撑开 */
-    }
-    
-    .news-slider-container {
-        display: flex; /* 关键：横向排列 */
-        overflow-x: auto; /* 关键：允许横向滚动 */
-        gap: 30px;
-        padding-bottom: 20px; /* 给滚动条留位置 */
-        padding-right: 20px;
-        scroll-snap-type: x mandatory; /* 顺滑吸附效果 */
-        -webkit-overflow-scrolling: touch;
-    }
+        nav {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 2rem;
+        }
 
-    /* 隐藏滚动条但保留功能 (可选，如果想完全隐藏滚动条可加 display:none) */
-    .news-slider-container::-webkit-scrollbar { height: 6px; }
-    .news-slider-container::-webkit-scrollbar-thumb { background: #ddd; border-radius: 3px; }
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
 
-    .news-card-slide {
-        min-width: 300px; /* 固定宽度，确保能横向滑 */
-        max-width: 300px;
-        flex: 0 0 auto;   /* 禁止压缩 */
-        scroll-snap-align: start;
-        background: white;
-        border-radius: 12px;
-        overflow: hidden;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-        transition: transform 0.3s;
-        display: flex;
-        flex-direction: column;
-    }
-    .news-card-slide:hover { transform: translateY(-5px); }
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
 
-    .date-badge {
-        font-size: 0.85rem;
-        color: #888;
-        margin-bottom: 8px;
-        display: block;
-        font-weight: 600;
-    }
-</style>
+        .nav-links a:hover {
+            color: var(--primary-color);
+        }
 
-<section class="hero-section">
-    <div class="hero-text">
-        <h1>Expert Guidance for<br>Your Canadian Journey</h1>
-        <p style="font-size: 1.2rem; color: #555; margin-bottom: 40px; max-width: 500px;">
-            基于官方 CRS 标准的精准规划。从留学到移民，我们为您定制最优路径。
-        </p>
-        <a href="/assessment" class="cta-button">Start Free Assessment &rarr;</a>
-    </div>
-    <div class="hero-image">
-        <img src="/images/hero.png" alt="Consultant" onerror="this.style.display='none'">
-    </div>
-</section>
+        /* --- 左右滑动的轮播图 (Hero Slider) --- */
+        .slider-container {
+            position: relative;
+            width: 100%;
+            height: 500px; /* 轮播图高度 */
+            overflow: hidden;
+            background-color: #ddd;
+        }
 
-<section class="services-grid">
-    <div class="service-card">
-        <img src="/images/icon-english.png" alt="Icon" onerror="this.src='https://via.placeholder.com/60'">
-        <h3>雅思/思培提分</h3>
-        <p>名师一对一精准指导，针对性突破口语写作瓶颈。</p>
-    </div>
-    <div class="service-card">
-        <img src="/images/icon-study.png" alt="Icon" onerror="this.src='https://via.placeholder.com/60'">
-        <h3>美加留学规划</h3>
-        <p>从小学到博士的全龄段申请服务，顶尖名校文书定制。</p>
-    </div>
-    <div class="service-card">
-        <img src="/images/icon-ca.png" alt="Icon" onerror="this.src='https://via.placeholder.com/60'">
-        <h3>加拿大移民</h3>
-        <p>快速通道 (Express Entry)、省提名 (PNP) 全类别办理。</p>
-    </div>
-    <div class="service-card">
-        <img src="/images/icon-us.png" alt="Icon" onerror="this.src='https://via.placeholder.com/60'">
-        <h3>美国移民</h3>
-        <p>杰出人才 (EB-1)、NIW 及跨国高管移民专业咨询。</p>
-    </div>
-</section>
+        .slider-wrapper {
+            display: flex;
+            width: 100%;
+            height: 100%;
+            transition: transform 0.5s ease-in-out;
+        }
 
-<section class="latest-news-section">
-    <h2 style="color: var(--secondary); margin-bottom: 30px;">Latest Stories</h2>
-    
-    <div class="news-slider-container">
-        {{ range first 10 .Site.RegularPages }}
-        <div class="news-card-slide">
-            
-            {{ $image := .Resources.GetMatch .Params.image }}
-            {{ if $image }}
-                <img src="{{ $image.RelPermalink }}" style="height: 180px; width: 100%; object-fit: cover;">
-            {{ else }}
-                <div style="height: 180px; width: 100%; background: #eee; display:flex; align-items:center; justify-content:center; color:#ccc;">No Image</div>
-            {{ end }}
+        .slide {
+            min-width: 100%;
+            height: 100%;
+            position: relative;
+            /* 这里模拟图片占位 */
+            background-color: #ccc; 
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
 
-            <div style="padding: 20px; flex: 1; display: flex; flex-direction: column;">
-                
-                <span class="date-badge">📅 {{ .Date.Format "Jan 2, 2006" }}</span>
+        /* 为演示设置不同的背景色，实际使用时换成 background-image */
+        .slide:nth-child(1) { background-color: #b3cde0; }
+        .slide:nth-child(2) { background-color: #6497b1; }
+        .slide:nth-child(3) { background-color: #005b96; }
 
-                <h3 style="margin: 0 0 10px 0; font-size: 1.1rem; line-height: 1.4;">
-                    <a href="{{ .Permalink }}" style="color: var(--secondary); text-decoration: none;">
-                        {{ .Title }}
-                    </a>
-                </h3>
-                
-                <p style="font-size: 0.9rem; color: #666; flex: 1; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical;">
-                    {{ .Summary | truncate 80 }}
-                </p>
+        .slide-content {
+            text-align: center;
+            color: #fff;
+            background: rgba(0,0,0,0.4);
+            padding: 2rem;
+            border-radius: 8px;
+        }
 
-                <a href="{{ .Permalink }}" style="color: var(--primary); font-weight: bold; font-size: 0.9rem; margin-top: 15px; text-decoration: none;">
-                    Read More &rarr;
-                </a>
+        .slide-content h2 { font-size: 2.5rem; margin-bottom: 0.5rem; }
+        .slide-content p { font-size: 1.2rem; }
+
+        /* 轮播图控制按钮 */
+        .slider-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(0,0,0,0.5);
+            color: white;
+            border: none;
+            padding: 1rem;
+            cursor: pointer;
+            font-size: 1.5rem;
+            z-index: 10;
+        }
+        .prev-btn { left: 10px; }
+        .next-btn { right: 10px; }
+
+        /* --- 内容区域通用 --- */
+        .section {
+            padding: 4rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 3rem;
+            font-size: 2rem;
+            color: var(--primary-color);
+        }
+
+        /* --- 图片占位符样式 --- */
+        .img-placeholder {
+            background-color: var(--placeholder-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #888;
+            font-weight: bold;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        /* 添加一个图标或文字提示 */
+        .img-placeholder::after {
+            content: "图片预留区域";
+        }
+
+        /* --- 业务介绍 (Grid布局) --- */
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .service-card {
+            background: #fff;
+            border: 1px solid #eee;
+            border-radius: 8px;
+            overflow: hidden;
+            transition: transform 0.3s;
+        }
+
+        .service-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        /* 卡片里的图片区域 */
+        .service-img {
+            width: 100%;
+            height: 200px; /* 固定高度，确保区域存在 */
+        }
+
+        .service-info {
+            padding: 1.5rem;
+            text-align: center;
+        }
+
+        /* --- 关于我们 (图文混排) --- */
+        .about-container {
+            display: flex;
+            align-items: center;
+            gap: 3rem;
+        }
+
+        .about-img {
+            flex: 1;
+            height: 350px; /* 确保关于我们的图片有高度 */
+        }
+
+        .about-text {
+            flex: 1;
+        }
+
+        /* --- 页脚 --- */
+        footer {
+            background: #333;
+            color: #fff;
+            text-align: center;
+            padding: 2rem;
+            margin-top: 4rem;
+        }
+
+        /* --- 响应式调整 --- */
+        @media (max-width: 768px) {
+            .about-container {
+                flex-direction: column;
+            }
+            .about-img {
+                width: 100%;
+                height: 250px;
+            }
+            .slide-content h2 { font-size: 1.8rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <nav>
+            <div class="logo">Koto Immigration</div>
+            <div class="nav-links">
+                <a href="#">首页</a>
+                <a href="#">关于我们</a>
+                <a href="#">服务项目</a>
+                <a href="#">成功案例</a>
+                <a href="#">联系我们</a>
+            </div>
+        </nav>
+    </header>
+
+    <div class="slider-container">
+        <div class="slider-wrapper" id="sliderWrapper">
+            <div class="slide">
+                <div class="slide-content">
+                    <h2>专业移民规划</h2>
+                    <p>为您量身定制最合适的移民方案</p>
+                </div>
+            </div>
+            <div class="slide">
+                <div class="slide-content">
+                    <h2>留学教育咨询</h2>
+                    <p>连接世界名校，开启未来之旅</p>
+                </div>
+            </div>
+            <div class="slide">
+                <div class="slide-content">
+                    <h2>全程贴心服务</h2>
+                    <p>从申请到落地，我们始终在您身边</p>
+                </div>
             </div>
         </div>
-        {{ end }}
+        <button class="slider-btn prev-btn" onclick="moveSlide(-1)">&#10094;</button>
+        <button class="slider-btn next-btn" onclick="moveSlide(1)">&#10095;</button>
     </div>
-</section>
 
-{{ end }}
+    <section class="section">
+        <h2 class="section-title">我们的服务</h2>
+        <div class="services-grid">
+            <div class="service-card">
+                <div class="img-placeholder service-img"></div> 
+                <div class="service-info">
+                    <h3>加拿大移民</h3>
+                    <p>技术移民、雇主担保、投资移民等全方位服务。</p>
+                </div>
+            </div>
+            <div class="service-card">
+                <div class="img-placeholder service-img"></div>
+                <div class="service-info">
+                    <h3>留学申请</h3>
+                    <p>涵盖小学、中学、本科及研究生申请。</p>
+                </div>
+            </div>
+            <div class="service-card">
+                <div class="img-placeholder service-img"></div>
+                <div class="service-info">
+                    <h3>签证服务</h3>
+                    <p>学签、工签、旅游签及拒签翻案。</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section" style="background-color: var(--bg-light);">
+        <h2 class="section-title">关于 Koto</h2>
+        <div class="about-container">
+            <div class="img-placeholder about-img"></div>
+            <div class="about-text">
+                <h3>致力于您的未来</h3>
+                <p>Koto Immigration & Education Inc. 是一家专业的移民与教育咨询机构。我们拥有经验丰富的持牌顾问团队，致力于为每一位客户提供最专业、最诚信的咨询服务。</p>
+                <p>无论是留学规划还是移民安置，我们都将竭诚为您服务，助您在新的国度顺利开启新生活。</p>
+                <br>
+                <a href="#" style="color: var(--primary-color); font-weight: bold;">了解更多 &rarr;</a>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <p>&copy; 2025 Koto Immigration & Education Inc. All Rights Reserved.</p>
+    </footer>
+
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const wrapper = document.getElementById('sliderWrapper');
+        const totalSlides = slides.length;
+
+        // 自动播放间隔 (3000ms = 3秒)
+        let autoPlayInterval = setInterval(() => {
+            moveSlide(1);
+        }, 3000);
+
+        function moveSlide(direction) {
+            currentSlide += direction;
+
+            if (currentSlide >= totalSlides) {
+                currentSlide = 0;
+            } else if (currentSlide < 0) {
+                currentSlide = totalSlides - 1;
+            }
+
+            const offset = -currentSlide * 100;
+            wrapper.style.transform = `translateX(${offset}%)`;
+            
+            // 重置自动播放计时器，防止用户点击后立即自动切换
+            clearInterval(autoPlayInterval);
+            autoPlayInterval = setInterval(() => {
+                moveSlide(1);
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
