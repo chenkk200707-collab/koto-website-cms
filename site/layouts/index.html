@@ -143,9 +143,10 @@
                 {{ $img = "/images/logo-koto.png" }}
             {{ end }}
 
-            {{/* 🛠️ 关键修复 V7.0：尝试 /img/ 路径 (这是 CMS 最常用的默认文件夹) */}}
+            {{/* 🛠️ 关键修复 V8.0：尝试 /uploads/ 路径 */}}
             {{ if and $img (not (hasPrefix $img "http")) (not (hasPrefix $img "/")) }}
-                {{ $img = printf "/img/%s" $img }}
+                {{/* 这是 Netlify CMS 最经典的默认路径 */}}
+                {{ $img = printf "/uploads/%s" $img }}
             {{ end }}
 
             <div style="background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.05); transition: transform 0.3s ease;">
