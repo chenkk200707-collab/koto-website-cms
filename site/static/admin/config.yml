@@ -59,7 +59,6 @@ collections: # A list of collections the CMS should be able to edit
       -
             fields:
               - {label: Heading, name: heading, widget: string}
-              - {label: Te file: "site/content/products/_index.md"
        
   - name: "site_settings"
     label: "Site Settings"
