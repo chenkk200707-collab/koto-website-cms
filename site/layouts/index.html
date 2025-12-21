@@ -1,76 +1,196 @@
 {{ define "main" }}
 <style>
-    /* Styling for the page */
+    /* === 1. 核心配色与基础样式 (保留原版美感) === */
+    :root {
+        --primary: #C41E3A; 
+        --secondary: #2C3E50;
+        --bg: #FFFFFF;
+        --light-gray: #F5F7FA;
+    }
+
+    /* === 2. Hero 区域 (恢复了大图和文字布局) === */
     .hero-section {
-        padding: 60px 10%;
-        background-color: #f9f9f9;
-        text-align: center; /* Centers the text since image is gone */
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 80px 10%;
+        background-color: var(--light-gray);
+        min-height: 500px;
     }
+    .hero-text { flex: 1; padding-right: 50px; }
     .hero-text h1 { 
-        font-size: 3rem; 
-        color: #2C3E50; 
+        font-size: 3.5rem; 
+        color: var(--secondary); 
         margin-bottom: 20px; 
+        line-height: 1.1; 
+        font-weight: 800;
     }
-    .news-container {
+    /* 适配移动端 */
+    @media (max-width: 768px) {
+        .hero-section { flex-direction: column; text-align: center; padding: 60px 20px; }
+        .hero-text { padding-right: 0; margin-bottom: 40px; }
+        .hero-image img { width: 80% !important; margin: 0 auto; }
+    }
+    .hero-image img { width: 550px; max-width: 100%; height: auto; }
+
+    /* 按钮样式 */
+    .cta-button {
+        background-color: var(--primary);
+        color: white;
+        padding: 18px 40px;
+        border-radius: 50px;
+        text-decoration: none;
+        font-weight: bold;
+        font-size: 1.1rem;
+        display: inline-block;
+        transition: transform 0.2s, box-shadow 0.2s;
+        box-shadow: 0 4px 15px rgba(196, 30, 58, 0.3);
+    }
+    .cta-button:hover { 
+        transform: translateY(-3px); 
+        box-shadow: 0 8px 25px rgba(196, 30, 58, 0.4);
+    }
+
+    /* === 3. 服务卡片 (恢复原版 Grid) === */
+    .services-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-        gap: 30px;
-        padding: 40px 10%;
-        max-width: 1200px;
-        margin: 0 auto;
-    }
-    .news-card {
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        gap: 40px;
+        padding: 80px 10%;
         background: white;
-        padding: 20px;
-        border-radius: 8px;
-        box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-        border: 1px solid #eee;
     }
-    .date-tag {
+    .service-card {
+        padding: 30px;
+        border-radius: 20px;
+        background: white;
+        border: 1px solid #f0f0f0;
+        text-align: center;
+        transition: 0.3s;
+    }
+    .service-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 20px 40px rgba(0,0,0,0.08);
+    }
+    .service-card img { width: 70px; margin-bottom: 20px; }
+    .service-card h3 { color: var(--secondary); margin-bottom: 10px; }
+    .service-card p { color: #666; font-size: 0.9rem; }
+
+    /* === 4. 最新文章 (重点修改：左右滑动 + 显示时间) === */
+    .latest-news-section {
+        padding: 60px 0 80px 10%; /* 左侧留白对齐，右侧无限延伸 */
+        background: #fafafa;
+        overflow: hidden; /* 防止页面被撑开 */
+    }
+    
+    .news-slider-container {
+        display: flex; /* 关键：横向排列 */
+        overflow-x: auto; /* 关键：允许横向滚动 */
+        gap: 30px;
+        padding-bottom: 20px; /* 给滚动条留位置 */
+        padding-right: 20px;
+        scroll-snap-type: x mandatory; /* 顺滑吸附效果 */
+        -webkit-overflow-scrolling: touch;
+    }
+
+    /* 隐藏滚动条但保留功能 (可选，如果想完全隐藏滚动条可加 display:none) */
+    .news-slider-container::-webkit-scrollbar { height: 6px; }
+    .news-slider-container::-webkit-scrollbar-thumb { background: #ddd; border-radius: 3px; }
+
+    .news-card-slide {
+        min-width: 300px; /* 固定宽度，确保能横向滑 */
+        max-width: 300px;
+        flex: 0 0 auto;   /* 禁止压缩 */
+        scroll-snap-align: start;
+        background: white;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        transition: transform 0.3s;
+        display: flex;
+        flex-direction: column;
+    }
+    .news-card-slide:hover { transform: translateY(-5px); }
+
+    .date-badge {
         font-size: 0.85rem;
         color: #888;
-        margin-bottom: 5px;
+        margin-bottom: 8px;
         display: block;
-        font-weight: bold;
+        font-weight: 600;
     }
 </style>
 
 <section class="hero-section">
     <div class="hero-text">
         <h1>Expert Guidance for<br>Your Canadian Journey</h1>
-        <p style="font-size: 1.2rem; color: #555; margin-bottom: 40px;">
+        <p style="font-size: 1.2rem; color: #555; margin-bottom: 40px; max-width: 500px;">
             基于官方 CRS 标准的精准规划。从留学到移民，我们为您定制最优路径。
         </p>
-        <a href="/assessment" style="background:#C41E3A; color:white; padding:15px 30px; text-decoration:none; border-radius:30px; font-weight:bold;">
-            Start Free Assessment &rarr;
-        </a>
+        <a href="/assessment" class="cta-button">Start Free Assessment &rarr;</a>
     </div>
-    </section>
+    <div class="hero-image">
+        <img src="/images/hero.png" alt="Consultant" onerror="this.style.display='none'">
+    </div>
+</section>
 
-<section style="background: white;">
-    <h2 style="text-align:center; margin-top:60px; color:#333;">Latest Stories</h2>
+<section class="services-grid">
+    <div class="service-card">
+        <img src="/images/icon-english.png" alt="Icon" onerror="this.src='https://via.placeholder.com/60'">
+        <h3>雅思/思培提分</h3>
+        <p>名师一对一精准指导，针对性突破口语写作瓶颈。</p>
+    </div>
+    <div class="service-card">
+        <img src="/images/icon-study.png" alt="Icon" onerror="this.src='https://via.placeholder.com/60'">
+        <h3>美加留学规划</h3>
+        <p>从小学到博士的全龄段申请服务，顶尖名校文书定制。</p>
+    </div>
+    <div class="service-card">
+        <img src="/images/icon-ca.png" alt="Icon" onerror="this.src='https://via.placeholder.com/60'">
+        <h3>加拿大移民</h3>
+        <p>快速通道 (Express Entry)、省提名 (PNP) 全类别办理。</p>
+    </div>
+    <div class="service-card">
+        <img src="/images/icon-us.png" alt="Icon" onerror="this.src='https://via.placeholder.com/60'">
+        <h3>美国移民</h3>
+        <p>杰出人才 (EB-1)、NIW 及跨国高管移民专业咨询。</p>
+    </div>
+</section>
+
+<section class="latest-news-section">
+    <h2 style="color: var(--secondary); margin-bottom: 30px;">Latest Stories</h2>
     
-    <div class="news-container">
-        {{ range .Site.RegularPages }}
-        <div class="news-card">
+    <div class="news-slider-container">
+        {{ range first 10 .Site.RegularPages }}
+        <div class="news-card-slide">
             
-            <span class="date-tag">📅 {{ .Date.Format "Jan 2, 2006" }}</span>
+            {{ $image := .Resources.GetMatch .Params.image }}
+            {{ if $image }}
+                <img src="{{ $image.RelPermalink }}" style="height: 180px; width: 100%; object-fit: cover;">
+            {{ else }}
+                <div style="height: 180px; width: 100%; background: #eee; display:flex; align-items:center; justify-content:center; color:#ccc;">No Image</div>
+            {{ end }}
 
-            <h3 style="margin: 10px 0;">
-                <a href="{{ .Permalink }}" style="color: #2C3E50; text-decoration: none;">
-                    {{ .Title }}
+            <div style="padding: 20px; flex: 1; display: flex; flex-direction: column;">
+                
+                <span class="date-badge">📅 {{ .Date.Format "Jan 2, 2006" }}</span>
+
+                <h3 style="margin: 0 0 10px 0; font-size: 1.1rem; line-height: 1.4;">
+                    <a href="{{ .Permalink }}" style="color: var(--secondary); text-decoration: none;">
+                        {{ .Title }}
+                    </a>
+                </h3>
+                
+                <p style="font-size: 0.9rem; color: #666; flex: 1; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical;">
+                    {{ .Summary | truncate 80 }}
+                </p>
+
+                <a href="{{ .Permalink }}" style="color: var(--primary); font-weight: bold; font-size: 0.9rem; margin-top: 15px; text-decoration: none;">
+                    Read More &rarr;
                 </a>
-            </h3>
-            
-            <p style="color: #666; font-size: 0.9rem;">
-                {{ .Summary | truncate 100 }}
-            </p>
-            
-            <a href="{{ .Permalink }}" style="color: #C41E3A; font-weight: bold; font-size: 0.9rem; text-decoration: none;">
-                Read more &rarr;
-            </a>
+            </div>
         </div>
         {{ end }}
     </div>
 </section>
+
 {{ end }}
