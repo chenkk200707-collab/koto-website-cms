@@ -130,7 +130,7 @@
             {{/* 1. 获取图片 */}}
             {{ $img := .Params.image }}
 
-            {{/* 2. 自动抓取逻辑 (如果没设置封面) */}}
+            {{/* 2. 自动抓取逻辑 */}}
             {{ if not $img }}
                 {{ $imgMatches := findRE `(?i)src="([^"]+)"` .Content 1 }}
                 {{ if gt (len $imgMatches) 0 }}
@@ -143,12 +143,28 @@
                 {{ $img = "/images/logo-koto.png" }}
             {{ end }}
 
-            {{/* 🛠️ 关键修复 V6.0：尝试 /images/ 路径 */}}
+            {{/* 🛠️ 关键修复 V7.0：尝试 /img/ 路径 (这是 CMS 最常用的默认文件夹) */}}
             {{ if and $img (not (hasPrefix $img "http")) (not (hasPrefix $img "/")) }}
-                {{/* 这次我们直接加 /images/，不加 uploads 了 */}}
-                {{ $img = printf "/images/%s" $img }}
+                {{ $img = printf "/img/%s" $img }}
             {{ end }}
 
             <div style="background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.05); transition: transform 0.3s ease;">
                 <a href="{{ .Permalink }}" style="display: block; overflow: hidden;">
-                    <img src="{{ $img
+                    <img src="{{ $img }}" style="width: 100%; height: 200px; object-fit: cover; transition: transform 0.5s ease;">
+                </a>
+                
+                <div style="padding: 25px;">
+                    <h3 style="margin: 0 0 10px 0; font-size: 1.1rem; line-height: 1.4; height: 3.2em; overflow: hidden;">
+                        <a href="{{ .Permalink }}" style="text-decoration: none; color: var(--secondary);">{{ .Title }}</a>
+                    </h3>
+                    <a href="{{ .Permalink }}" style="color: var(--primary); font-weight: bold; font-size: 0.9rem; text-decoration: none; display: inline-block; margin-top: 10px;">阅读全文 &rarr;</a>
+                    
+                    <p style="color: #999; font-size: 0.7rem; margin-top: 5px;">Source: {{ $img }}</p>
+                </div>
+            </div>
+            {{ end }}
+        </div>
+
+    </div>
+</section>
+{{ end }}
