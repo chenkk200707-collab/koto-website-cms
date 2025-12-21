@@ -144,4 +144,43 @@
             {{/* 3. 如果没找到资源，可能是旧的全局路径，或者是没填 */}}
             {{ if not $finalImg }}
                 {{ if $imgName }}
-                     {{/* 有名字但没找到资源
+                     {{/* 有名字但没找到资源，假设是旧的 /images/ 路径 */}}
+                     {{ if or (hasPrefix $imgName "http") (hasPrefix $imgName "/") }}
+                        {{ $finalImg = $imgName }}
+                     {{ else }}
+                        {{/* 兜底：尝试拼凑 global 路径 */}}
+                        {{ $finalImg = printf "/images/%s" $imgName }}
+                     {{ end }}
+                {{ else }}
+                    {{/* 4. 名字都没填，去正文里抓 (正则) */}}
+                    {{ $imgMatches := findRE `(?i)src="([^"]+)"` .Content 1 }}
+                    {{ if gt (len $imgMatches) 0 }}
+                        {{ $finalImg = index $imgMatches 0 | replaceRE `src="` "" | replaceRE `"` "" }}
+                    {{ end }}
+                {{ end }}
+            {{ end }}
+
+            {{/* 5. 最后的最后，还是没有？用 Logo */}}
+            {{ if not $finalImg }}
+                {{ $finalImg = "/images/logo-koto.png" }}
+            {{ end }}
+
+            <div style="background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.05); transition: transform 0.3s ease;">
+                <a href="{{ .Permalink }}" style="display: block; overflow: hidden;">
+                    <img src="{{ $finalImg }}" style="width: 100%; height: 200px; object-fit: cover; transition: transform 0.5s ease;">
+                </a>
+                
+                <div style="padding: 25px;">
+                    <h3 style="margin: 0 0 10px 0; font-size: 1.1rem; line-height: 1.4; height: 3.2em; overflow: hidden;">
+                        <a href="{{ .Permalink }}" style="text-decoration: none; color: var(--secondary);">{{ .Title }}</a>
+                    </h3>
+                    <a href="{{ .Permalink }}" style="color: var(--primary); font-weight: bold; font-size: 0.9rem; text-decoration: none; display: inline-block; margin-top: 10px;">阅读全文 &rarr;</a>
+                    
+                    </div>
+            </div>
+            {{ end }}
+        </div>
+
+    </div>
+</section>
+{{ end }}
