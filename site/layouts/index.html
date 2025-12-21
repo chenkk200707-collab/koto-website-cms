@@ -1,71 +1,35 @@
 {{ define "main" }}
-<style>
-    /* === 1. Koto 品牌变量 === */
-    :root {
-        --k-red: #C41E3A;
-        --k-dark: #2C3E50;
-        --k-gray: #F5F7FA;
-    }
+{{ partial "koto-header.html" . }}
 
-    /* === 2. 基础设置 === */
+<style>
     html { scroll-behavior: smooth; }
+    
+    /* 关键：给 Body 加顶部边距，因为 Header 是 fixed 的 */
     body {
         margin: 0; padding: 0;
-        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-        color: #333;
-        background-color: #fff;
+        padding-top: 80px; 
+        font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+        color: #333; background-color: #fff;
     }
     a { text-decoration: none; color: inherit; transition: 0.3s; }
     * { box-sizing: border-box; }
 
-    /* === 3. 新版红色导航栏 === */
-    .koto-main-nav {
-        background-color: white; height: 80px; padding: 0 5%;
-        display: flex; justify-content: space-between; align-items: center;
-        box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-        position: fixed; top: 0; left: 0; width: 100%; z-index: 99999; 
-    }
-    .nav-logo { height: 100%; display: flex; align-items: center; }
-    .nav-logo img { height: 70px; width: auto; object-fit: contain; }
-    .nav-links { display: flex; gap: 25px; align-items: center; }
-    
-    .nav-item {
-        font-size: 1.1rem; font-weight: 800; color: var(--k-red); 
-        position: relative; padding: 5px 0; cursor: pointer;
-        letter-spacing: 0.5px; white-space: nowrap; border: none; background: none;
-    }
-    .nav-item::after {
-        content: ''; position: absolute; bottom: 0; left: 0; width: 0; height: 3px;
-        background: var(--k-red); transition: 0.3s;
-    }
-    .nav-item:hover::after { width: 100%; }
-
-    .nav-btn-cta {
-        background-color: var(--k-red); color: white !important;
-        padding: 12px 28px; border-radius: 50px; font-weight: 800; font-size: 1rem;
-        box-shadow: 0 4px 12px rgba(196, 30, 58, 0.3); white-space: nowrap;
-    }
-    .nav-btn-cta:hover { transform: scale(1.05); }
-
-    /* === 4. 轮播图 === */
-    .koto-hero-wrapper {
-        position: relative; width: 100%; height: 550px; 
-        background-color: var(--k-gray); overflow: hidden; margin-top: 80px; 
-    }
+    /* 轮播图 */
+    .koto-hero-wrapper { position: relative; width: 100%; height: 550px; background-color: #F5F7FA; overflow: hidden; }
     .koto-hero-slide { position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; transition: opacity 0.8s; display: flex; align-items: center; justify-content: center; z-index: 1; background-size: cover; background-position: center; }
     .koto-hero-slide.active { opacity: 1; z-index: 2; }
     .koto-hero-content { background: rgba(196, 30, 58, 0.95); padding: 40px 60px; border-radius: 12px; text-align: center; color: white; max-width: 700px; }
     .koto-hero-content h1 { font-size: 2.5rem; margin: 0 0 15px 0; color: white !important; }
     .koto-hero-content p { font-size: 1.1rem; margin-bottom: 30px; color: #f0f0f0 !important; }
-    .koto-hero-btn { background: white !important; color: var(--k-red) !important; padding: 12px 35px; border-radius: 50px; font-weight: bold; display: inline-block; cursor: pointer; }
+    .koto-hero-btn { background: white !important; color: #C41E3A !important; padding: 12px 35px; border-radius: 50px; font-weight: bold; display: inline-block; cursor: pointer; }
     .koto-dots { position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%); z-index: 10; display: flex; gap: 12px; }
     .koto-dot { width: 12px; height: 12px; background: rgba(255,255,255,0.4); border-radius: 50%; cursor: pointer; }
     .koto-dot.active { background: white; }
 
-    /* === 5. 服务与新闻 === */
+    /* 服务区 */
     .koto-services-section { padding: 60px 10%; background: white; scroll-margin-top: 100px; }
     .koto-services-header { text-align: center; margin-bottom: 50px; }
-    .koto-services-header h2 { color: var(--k-red); font-size: 2.2rem; font-weight: bold; }
+    .koto-services-header h2 { color: #C41E3A; font-size: 2.2rem; font-weight: bold; }
     .koto-services-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 30px; }
     
     .koto-card { background: white; border: 1px solid #eee; border-radius: 16px; overflow: hidden; display: flex; flex-direction: column; align-items: center; text-align: center; padding-bottom: 30px; transition: 0.3s; }
@@ -73,58 +37,16 @@
     .koto-card-img { width: 100%; height: 200px; background: #e0e0e0; display: flex; align-items: center; justify-content: center; color: #999; margin-bottom: 25px; }
     .koto-card-img img { width: 100%; height: 100%; object-fit: cover; }
     
-    .koto-card-pill { 
-        display: inline-block; background: var(--k-red); color: white !important; 
-        padding: 10px 30px; border-radius: 50px; font-weight: bold; 
-        margin-bottom: 20px; transition: transform 0.2s; cursor: pointer;
-    }
+    .koto-card-pill { display: inline-block; background: #C41E3A; color: white !important; padding: 10px 30px; border-radius: 50px; font-weight: bold; margin-bottom: 20px; transition: transform 0.2s; cursor: pointer; }
     .koto-card-pill:hover { transform: scale(1.05); box-shadow: 0 5px 15px rgba(196, 30, 58, 0.2); }
     .koto-card-desc { color: #666; font-size: 0.95rem; padding: 0 20px; }
 
+    /* 新闻区 */
     .koto-news-section { padding: 60px 20px; background: #fafafa; }
     .koto-news-container { max-width: 1200px; margin: 0 auto; }
     .koto-news-scroll { display: flex; overflow-x: auto; gap: 30px; padding: 10px 5px 30px 5px; scroll-snap-type: x mandatory; }
     .koto-news-card { min-width: 300px; scroll-snap-align: start; background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.05); display: block; }
-
-    /* === 6. [新增] 弹窗样式 (复用自子页面) === */
-    .modal-overlay {
-        position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-        background: rgba(0,0,0,0.6); backdrop-filter: blur(5px);
-        z-index: 100000; display: none; align-items: center; justify-content: center;
-    }
-    .modal-overlay.show { display: flex; }
-    .modal-box {
-        background: white; width: 90%; max-width: 400px; border-radius: 16px; padding: 40px; text-align: center; position: relative;
-        box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-    }
-    .modal-close { position: absolute; top: 15px; right: 20px; font-size: 1.5rem; color: #999; cursor: pointer; }
-    .qr-box {
-        width: 200px; height: 200px; background: #f9f9f9; margin: 20px auto; border-radius: 8px;
-        display: flex; align-items: center; justify-content: center; overflow: hidden;
-    }
-    .qr-box img { width: 100%; height: 100%; object-fit: contain; }
-    .wechat-copy { background: #f0f0f0; padding: 10px; border-radius: 6px; font-family: monospace; font-size: 1.1rem; cursor: pointer; border: 1px dashed #ccc; display: inline-block; width: 100%; }
 </style>
-
-<nav class="koto-main-nav" id="koto-new-nav">
-    <div class="nav-logo">
-        <a href="/">
-            <img src="/images/logo-koto.png" alt="KOTO Logo">
-        </a>
-    </div>
-    
-    <div class="nav-links">
-        <a href="/capsules/" class="nav-item">英语胶囊</a>
-        
-        <button onclick="openHomeModal('北美留学规划')" class="nav-item">北美留学</button>
-        
-        <a href="/canada/" class="nav-item">加拿大移民</a>
-        <a href="/usa/" class="nav-item">美国移民</a>
-        <a href="/cases/" class="nav-item">成功案例</a>
-        
-        <a href="#page-bottom" class="nav-btn-cta">预约咨询</a>
-    </div>
-</nav>
 
 <div class="koto-hero-wrapper" id="kotoHero">
     <div class="koto-hero-slide active" style="background-color: #ddd; background-image: url('');">
@@ -138,7 +60,7 @@
         <div class="koto-hero-content">
             <h1>美加名校直通车</h1>
             <p>顶尖名校文书定制，从小学到博士的全龄段申请服务。</p>
-            <button onclick="openHomeModal('美加名校直通车')" class="koto-hero-btn">查看留学服务</button>
+            <a href="/study/" class="koto-hero-btn">查看留学服务</a>
         </div>
     </div>
     <div class="koto-hero-slide" style="background-color: #bbb; background-image: url('');">
@@ -167,7 +89,7 @@
 
         <div class="koto-card">
             <div class="koto-card-img">留学图片位</div>
-            <div onclick="openHomeModal('美加留学规划')" class="koto-card-pill">美加留学规划</div>
+            <a href="/study/" class="koto-card-pill">美加留学规划</a>
             <p class="koto-card-desc">从小学到博士的全龄段申请服务。顶尖名校文书定制，学签办理及拒签翻案。</p>
         </div>
 
@@ -179,7 +101,7 @@
 
         <div class="koto-card">
             <div class="koto-card-img">美移民图片位</div>
-            <a href="/usa/" class="koto-card-pill">美国移民</a>
+            <div onclick="openGlobalModal('美国移民规划')" class="koto-card-pill">美国移民</div>
             <p class="koto-card-desc">杰出人才 (EB-1)、国家利益豁免 (NIW) 及跨国高管移民 (L1/EB-1C) 专业咨询。</p>
         </div>
     </div>
@@ -187,7 +109,7 @@
 
 <section class="koto-news-section">
     <div class="koto-news-container">
-        <h2 style="color: var(--k-dark); margin-bottom: 30px; font-size: 1.5rem; font-weight: bold;">最新移民资讯</h2>
+        <h2 style="color: #2C3E50; margin-bottom: 30px; font-size: 1.5rem; font-weight: bold;">最新移民资讯</h2>
         <div class="koto-news-scroll">
             {{ range first 6 .Site.RegularPages }}
             <a href="{{ .Permalink }}" class="koto-news-card">
@@ -204,7 +126,7 @@
                     </span>
                     <h3 style="margin: 0 0 10px 0; font-size: 1.1rem; line-height: 1.4; color: #333;">{{ .Title }}</h3>
                     <p style="font-size: 0.9rem; color: #666; margin:0;">{{ .Summary | truncate 50 }}</p>
-                    <span style="color: var(--k-red); font-weight: bold; font-size: 0.9rem; display:block; margin-top: 15px;">阅读全文 &rarr;</span>
+                    <span style="color: #C41E3A; font-weight: bold; font-size: 0.9rem; display:block; margin-top: 15px;">阅读全文 &rarr;</span>
                 </div>
             </a>
             {{ end }}
@@ -212,39 +134,9 @@
     </div>
 </section>
 
-<div class="modal-overlay" id="homeModal">
-    <div class="modal-box">
-        <div class="modal-close" onclick="closeHomeModal()">&times;</div>
-        <h3>预约咨询</h3>
-        <p style="color:#666; margin-bottom:5px;">您正在咨询：</p>
-        <p style="color:var(--k-red); font-weight:bold; margin-top:0;" id="homeModalService">...</p>
-        <div class="qr-box">
-            <img src="/images/qrcode.png" alt="客服二维码" onerror="this.parentElement.innerHTML='<div style=\'padding:20px; color:red\'>图片加载失败<br>请确保 /static/images/qrcode.png 存在</div>'">
-        </div>
-        <p style="font-size:0.9rem; color:#999;">点击下方复制微信号</p>
-        <div class="wechat-copy" onclick="copyHomeWx()">KotoHelp2025 📋</div>
-    </div>
-</div>
-
 <div id="page-bottom" style="height: 1px;"></div>
 
 <script>
-    // 弹窗逻辑
-    function openHomeModal(serviceName) {
-        document.getElementById('homeModalService').innerText = serviceName;
-        document.getElementById('homeModal').classList.add('show');
-    }
-    function closeHomeModal() {
-        document.getElementById('homeModal').classList.remove('show');
-    }
-    document.getElementById('homeModal').addEventListener('click', function(e){
-        if(e.target === this) closeHomeModal();
-    });
-    function copyHomeWx() {
-        navigator.clipboard.writeText('KotoHelp2025').then(() => alert('微信号已复制'));
-    }
-
-    // 轮播图与菜单逻辑
     document.addEventListener("DOMContentLoaded", function() {
         let kIdx = 0;
         const slides = document.querySelectorAll('.koto-hero-slide');
@@ -266,13 +158,6 @@
                 kTimer = setInterval(() => { updateKotoHero(kIdx + 1); }, 4000);
             };
         }
-        
-        // 移除旧菜单
-        const myNav = document.getElementById('koto-new-nav');
-        const allHeaders = document.querySelectorAll('header, nav, .site-header, #header');
-        allHeaders.forEach(el => {
-            if (el !== myNav && !myNav.contains(el)) { el.style.display = 'none'; }
-        });
     });
 </script>
 {{ end }}
