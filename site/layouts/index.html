@@ -127,18 +127,31 @@
         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px;">
             {{ range first 3 .Site.RegularPages }}
             
+            {{/* 📸 智能图片逻辑 V2.0 */}}
+            
+            {{/* 1. 先获取手动设置的封面 */}}
             {{ $img := .Params.image }}
+
+            {{/* 2. 如果封面是空的，才去正文里找图！ */}}
+            {{ if not $img }}
+                {{ $imgMatches := findRE `(?i)src="([^"]+)"` .Content 1 }}
+                {{ if gt (len $imgMatches) 0 }}
+                    {{ $img = index $imgMatches 0 | replaceRE `src="` "" | replaceRE `"` "" }}
+                {{ end }}
+            {{ end }}
+
+            {{/* 3. 如果正文也没图，最后用 KOTO Logo 兜底 */}}
             {{ if not $img }}
                 {{ $img = "/images/logo-koto.png" }}
             {{ end }}
 
-            <div style="background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.05);">
-                <a href="{{ .Permalink }}" style="display: block;">
-                    <img src="{{ $img }}" style="width: 100%; height: 200px; object-fit: cover;">
+            <div style="background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.05); transition: transform 0.3s ease;">
+                <a href="{{ .Permalink }}" style="display: block; overflow: hidden;">
+                    <img src="{{ $img }}" style="width: 100%; height: 200px; object-fit: cover; transition: transform 0.5s ease;">
                 </a>
                 
                 <div style="padding: 25px;">
-                    <h3 style="margin: 0 0 10px 0; font-size: 1.1rem; line-height: 1.4;">
+                    <h3 style="margin: 0 0 10px 0; font-size: 1.1rem; line-height: 1.4; height: 3.2em; overflow: hidden;">
                         <a href="{{ .Permalink }}" style="text-decoration: none; color: var(--secondary);">{{ .Title }}</a>
                     </h3>
                     <a href="{{ .Permalink }}" style="color: var(--primary); font-weight: bold; font-size: 0.9rem; text-decoration: none; display: inline-block; margin-top: 10px;">阅读全文 &rarr;</a>
