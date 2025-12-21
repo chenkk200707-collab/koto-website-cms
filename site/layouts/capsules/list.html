@@ -1,69 +1,44 @@
 {{ define "main" }}
 {{ partial "koto-header.html" . }}
 
+<div style="height: 120px; width: 100%; background: transparent;"></div>
+
 <style>
-    /* === 1. 布局修复 (强力版) === */
-    /* 使用 !important 确保不被主题样式覆盖 */
+    /* 基础字体设置 */
     body { 
-        padding-top: 100px !important; /* 增加到 100px，留出更多呼吸空间 */
         font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
         background-color: #fff;
-        margin: 0;
+        margin: 0; padding: 0; /* 重置 padding，改用上面的 div 占位 */
     }
     
-    /* 2. Hero 区域 */
-    .capsule-hero { 
-        text-align: center; 
-        padding: 40px 20px 40px; /* 顶部内边距稍微减小，因为 body 已经有了 padding */
-        background-color: #F5F7FA; 
-    }
-    .hero-badge { 
-        display: inline-block; background: #CFA45C; color: white; 
-        padding: 6px 15px; border-radius: 50px; font-weight: bold; 
-        margin-bottom: 20px; font-size: 0.85rem; 
-    }
-    .capsule-hero h1 { 
-        font-size: 2.5rem; font-weight: 800; color: #2C3E50; 
-        margin: 0 0 20px 0; 
-    }
-    .capsule-hero p { 
-        font-size: 1.1rem; color: #666; max-width: 600px; 
-        margin: 0 auto; line-height: 1.6; 
-    }
+    /* Hero 区域 */
+    .capsule-hero { text-align: center; padding: 20px 20px 40px; background-color: #F5F7FA; }
+    .hero-badge { display: inline-block; background: #CFA45C; color: white; padding: 6px 15px; border-radius: 50px; font-weight: bold; margin-bottom: 20px; font-size: 0.85rem; }
+    .capsule-hero h1 { font-size: 2.5rem; font-weight: 800; color: #2C3E50; margin: 0 0 20px 0; }
+    .capsule-hero p { font-size: 1.1rem; color: #666; max-width: 600px; margin: 0 auto; line-height: 1.6; }
     
-    /* 3. 筛选器 */
-    .capsule-filters { 
-        display: flex; justify-content: center; gap: 15px; flex-wrap: wrap; 
-        margin-bottom: 60px; margin-top: 30px; 
-    }
-    .filter-tag { 
-        padding: 10px 25px; border-radius: 50px; background: #e0e0e0; color: #555; 
-        font-weight: 600; cursor: pointer; border: none; font-size: 0.95rem; transition: 0.3s; 
-    }
+    /* 筛选器 */
+    .capsule-filters { display: flex; justify-content: center; gap: 15px; flex-wrap: wrap; margin-bottom: 60px; margin-top: 30px; }
+    .filter-tag { padding: 10px 25px; border-radius: 50px; background: #e0e0e0; color: #555; font-weight: 600; cursor: pointer; border: none; font-size: 0.95rem; transition: 0.3s; }
     .filter-tag:hover { background: #d0d0d0; transform: translateY(-2px); }
     .filter-tag.active { background: #2C3E50; color: white; box-shadow: 0 4px 10px rgba(44, 62, 80, 0.3); }
 
-    /* 4. 网格布局 */
-    .capsule-grid { 
-        display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); 
-        gap: 30px; max-width: 1200px; margin: 0 auto; padding: 0 20px 100px; 
-    }
+    /* 网格布局 */
+    .capsule-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; max-width: 1200px; margin: 0 auto; padding: 0 20px 100px; }
     
-    /* 5. 卡片样式 */
+    /* 卡片样式 */
     .course-card { 
         background: white; border-radius: 12px; 
         border-top: 5px solid #C41E3A; /* 默认红色顶条 */
         box-shadow: 0 5px 20px rgba(0,0,0,0.05); padding: 30px; 
         display: flex; flex-direction: column; align-items: flex-start;
-        transition: all 0.3s ease; 
-        height: 100%; /* 确保卡片高度拉伸一致 */
+        transition: all 0.3s ease; height: 100%;
     }
     .course-card.hidden { display: none; }
     .course-card:hover { transform: translateY(-5px); box-shadow: 0 15px 40px rgba(0,0,0,0.1); }
     
-    /* 不同类别的顶条颜色 */
-    .course-card.blue-top { border-top-color: #3b82f6; } /* 思培蓝色 */
-    .course-card.gold-top { border-top-color: #CFA45C; } /* 词汇金色 */
+    .course-card.blue-top { border-top-color: #3b82f6; } 
+    .course-card.gold-top { border-top-color: #CFA45C; } 
     
     .card-category { font-size: 0.75rem; font-weight: bold; color: #999; text-transform: uppercase; margin-bottom: 15px; letter-spacing: 1px; }
     .card-icon { font-size: 2.5rem; margin-bottom: 15px; }
@@ -72,7 +47,7 @@
     
     .inquire-btn { 
         width: 100%; padding: 12px; background: #2C3E50; color: white; 
-        text-align: center; border-radius: 8px; font-weight: bold; cursor: pointer; border: none; transition: 0.3s; margin-top: auto; /* 按钮沉底 */
+        text-align: center; border-radius: 8px; font-weight: bold; cursor: pointer; border: none; transition: 0.3s; margin-top: auto;
     }
     .inquire-btn:hover { background: #C41E3A; }
 </style>
@@ -152,12 +127,10 @@
 
 <script>
     function filterCapsules(category, btnElement) {
-        // 1. 切换按钮状态
         const buttons = document.querySelectorAll('.filter-tag');
         buttons.forEach(btn => btn.classList.remove('active'));
         btnElement.classList.add('active');
         
-        // 2. 筛选卡片
         const cards = document.querySelectorAll('.course-card');
         cards.forEach(card => {
             if (category === 'all') {
