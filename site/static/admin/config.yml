@@ -56,10 +56,7 @@ collections: # A list of collections the CMS should be able to edit
               - label: Text
                 name: text
                 widget: text
-      -
-            fields:
-              - {label: Heading, name: heading, widget: string}
-       
+      
   - name: "site_settings"
     label: "Site Settings"
     files:
