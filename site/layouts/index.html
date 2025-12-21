@@ -114,42 +114,34 @@
     }
 
     /* === 3. 服务卡片区 (保持您喜欢的原版) === */
-    <section class="koto-section" style="text-align: center;"> <h2 style="
-            background-color: var(--koto-red); 
-            color: white; 
-            display: inline-block; 
-            padding: 15px 50px; 
-            border-radius: 8px; 
-            margin-bottom: 50px; 
-            font-size: 2rem;
-            box-shadow: 0 5px 15px rgba(196, 30, 58, 0.3);
-        ">
-            我们的核心服务
-        </h2>
-
-        <div class="koto-grid" style="text-align: left;"> <div class="koto-card">
-                <img src="/images/icon-ca.png" alt="Icon" onerror="this.src='https://via.placeholder.com/64'">
-                <h3>加拿大移民</h3>
-                <p>快速通道 (EE)、省提名 (PNP)、家庭团聚及配偶工签全类别办理。</p>
-            </div>
-            <div class="koto-card">
-                <img src="/images/icon-study.png" alt="Icon" onerror="this.src='https://via.placeholder.com/64'">
-                <h3>留学规划</h3>
-                <p>涵盖K-12、本科、硕博申请，以及陪读签证办理。</p>
-            </div>
-            <div class="koto-card">
-                <img src="/images/icon-english.png" alt="Icon" onerror="this.src='https://via.placeholder.com/64'">
-                <h3>语言培训</h3>
-                <p>雅思、思培、多邻国名师一对一，短期快速提分。</p>
-            </div>
-            <div class="koto-card">
-                <img src="/images/icon-us.png" alt="Icon" onerror="this.src='https://via.placeholder.com/64'">
-                <h3>美国业务</h3>
-                <p>EB-1A 杰出人才、NIW 国家利益豁免及 L1 跨国高管签证。</p>
-            </div>
-        </div>
-    </section>
+    .koto-section {
+        padding: 80px 10%;
+        background: #fff;
+    }
     
+    .koto-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 40px;
+    }
+
+    .koto-card {
+        background: #fff;
+        padding: 30px;
+        border-radius: 16px;
+        border: 1px solid #eee;
+        text-align: center;
+        transition: transform 0.3s, box-shadow 0.3s;
+    }
+    .koto-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 15px 30px rgba(0,0,0,0.08);
+        border-color: var(--koto-red);
+    }
+    .koto-card img { width: 64px; margin-bottom: 20px; }
+    .koto-card h3 { color: var(--koto-dark); margin-bottom: 12px; font-size: 1.2rem; }
+    .koto-card p { color: #666; font-size: 0.95rem; line-height: 1.5; }
+
     /* === 4. 新闻滑块 (横向滚动版) === */
     .koto-news-wrapper {
         display: flex;
