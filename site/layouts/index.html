@@ -1,21 +1,16 @@
 {{ define "main" }}
 <div id="koto-safe-container">
     <style>
-        /* === 1. 安全隔离样式 (只在当前 ID 下生效) === */
+        /* === 1. 安全隔离样式 === */
         #koto-safe-container {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             color: #333;
             line-height: 1.6;
             width: 100%;
-            overflow-x: hidden; /* 防止横向滚动条崩坏 */
+            overflow-x: hidden;
             background-color: #fff;
         }
-
-        /* 强制盒模型，防止布局撑破 */
-        #koto-safe-container * {
-            box-sizing: border-box; 
-        }
-
+        #koto-safe-container * { box-sizing: border-box; }
         #koto-safe-container a { text-decoration: none; color: inherit; transition: 0.3s; }
         #koto-safe-container ul { list-style: none; padding: 0; margin: 0; }
         #koto-safe-container img { max-width: 100%; display: block; }
@@ -32,23 +27,16 @@
         .ks-hero-wrapper {
             position: relative;
             width: 100%;
-            height: 550px; /* 固定高度 */
+            height: 550px;
             background-color: var(--k-gray);
             overflow: hidden;
         }
-
         .ks-hero-slide {
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            opacity: 0;
-            transition: opacity 0.8s ease-in-out;
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            opacity: 0; transition: opacity 0.8s ease-in-out;
             display: flex; align-items: center; justify-content: center;
-            z-index: 1;
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
+            z-index: 1; background-size: cover; background-position: center; background-repeat: no-repeat;
         }
-
         .ks-hero-slide.active { opacity: 1; z-index: 2; }
 
         /* 红色方块 */
@@ -62,17 +50,26 @@
             width: 600px;
             box-shadow: 0 10px 25px rgba(0,0,0,0.15);
         }
-
         .ks-hero-box h1 {
             font-size: 2.2rem; margin: 0 0 15px 0; color: white; font-weight: 800; line-height: 1.2;
         }
         .ks-hero-box p { font-size: 1.1rem; margin-bottom: 25px; color: #f0f0f0; }
 
+        /* --- [修复点] 按钮样式修改 --- */
         .ks-btn {
-            display: inline-block; background: white; color: var(--k-red);
-            padding: 12px 35px; border-radius: 50px; font-weight: bold;
+            display: inline-block;
+            background: white; /* 白底 */
+            color: var(--k-red); /* 红字 */
+            padding: 12px 35px;
+            border-radius: 50px;
+            font-weight: bold;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1); /* 加一点阴影提升层次感 */
         }
-        .ks-btn:hover { transform: scale(1.05); }
+        .ks-btn:hover {
+            transform: scale(1.05);
+            background: #f0f0f0; /* 悬停时稍微变灰 */
+        }
+        /* --- [修复结束] --- */
 
         .ks-dots {
             position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%); z-index: 10; display: flex; gap: 10px;
@@ -82,72 +79,39 @@
         }
         .ks-dot.active { background: white; transform: scale(1.2); }
 
-        /* === 3. 服务卡片 (上图 - 中红胶囊 - 下文) === */
+        /* === 3. 服务卡片 === */
         .ks-section { padding: 60px 5%; background: white; }
-        
         .ks-title-center { text-align: center; margin-bottom: 50px; }
         .ks-title-center h2 { color: var(--k-red); font-size: 2rem; font-weight: bold; margin: 0; }
-
         .ks-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-            gap: 30px;
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 30px;
         }
-
         .ks-card {
-            background: white;
-            border: 1px solid #eee;
-            border-radius: 12px;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            text-align: center;
-            padding-bottom: 30px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.03);
-            transition: transform 0.3s;
+            background: white; border: 1px solid #eee; border-radius: 12px; overflow: hidden;
+            display: flex; flex-direction: column; align-items: center; text-align: center;
+            padding-bottom: 30px; box-shadow: 0 5px 15px rgba(0,0,0,0.03); transition: transform 0.3s;
         }
         .ks-card:hover { transform: translateY(-5px); box-shadow: 0 15px 30px rgba(0,0,0,0.08); }
-
-        /* 图片预留位 */
         .ks-card-img-box {
-            width: 100%;
-            height: 200px;
-            background-color: #e0e0e0;
-            display: flex; align-items: center; justify-content: center;
-            color: #999; font-weight: bold;
-            margin-bottom: 25px;
+            width: 100%; height: 200px; background-color: #e0e0e0; display: flex; align-items: center; justify-content: center;
+            color: #999; font-weight: bold; margin-bottom: 25px;
         }
         .ks-card-img-box img { width: 100%; height: 100%; object-fit: cover; }
-
-        /* 红色胶囊标题 */
         .ks-card-pill {
-            background-color: var(--k-red);
-            color: white;
-            display: inline-block;
-            padding: 8px 30px;
-            border-radius: 50px;
-            font-size: 1.1rem;
-            font-weight: bold;
-            margin-bottom: 20px;
+            background-color: var(--k-red); color: white; display: inline-block; padding: 8px 30px;
+            border-radius: 50px; font-size: 1.1rem; font-weight: bold; margin-bottom: 20px;
             box-shadow: 0 4px 10px rgba(196, 30, 58, 0.2);
         }
-
-        .ks-card-desc {
-            color: #666; font-size: 0.95rem; line-height: 1.6; padding: 0 20px;
-        }
+        .ks-card-desc { color: #666; font-size: 0.95rem; line-height: 1.6; padding: 0 20px; }
 
         /* === 4. 新闻滑块 === */
         .ks-news-bg { background: #fafafa; padding: 60px 20px; }
         .ks-news-wrapper { max-width: 1200px; margin: 0 auto; }
-        
         .ks-news-scroll {
-            display: flex; overflow-x: auto; gap: 25px; padding: 10px 5px 30px 5px;
-            scroll-snap-type: x mandatory;
+            display: flex; overflow-x: auto; gap: 25px; padding: 10px 5px 30px 5px; scroll-snap-type: x mandatory;
         }
         .ks-news-scroll::-webkit-scrollbar { height: 6px; }
         .ks-news-scroll::-webkit-scrollbar-thumb { background: #ccc; border-radius: 3px; }
-
         .ks-news-item {
             min-width: 300px; max-width: 300px; flex: 0 0 auto; scroll-snap-align: start;
             background: white; border-radius: 10px; overflow: hidden;
@@ -177,7 +141,6 @@
                 <a href="/contact" class="ks-btn">联系我们</a>
             </div>
         </div>
-
         <div class="ks-dots">
             <span class="ks-dot active" onclick="ksSetHero(0)"></span>
             <span class="ks-dot" onclick="ksSetHero(1)"></span>
@@ -189,107 +152,23 @@
         <div class="ks-title-center">
             <h2>我们的核心服务</h2>
         </div>
-        
         <div class="ks-grid">
             <div class="ks-card">
-                <div class="ks-card-img-box">
-                    雅思图片位
-                </div>
+                <div class="ks-card-img-box">雅思图片位</div>
                 <div class="ks-card-pill">雅思/思培提分</div>
                 <div class="ks-card-desc">名师一对一精准指导，针对性突破口语写作瓶颈，助您快速达到移民分数要求。</div>
             </div>
-
             <div class="ks-card">
                 <div class="ks-card-img-box">留学图片位</div>
                 <div class="ks-card-pill">美加留学规划</div>
                 <div class="ks-card-desc">从小学到博士的全龄段申请服务。顶尖名校文书定制，学签办理及拒签翻案。</div>
             </div>
-
             <div class="ks-card">
                 <div class="ks-card-img-box">加移民图片位</div>
                 <div class="ks-card-pill">加拿大移民</div>
                 <div class="ks-card-desc">快速通道 (Express Entry)、省提名 (PNP)、家庭团聚及配偶工签全类别办理。</div>
             </div>
-
             <div class="ks-card">
                 <div class="ks-card-img-box">美移民图片位</div>
                 <div class="ks-card-pill">美国移民</div>
-                <div class="ks-card-desc">杰出人才 (EB-1)、国家利益豁免 (NIW) 及跨国高管移民 (L1/EB-1C) 专业咨询。</div>
-            </div>
-        </div>
-    </div>
-
-    <div class="ks-news-bg">
-        <div class="ks-news-wrapper">
-            <h2 style="color: #2C3E50; margin-bottom: 30px; font-size: 1.5rem; font-weight: bold;">最新移民资讯</h2>
-            
-            <div class="ks-news-scroll">
-                {{ range first 6 .Site.RegularPages }}
-                <a href="{{ .Permalink }}" class="ks-news-item">
-                    
-                    {{/* 图片逻辑：如果没图，用 /images/logo-koto.png */}}
-                    {{ $img := "" }}
-                    {{ if .Params.image }}
-                        {{ $res := .Resources.GetMatch .Params.image }}
-                        {{ if $res }}{{ $img = $res.RelPermalink }}{{ else }}{{ $img = .Params.image }}{{ end }}
-                    {{ end }}
-                    
-                    {{/* 这里的逻辑：如果 $img 还是空的，就强制赋值为 Logo 路径 */}}
-                    {{ if eq $img "" }}
-                        {{ $img = "/images/logo-koto.png" }}
-                    {{ end }}
-                    
-                    <img src="{{ $img }}" style="width: 100%; height: 180px; object-fit: cover;">
-                    
-                    <div style="padding: 20px;">
-                        <div style="font-size: 0.85rem; color: #888; margin-bottom: 8px;">
-                            📅 {{ .Date.Format "2006-01-02" }}
-                        </div>
-
-                        <h3 style="margin: 0 0 10px 0; font-size: 1.1rem; line-height: 1.4; color: #333;">{{ .Title }}</h3>
-                        <p style="font-size: 0.9rem; color: #666; margin:0;">{{ .Summary | truncate 50 }}</p>
-                        <div style="color: #C41E3A; font-weight: bold; font-size: 0.9rem; margin-top: 15px;">阅读全文 &rarr;</div>
-                    </div>
-                </a>
-                {{ end }}
-            </div>
-        </div>
-    </div>
-
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            let ksIdx = 0;
-            const slides = document.querySelectorAll('.ks-hero-slide');
-            const dots = document.querySelectorAll('.ks-dot');
-            
-            // 安全检查：如果页面上找不到元素，就不执行，防止报错
-            if (slides.length === 0) return;
-
-            function ksUpdate(n) {
-                // 清除状态
-                slides.forEach(s => s.classList.remove('active'));
-                dots.forEach(d => d.classList.remove('active'));
-                
-                // 计算索引
-                ksIdx = n;
-                if (ksIdx >= slides.length) ksIdx = 0;
-                if (ksIdx < 0) ksIdx = slides.length - 1;
-                
-                // 添加状态
-                if(slides[ksIdx]) slides[ksIdx].classList.add('active');
-                if(dots[ksIdx]) dots[ksIdx].classList.add('active');
-            }
-
-            // 自动播放
-            let ksTimer = setInterval(() => { ksUpdate(ksIdx + 1); }, 4000);
-
-            // 暴露给全局点击事件
-            window.ksSetHero = function(n) {
-                clearInterval(ksTimer);
-                ksUpdate(n);
-                ksTimer = setInterval(() => { ksUpdate(ksIdx + 1); }, 4000);
-            };
-        });
-    </script>
-</div>
-{{ end }}
+                <div class="ks-card-desc">杰出人才 (EB-1)、国家利益豁免 (NIW) 及跨国高管移民 (L1/
