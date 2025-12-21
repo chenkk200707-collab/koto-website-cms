@@ -25,8 +25,8 @@
     .back-link { font-size: 1rem; color: #999; display: flex; align-items: center; gap: 5px; font-weight: 600; text-decoration: none; }
     .back-link:hover { color: var(--k-red); }
     
-    /* [修改] 修复 Logo 显示，使用图片 */
-    .header-logo-img { height: 40px; width: auto; display: block; }
+    /* [修改] Logo 高度加大到 60px */
+    .header-logo-img { height: 60px; width: auto; display: block; }
 
     /* 4. Hero */
     .capsule-hero { text-align: center; padding: 60px 20px 40px; background-color: var(--k-gray); }
@@ -217,14 +217,11 @@
         navigator.clipboard.writeText('KotoHelp2025').then(() => alert('微信号已复制'));
     }
 
-    // [新增] 课程筛选逻辑
+    // 课程筛选逻辑
     function filterCapsules(category, btnElement) {
-        // 1. 切换按钮高亮
         const buttons = document.querySelectorAll('.filter-tag');
         buttons.forEach(btn => btn.classList.remove('active'));
         btnElement.classList.add('active');
-
-        // 2. 筛选卡片
         const cards = document.querySelectorAll('.course-card');
         cards.forEach(card => {
             if (category === 'all') {
