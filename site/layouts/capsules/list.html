@@ -1,7 +1,7 @@
 {{ define "main" }}
 <style>
-    /* 1. 隐藏通用导航 */
-    header, nav, .koto-nav-wrapper { display: none !important; }
+    /* 1. 隐藏主站导航 */
+    header, nav, .koto-main-nav { display: none !important; }
 
     /* 2. 核心样式 */
     :root {
@@ -14,7 +14,7 @@
     body { font-family: -apple-system, BlinkMacSystemFont, sans-serif; background-color: #fff; color: var(--k-text); margin: 0; padding: 0; }
     * { box-sizing: border-box; }
 
-    /* 3. 独立头部 (无“我的课程”) */
+    /* 3. 独立头部 (无"我的课程") */
     .capsule-header {
         display: flex; justify-content: space-between; align-items: center;
         padding: 15px 5%; height: 70px;
@@ -30,8 +30,8 @@
     /* 4. Hero */
     .capsule-hero { text-align: center; padding: 60px 20px 40px; background-color: var(--k-gray); }
     .hero-badge {
-        display: inline-block; background: #CFA45C; /* 图中那个金色的颜色 */
-        color: white; font-size: 0.85rem; font-weight: bold; padding: 6px 15px; border-radius: 50px;
+        display: inline-block; background: #CFA45C; color: white;
+        font-size: 0.85rem; font-weight: bold; padding: 6px 15px; border-radius: 50px;
         margin-bottom: 20px;
     }
     .capsule-hero h1 { font-size: 2.5rem; font-weight: 800; color: var(--k-dark); margin: 0 0 20px 0; }
@@ -55,8 +55,9 @@
         display: flex; flex-direction: column; align-items: flex-start;
         transition: 0.3s; position: relative; height: 100%;
     }
+    /* 不同颜色的顶部条 */
     .course-card.blue-top { border-top-color: #3b82f6; } /* 思培蓝 */
-    .course-card.gold-top { border-top-color: #CFA45C; } /* 法语金 */
+    .course-card.gold-top { border-top-color: #CFA45C; } /* 法语/词汇金 */
 
     .course-card:hover { transform: translateY(-5px); box-shadow: 0 15px 40px rgba(0,0,0,0.1); }
     .card-category { font-size: 0.75rem; font-weight: bold; color: #999; text-transform: uppercase; margin-bottom: 15px; letter-spacing: 1px; }
@@ -83,13 +84,13 @@
     .modal-close { position: absolute; top: 15px; right: 20px; font-size: 1.5rem; color: #999; cursor: pointer; }
     
     .qr-box {
-        width: 100%; aspect-ratio: 1/1; background: #f9f9f9; margin: 20px 0; border-radius: 8px;
+        width: 200px; height: 200px; background: #f9f9f9; margin: 20px auto; border-radius: 8px;
         display: flex; align-items: center; justify-content: center; overflow: hidden;
     }
     .qr-box img { width: 100%; height: 100%; object-fit: contain; }
 
     .wechat-copy {
-        background: #f0f0f0; padding: 10px; border-radius: 6px; font-family: monospace; font-size: 1.1rem; cursor: pointer; border: 1px dashed #ccc;
+        background: #f0f0f0; padding: 10px; border-radius: 6px; font-family: monospace; font-size: 1.1rem; cursor: pointer; border: 1px dashed #ccc; display: inline-block; width: 100%;
     }
 </style>
 
@@ -139,7 +140,7 @@
         <button class="inquire-btn" onclick="openModal('雅思大作文 Argument Builder')">Get Capsule</button>
     </div>
 
-    <div class="course-card gold-top" style="border-top-color:#CFA45C">
+    <div class="course-card gold-top">
         <div class="card-category">GENERAL ENGLISH</div>
         <div class="card-icon">🚀</div>
         <h3 class="card-title">Vocab Upgrade: Simple to Elite</h3>
@@ -181,7 +182,7 @@
         <p style="color:var(--k-red); font-weight:bold; margin-top:0;" id="modalCourseName">...</p>
         
         <div class="qr-box">
-            <img src="/images/qr-code1.png" alt="客服二维码" onerror="this.parentElement.innerText='[未找到图片 /images/qr-code1.png]'">
+            <img src="/images/qr-code1.png" alt="客服二维码" onerror="this.parentElement.innerHTML='<div style=\'padding:20px; color:red\'>图片加载失败<br>请确保 /static/images/qr-code1.png 存在</div>'">
         </div>
         
         <p style="font-size:0.9rem; color:#999;">点击下方复制微信号</p>
