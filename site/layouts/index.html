@@ -1,6 +1,6 @@
 {{ define "main" }}
 <style>
-    /* 核心配色 */
+    /* === 核心配色 === */
     :root {
         --primary: #C41E3A; 
         --secondary: #2C3E50;
@@ -8,7 +8,7 @@
         --light-gray: #F5F7FA;
     }
 
-    /* Hero 区域 */
+    /* === Hero 区域 === */
     .hero-section {
         display: flex;
         align-items: center;
@@ -45,7 +45,7 @@
         box-shadow: 0 8px 25px rgba(196, 30, 58, 0.4);
     }
 
-    /* 服务卡片 */
+    /* === 服务卡片 === */
     .services-grid {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
@@ -70,6 +70,49 @@
     .service-card h3 { color: var(--secondary); margin-bottom: 10px; }
     .service-card p { color: #666; font-size: 0.9rem; }
 
+    /* === 🆕 新增：横向滑动区域样式 === */
+    .news-slider-container {
+        /* 这里的 padding-bottom 是为了给滚动条留位置，不让它挡住内容 */
+        display: flex;
+        overflow-x: auto; 
+        gap: 30px;
+        padding: 10px 5px 30px 5px; 
+        scroll-snap-type: x mandatory; /* 每次滑动自动对齐一张卡片 */
+        -webkit-overflow-scrolling: touch; /* iOS 顺滑滚动 */
+    }
+    
+    /* 美化滚动条 */
+    .news-slider-container::-webkit-scrollbar {
+        height: 8px;
+    }
+    .news-slider-container::-webkit-scrollbar-track {
+        background: #f1f1f1;
+        border-radius: 4px;
+    }
+    .news-slider-container::-webkit-scrollbar-thumb {
+        background: #ccc;
+        border-radius: 4px;
+    }
+    .news-slider-container::-webkit-scrollbar-thumb:hover {
+        background: #999;
+    }
+
+    /* 卡片固定宽度，防止被压缩 */
+    .news-card-slide {
+        min-width: 320px; /* 电脑端宽度 */
+        max-width: 320px;
+        flex: 0 0 auto;   /* 禁止伸缩 */
+        scroll-snap-align: start; /* 对齐左边 */
+        background: white; 
+        border-radius: 12px; 
+        overflow: hidden; 
+        box-shadow: 0 4px 20px rgba(0,0,0,0.05); 
+        transition: transform 0.3s ease;
+    }
+    .news-card-slide:hover {
+        transform: translateY(-5px);
+    }
+
     /* 移动端适配 */
     @media (max-width: 768px) {
         .hero-section {
@@ -80,6 +123,12 @@
         .hero-text { padding-right: 0; margin-bottom: 40px; }
         .hero-text h1 { font-size: 2.5rem; }
         .services-grid { padding: 60px 20px; }
+        
+        /* 移动端卡片稍微窄一点，方便露出下一张的边缘提示用户可以滑 */
+        .news-card-slide {
+            min-width: 280px;
+            max-width: 280px;
+        }
     }
 </style>
 
@@ -119,68 +168,36 @@
     </div>
 </section>
 
-<section style="padding: 80px 20px; background: #fafafa;">
-    <div style="max-width: 1100px; margin: 0 auto;">
+<section style="padding: 60px 20px; background: #fafafa;">
+    <div style="max-width: 1200px; margin: 0 auto;"> <h2 style="color: var(--secondary); margin-bottom: 30px; text-align: left; padding-left: 5px;">最新移民资讯</h2>
         
-        <h2 style="color: var(--secondary); margin-bottom: 40px; text-align: center;">最新移民资讯</h2>
-        
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px;">
-            {{ range first 3 .Site.RegularPages }}
+        <div class="news-slider-container">
+            {{ range .Site.RegularPages }}
             
-            {{/* 1. 初始化变量 */}}
+            {{/* 📸 图片抓取逻辑 (V9.0 保留) */}}
             {{ $imgName := .Params.image }}
             {{ $finalImg := "" }}
-
-            {{/* 2. 核心修复：检查图片是否藏在文章文件夹里 (Page Resources) */}}
             {{ if $imgName }}
-                {{/* 尝试在当前页面包里找这个资源 */}}
                 {{ $res := .Resources.GetMatch $imgName }}
-                {{ if $res }}
-                    {{/* 找到了！获取它的正确链接 */}}
-                    {{ $finalImg = $res.RelPermalink }}
-                {{ end }}
+                {{ if $res }}{{ $finalImg = $res.RelPermalink }}{{ end }}
             {{ end }}
-
-            {{/* 3. 如果没找到资源，可能是旧的全局路径，或者是没填 */}}
             {{ if not $finalImg }}
                 {{ if $imgName }}
-                     {{/* 有名字但没找到资源，假设是旧的 /images/ 路径 */}}
-                     {{ if or (hasPrefix $imgName "http") (hasPrefix $imgName "/") }}
-                        {{ $finalImg = $imgName }}
-                     {{ else }}
-                        {{/* 兜底：尝试拼凑 global 路径 */}}
-                        {{ $finalImg = printf "/images/%s" $imgName }}
-                     {{ end }}
+                     {{ if or (hasPrefix $imgName "http") (hasPrefix $imgName "/") }}{{ $finalImg = $imgName }}
+                     {{ else }}{{ $finalImg = printf "/images/%s" $imgName }}{{ end }}
                 {{ else }}
-                    {{/* 4. 名字都没填，去正文里抓 (正则) */}}
                     {{ $imgMatches := findRE `(?i)src="([^"]+)"` .Content 1 }}
                     {{ if gt (len $imgMatches) 0 }}
                         {{ $finalImg = index $imgMatches 0 | replaceRE `src="` "" | replaceRE `"` "" }}
                     {{ end }}
                 {{ end }}
             {{ end }}
+            {{ if not $finalImg }}{{ $finalImg = "/images/logo-koto.png" }}{{ end }}
 
-            {{/* 5. 最后的最后，还是没有？用 Logo */}}
-            {{ if not $finalImg }}
-                {{ $finalImg = "/images/logo-koto.png" }}
-            {{ end }}
-
-            <div style="background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.05); transition: transform 0.3s ease;">
+            <div class="news-card-slide">
                 <a href="{{ .Permalink }}" style="display: block; overflow: hidden;">
                     <img src="{{ $finalImg }}" style="width: 100%; height: 200px; object-fit: cover; transition: transform 0.5s ease;">
                 </a>
                 
                 <div style="padding: 25px;">
-                    <h3 style="margin: 0 0 10px 0; font-size: 1.1rem; line-height: 1.4; height: 3.2em; overflow: hidden;">
-                        <a href="{{ .Permalink }}" style="text-decoration: none; color: var(--secondary);">{{ .Title }}</a>
-                    </h3>
-                    <a href="{{ .Permalink }}" style="color: var(--primary); font-weight: bold; font-size: 0.9rem; text-decoration: none; display: inline-block; margin-top: 10px;">阅读全文 &rarr;</a>
-                    
-                    </div>
-            </div>
-            {{ end }}
-        </div>
-
-    </div>
-</section>
-{{ end }}
+                    <h3 style="margin: 0 0 10px 0; font-size: 1.1rem; line-height: 1.4; height: 3.2em
