@@ -1,56 +1,120 @@
 {{ define "main" }}
 <style>
-    /* === 核心配色 === */
+    /* === 1. 核心配色 (保持您满意的原版) === */
     :root {
-        --primary: #C41E3A;  /* 您的品牌红 */
-        --secondary: #2C3E50; /* 深蓝色 */
+        --primary: #C41E3A; 
+        --secondary: #2C3E50;
         --bg: #FFFFFF;
         --light-gray: #F5F7FA;
     }
 
-    /* === Hero 区域 === */
-    .hero-section {
+    /* === 2. Hero 轮播图 (防崩坏版：使用 Opacity 切换) === */
+    .hero-container {
+        position: relative;
+        width: 100%;
+        height: 550px; /* 固定高度 */
+        background-color: var(--light-gray);
+        overflow: hidden;
+    }
+
+    .hero-slide {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        opacity: 0;
+        transition: opacity 1s ease-in-out; /* 柔和淡入 */
         display: flex;
         align-items: center;
-        justify-content: space-between;
-        padding: 80px 10%;
-        background-color: var(--light-gray);
-        min-height: 500px;
+        justify-content: center;
+        z-index: 1;
+        background-size: cover;
+        background-position: center;
     }
-    .hero-text { flex: 1; padding-right: 50px; }
-    .hero-text h1 { 
-        font-size: 3.5rem; 
-        color: var(--secondary); 
-        margin-bottom: 20px; 
-        line-height: 1.1; 
-        font-weight: 800;
-    }
-    .hero-image img { width: 550px; max-width: 100%; height: auto; }
+    
+    .hero-slide.active { opacity: 1; z-index: 2; }
 
-    /* 按钮 */
-    .cta-button {
-        background-color: var(--primary);
+    /* 红色半透明方块 */
+    .hero-content-box {
+        background: rgba(196, 30, 58, 0.9); /* 主色调红 */
         color: white;
-        padding: 18px 40px;
-        border-radius: 50px;
-        text-decoration: none;
-        font-weight: bold;
-        font-size: 1.1rem;
-        display: inline-block;
-        transition: transform 0.2s, box-shadow 0.2s;
-        box-shadow: 0 4px 15px rgba(196, 30, 58, 0.3);
-    }
-    .cta-button:hover { 
-        transform: translateY(-3px); 
-        box-shadow: 0 8px 25px rgba(196, 30, 58, 0.4);
+        padding: 40px 60px;
+        border-radius: 10px;
+        text-align: center;
+        max-width: 600px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+        margin: 0 20px; /* 防止在手机上贴边 */
     }
 
-    /* === 服务卡片 === */
+    .hero-content-box h2 {
+        font-size: 2.5rem;
+        margin-bottom: 15px;
+        font-weight: 800;
+        color: white;
+    }
+    
+    .hero-content-box p {
+        font-size: 1.1rem;
+        margin-bottom: 25px;
+        color: #f0f0f0;
+    }
+
+    .hero-btn {
+        display: inline-block;
+        background: white;
+        color: var(--primary);
+        padding: 12px 35px;
+        border-radius: 50px;
+        font-weight: bold;
+        text-decoration: none;
+        transition: 0.3s;
+    }
+    .hero-btn:hover { background: #f9f9f9; transform: translateY(-2px); }
+
+    /* 轮播图底部小圆点 */
+    .dots-container {
+        position: absolute;
+        bottom: 30px;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 10;
+        display: flex;
+        gap: 10px;
+    }
+    .dot {
+        width: 12px;
+        height: 12px;
+        background: rgba(255,255,255,0.4);
+        border-radius: 50%;
+        cursor: pointer;
+    }
+    .dot.active { background: var(--primary); transform: scale(1.2); }
+
+    /* === 3. 标题样式 (新增：红底白字标签) === */
+    .section-header {
+        text-align: center;
+        padding-top: 60px;
+        padding-bottom: 20px;
+    }
+    
+    .title-badge {
+        display: inline-block;
+        background-color: var(--primary); /* 红底 */
+        color: white;               /* 白字 */
+        padding: 15px 50px;
+        border-radius: 8px;         /* 圆角 */
+        font-size: 2rem;
+        font-weight: bold;
+        box-shadow: 0 5px 15px rgba(196, 30, 58, 0.3); /* 红色阴影 */
+    }
+
+    /* === 4. 服务卡片 (严格保留 index(3) 原版 Grid) === */
     .services-grid {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
         gap: 40px;
-        padding: 80px 10%;
+        padding: 40px 10% 80px 10%; /* 上方留白少一点，因为标题有padding */
         background: white;
     }
     .service-card {
@@ -67,122 +131,150 @@
         border-color: transparent;
     }
     .service-card img { width: 70px; margin-bottom: 20px; }
-    
-    /* ▼▼▼ 修改点在此 ▼▼▼ */
-    /* 将原本的 var(--secondary) 改为 var(--primary) */
-    .service-card h3 { color: var(--primary); margin-bottom: 10px; }
-    /* ▲▲▲ 修改结束 ▲▲▲ */
-
+    .service-card h3 { color: var(--secondary); margin-bottom: 10px; }
     .service-card p { color: #666; font-size: 0.9rem; }
 
-    /* === 🆕 新增：横向滑动区域样式 === */
+    /* === 5. 最新资讯 (保留原版横向滑动) === */
+    .latest-news-section {
+        padding: 60px 0 80px 10%;
+        background: #fafafa;
+        overflow: hidden; 
+    }
     .news-slider-container {
-        display: flex;
+        display: flex; 
         overflow-x: auto; 
         gap: 30px;
-        padding: 10px 5px 30px 5px; 
-        scroll-snap-type: x mandatory;
-        -webkit-overflow-scrolling: touch;
+        padding-bottom: 20px; 
+        padding-right: 20px;
+        scroll-snap-type: x mandatory; 
     }
-    
-    .news-slider-container::-webkit-scrollbar { height: 8px; }
-    .news-slider-container::-webkit-scrollbar-track { background: #f1f1f1; border-radius: 4px; }
-    .news-slider-container::-webkit-scrollbar-thumb { background: #ccc; border-radius: 4px; }
-    .news-slider-container::-webkit-scrollbar-thumb:hover { background: #999; }
-
     .news-card-slide {
-        min-width: 320px; 
-        max-width: 320px;
-        flex: 0 0 auto;
+        min-width: 300px; 
+        max-width: 300px;
+        flex: 0 0 auto;   
         scroll-snap-align: start;
-        background: white; 
-        border-radius: 12px; 
-        overflow: hidden; 
-        box-shadow: 0 4px 20px rgba(0,0,0,0.05); 
-        transition: transform 0.3s ease;
+        background: white;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        transition: transform 0.3s;
+        display: flex;
+        flex-direction: column;
     }
-    .news-card-slide:hover { transform: translateY(-5px); }
-
-    @media (max-width: 768px) {
-        .hero-section { flex-direction: column; padding: 60px 20px; text-align: center; }
-        .hero-text { padding-right: 0; margin-bottom: 40px; }
-        .hero-text h1 { font-size: 2.5rem; }
-        .services-grid { padding: 60px 20px; }
-        .news-card-slide { min-width: 280px; max-width: 280px; }
+    .date-badge {
+        font-size: 0.85rem; color: #888; margin-bottom: 8px; display: block; font-weight: 600;
     }
 </style>
 
-<section class="hero-section">
-    <div class="hero-text">
-        <h1>Expert Guidance for<br>Your Canadian Journey</h1>
-        <p style="font-size: 1.2rem; color: #555; margin-bottom: 40px; max-width: 500px;">
-            基于官方 CRS 标准的精准规划。从留学到移民，我们为您定制最优路径。
-        </p>
-        <a href="/assessment.html" class="cta-button">开始免费评估 &rarr;</a>
+<div class="hero-container">
+    <div class="hero-slide active" style="background-color: #f4f4f4;"> <div class="hero-content-box">
+            <h2>专业移民规划</h2>
+            <p>基于官方 CRS 标准的精准规划，为您定制最优路径。</p>
+            <a href="/assessment" class="hero-btn">开始免费评估 &rarr;</a>
+        </div>
     </div>
-    <div class="hero-image">
-        <img src="/images/hero.png" alt="Consultant">
+    <div class="hero-slide" style="background-color: #eaeaea;">
+        <div class="hero-content-box">
+            <h2>留学教育咨询</h2>
+            <p>连接北美名校，开启通往未来的大门。</p>
+            <a href="/services" class="hero-btn">查看留学服务</a>
+        </div>
     </div>
-</section>
+    <div class="hero-slide" style="background-color: #e0e0e0;">
+        <div class="hero-content-box">
+            <h2>全程贴心服务</h2>
+            <p>从递交申请到落地安家，我们始终与您同行。</p>
+            <a href="/contact" class="hero-btn">联系我们</a>
+        </div>
+    </div>
 
-<h2 style="text-align: center; margin-top: 60px; color: var(--primary);">我们的核心服务</h2>
+    <div class="dots-container">
+        <span class="dot active" onclick="switchSlide(0)"></span>
+        <span class="dot" onclick="switchSlide(1)"></span>
+        <span class="dot" onclick="switchSlide(2)"></span>
+    </div>
+</div>
+
+<div class="section-header">
+    <h2 class="title-badge">我们的核心服务</h2>
+</div>
 
 <section class="services-grid">
     <div class="service-card">
-        <img src="/images/icon-english.png" alt="English" style="width:60px; margin-bottom:15px;">
-        <h3>雅思/思培提分</h3>
-        <p>名师一对一精准指导，针对性突破口语写作瓶颈，助您快速达到移民分数要求。</p>
-    </div>
-    <div class="service-card">
-        <img src="/images/icon-study.png" alt="Study" style="width:60px; margin-bottom:15px;">
-        <h3>美加留学规划</h3>
-        <p>从小学到博士的全龄段申请服务。顶尖名校文书定制，学签办理及拒签翻案。</p>
-    </div>
-    <div class="service-card">
-        <img src="/images/icon-ca.png" alt="Canada" style="width:60px; margin-bottom:15px;">
+        <img src="/images/icon-ca.png" alt="Icon" onerror="this.src='https://via.placeholder.com/64'">
         <h3>加拿大移民</h3>
-        <p>快速通道 (Express Entry)、省提名 (PNP)、家庭团聚及配偶工签全类别办理。</p>
+        <p>快速通道 (EE)、省提名 (PNP)、家庭团聚及配偶工签全类别办理。</p>
     </div>
     <div class="service-card">
-        <img src="/images/icon-us.png" alt="USA" style="width:60px; margin-bottom:15px;">
+        <img src="/images/icon-study.png" alt="Icon" onerror="this.src='https://via.placeholder.com/64'">
+        <h3>美加留学规划</h3>
+        <p>从小学到博士的全龄段申请服务，顶尖名校文书定制。</p>
+    </div>
+    <div class="service-card">
+        <img src="/images/icon-english.png" alt="Icon" onerror="this.src='https://via.placeholder.com/64'">
+        <h3>雅思/思培提分</h3>
+        <p>名师一对一精准指导，针对性突破口语写作瓶颈。</p>
+    </div>
+    <div class="service-card">
+        <img src="/images/icon-us.png" alt="Icon" onerror="this.src='https://via.placeholder.com/64'">
         <h3>美国移民</h3>
-        <p>杰出人才 (EB-1)、国家利益豁免 (NIW) 及跨国高管移民 (L1/EB-1C) 专业咨询。</p>
+        <p>杰出人才 (EB-1)、NIW 及跨国高管移民专业咨询。</p>
     </div>
 </section>
 
-<section style="padding: 60px 20px; background: #fafafa;">
-    <div style="max-width: 1200px; margin: 0 auto;"> 
-        <h2 style="color: var(--secondary); margin-bottom: 30px; text-align: left; padding-left: 5px;">最新移民资讯</h2>
-        
-        <div class="news-slider-container">
-            {{ range .Site.RegularPages }}
-            
-            {{/* Image Fetching Logic */}}
-            {{ $imgName := .Params.image }}
-            {{ $finalImg := "" }}
-            {{ if $imgName }}
-                {{ $res := .Resources.GetMatch $imgName }}
-                {{ if $res }}{{ $finalImg = $res.RelPermalink }}{{ end }}
+<section class="latest-news-section">
+    <h2 style="color: var(--secondary); margin-bottom: 30px;">最新移民资讯</h2>
+    <div class="news-slider-container">
+        {{ range first 8 .Site.RegularPages }}
+        <div class="news-card-slide">
+            {{ $image := .Resources.GetMatch .Params.image }}
+            {{ if $image }}
+                <img src="{{ $image.RelPermalink }}" style="height: 180px; width: 100%; object-fit: cover;">
+            {{ else }}
+                <div style="height: 180px; width: 100%; background: #eee;"></div>
             {{ end }}
-            {{ if not $finalImg }}
-                {{ if $imgName }}
-                     {{ if or (hasPrefix $imgName "http") (hasPrefix $imgName "/") }}{{ $finalImg = $imgName }}
-                     {{ else }}{{ $finalImg = printf "/images/%s" $imgName }}{{ end }}
-                {{ else }}
-                    {{ $imgMatches := findRE `(?i)src="([^"]+)"` .Content 1 }}
-                    {{ if gt (len $imgMatches) 0 }}
-                        {{ $finalImg = index $imgMatches 0 | replaceRE `src="` "" | replaceRE `"` "" }}
-                    {{ end }}
-                {{ end }}
-            {{ end }}
-            {{ if not $finalImg }}{{ $finalImg = "/images/logo-koto.png" }}{{ end }}
+            <div style="padding: 20px; flex: 1;">
+                <span class="date-badge">📅 {{ .Date.Format "2006-01-02" }}</span>
+                <h3 style="margin: 0 0 10px 0; font-size: 1.1rem;">
+                    <a href="{{ .Permalink }}" style="color: var(--secondary); text-decoration: none;">{{ .Title }}</a>
+                </h3>
+                <p style="font-size: 0.9rem; color: #666;">{{ .Summary | truncate 60 }}</p>
+            </div>
+        </div>
+        {{ end }}
+    </div>
+</section>
 
-            <div class="news-card-slide">
-                <a href="{{ .Permalink }}" style="display: block; overflow: hidden;">
-                    <img src="{{ $finalImg }}" style="width: 100%; height: 200px; object-fit: cover; transition: transform 0.5s ease;">
-                </a>
-                
-                <div style="padding: 25px;">
-                    {{/* This matches the style where your file got cut off */}}
-                    <h3 style="margin: 0 0 10px 0; font-size: 1.1rem; line-height: 1.4; height: 3.2em; overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;">
-                        <a href="{{ .Permalink }}" style="
+<script>
+    let currentSlide = 0;
+    const slides = document.querySelectorAll('.hero-slide');
+    const dots = document.querySelectorAll('.dot');
+    const totalSlides = slides.length;
+    let autoPlayTimer;
+
+    function showSlide(index) {
+        // 清除所有激活状态
+        slides.forEach(s => s.classList.remove('active'));
+        dots.forEach(d => d.classList.remove('active'));
+        
+        // 激活当前
+        slides[index].classList.add('active');
+        dots[index].classList.add('active');
+        currentSlide = index;
+    }
+
+    function nextSlide() {
+        let next = (currentSlide + 1) % totalSlides;
+        showSlide(next);
+    }
+
+    function switchSlide(index) {
+        clearInterval(autoPlayTimer);
+        showSlide(index);
+        autoPlayTimer = setInterval(nextSlide, 4000);
+    }
+
+    // 启动
+    autoPlayTimer = setInterval(nextSlide, 4000);
+</script>
+{{ end }}
