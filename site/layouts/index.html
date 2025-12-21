@@ -1,174 +1,285 @@
 {{ define "main" }}
-<div id="koto-safe-container">
-    <style>
-        /* === 1. 安全隔离样式 === */
-        #koto-safe-container {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            color: #333;
-            line-height: 1.6;
-            width: 100%;
-            overflow-x: hidden;
-            background-color: #fff;
-        }
-        #koto-safe-container * { box-sizing: border-box; }
-        #koto-safe-container a { text-decoration: none; color: inherit; transition: 0.3s; }
-        #koto-safe-container ul { list-style: none; padding: 0; margin: 0; }
-        #koto-safe-container img { max-width: 100%; display: block; }
+<style>
+    /* === 1. Koto 专用变量 (红白主题) === */
+    :root {
+        --k-red: #C41E3A;       /* 品牌红 */
+        --k-dark: #2C3E50;      /* 深色文字 */
+        --k-gray: #F5F7FA;      /* 浅灰背景 */
+        --k-white: #FFFFFF;
+    }
 
-        /* 变量定义 */
-        #koto-safe-container {
-            --k-red: #C41E3A;
-            --k-dark: #2C3E50;
-            --k-gray: #F5F7FA;
-            --k-light: #FFFFFF;
-        }
+    /* === 2. Hero 轮播图 (修复按钮可见性) === */
+    .koto-hero-wrapper {
+        position: relative;
+        width: 100%;
+        height: 550px;
+        background-color: var(--k-gray);
+        overflow: hidden;
+    }
 
-        /* === 2. Hero 轮播图 === */
-        .ks-hero-wrapper {
-            position: relative;
-            width: 100%;
-            height: 550px;
-            background-color: var(--k-gray);
-            overflow: hidden;
-        }
-        .ks-hero-slide {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            opacity: 0; transition: opacity 0.8s ease-in-out;
-            display: flex; align-items: center; justify-content: center;
-            z-index: 1; background-size: cover; background-position: center; background-repeat: no-repeat;
-        }
-        .ks-hero-slide.active { opacity: 1; z-index: 2; }
+    .koto-hero-slide {
+        position: absolute;
+        top: 0; left: 0; width: 100%; height: 100%;
+        opacity: 0;
+        transition: opacity 0.8s ease-in-out;
+        display: flex; align-items: center; justify-content: center;
+        z-index: 1;
+        /* 背景图属性 */
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+    }
 
-        /* 红色方块 */
-        .ks-hero-box {
-            background: rgba(196, 30, 58, 0.92);
-            padding: 40px 50px;
-            border-radius: 10px;
-            text-align: center;
-            color: white;
-            max-width: 90%;
-            width: 600px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
-        }
-        .ks-hero-box h1 {
-            font-size: 2.2rem; margin: 0 0 15px 0; color: white; font-weight: 800; line-height: 1.2;
-        }
-        .ks-hero-box p { font-size: 1.1rem; margin-bottom: 25px; color: #f0f0f0; }
+    .koto-hero-slide.active { opacity: 1; z-index: 2; }
 
-        /* --- [修复点] 按钮样式修改 --- */
-        .ks-btn {
-            display: inline-block;
-            background: white; /* 白底 */
-            color: var(--k-red); /* 红字 */
-            padding: 12px 35px;
-            border-radius: 50px;
-            font-weight: bold;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1); /* 加一点阴影提升层次感 */
-        }
-        .ks-btn:hover {
-            transform: scale(1.05);
-            background: #f0f0f0; /* 悬停时稍微变灰 */
-        }
-        /* --- [修复结束] --- */
+    /* 中间的红色方块 */
+    .koto-hero-content {
+        background: rgba(196, 30, 58, 0.95); /* 红色半透明背景 */
+        padding: 40px 60px;
+        border-radius: 12px;
+        text-align: center;
+        color: white;
+        max-width: 700px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+    }
 
-        .ks-dots {
-            position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%); z-index: 10; display: flex; gap: 10px;
-        }
-        .ks-dot {
-            width: 10px; height: 10px; background: rgba(255,255,255,0.4); border-radius: 50%; cursor: pointer;
-        }
-        .ks-dot.active { background: white; transform: scale(1.2); }
+    .koto-hero-content h1 {
+        font-size: 2.5rem; margin: 0 0 15px 0; color: white !important; font-weight: 800; line-height: 1.2;
+    }
+    
+    .koto-hero-content p {
+        font-size: 1.1rem; margin-bottom: 30px; color: #f0f0f0 !important;
+    }
 
-        /* === 3. 服务卡片 === */
-        .ks-section { padding: 60px 5%; background: white; }
-        .ks-title-center { text-align: center; margin-bottom: 50px; }
-        .ks-title-center h2 { color: var(--k-red); font-size: 2rem; font-weight: bold; margin: 0; }
-        .ks-grid {
-            display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 30px;
-        }
-        .ks-card {
-            background: white; border: 1px solid #eee; border-radius: 12px; overflow: hidden;
-            display: flex; flex-direction: column; align-items: center; text-align: center;
-            padding-bottom: 30px; box-shadow: 0 5px 15px rgba(0,0,0,0.03); transition: transform 0.3s;
-        }
-        .ks-card:hover { transform: translateY(-5px); box-shadow: 0 15px 30px rgba(0,0,0,0.08); }
-        .ks-card-img-box {
-            width: 100%; height: 200px; background-color: #e0e0e0; display: flex; align-items: center; justify-content: center;
-            color: #999; font-weight: bold; margin-bottom: 25px;
-        }
-        .ks-card-img-box img { width: 100%; height: 100%; object-fit: cover; }
-        .ks-card-pill {
-            background-color: var(--k-red); color: white; display: inline-block; padding: 8px 30px;
-            border-radius: 50px; font-size: 1.1rem; font-weight: bold; margin-bottom: 20px;
-            box-shadow: 0 4px 10px rgba(196, 30, 58, 0.2);
-        }
-        .ks-card-desc { color: #666; font-size: 0.95rem; line-height: 1.6; padding: 0 20px; }
+    /* [核心修复] 轮播图按钮：白底红字，确保在红背景上清晰可见 */
+    .koto-hero-btn {
+        display: inline-block;
+        background-color: #FFFFFF !important; /* 强制白色背景 */
+        color: #C41E3A !important;            /* 强制红色文字 */
+        padding: 12px 35px;
+        border-radius: 50px;
+        font-weight: bold;
+        text-decoration: none;
+        transition: transform 0.2s;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+    .koto-hero-btn:hover {
+        transform: scale(1.05);
+        background-color: #f9f9f9 !important;
+    }
 
-        /* === 4. 新闻滑块 === */
-        .ks-news-bg { background: #fafafa; padding: 60px 20px; }
-        .ks-news-wrapper { max-width: 1200px; margin: 0 auto; }
-        .ks-news-scroll {
-            display: flex; overflow-x: auto; gap: 25px; padding: 10px 5px 30px 5px; scroll-snap-type: x mandatory;
-        }
-        .ks-news-scroll::-webkit-scrollbar { height: 6px; }
-        .ks-news-scroll::-webkit-scrollbar-thumb { background: #ccc; border-radius: 3px; }
-        .ks-news-item {
-            min-width: 300px; max-width: 300px; flex: 0 0 auto; scroll-snap-align: start;
-            background: white; border-radius: 10px; overflow: hidden;
-            box-shadow: 0 3px 10px rgba(0,0,0,0.05); display: block;
-        }
-    </style>
+    /* 底部圆点 */
+    .koto-dots {
+        position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%); z-index: 10; display: flex; gap: 12px;
+    }
+    .koto-dot {
+        width: 12px; height: 12px; background: rgba(255,255,255,0.4); border-radius: 50%; cursor: pointer;
+    }
+    .koto-dot.active { background: white; transform: scale(1.2); }
 
-    <div class="ks-hero-wrapper" id="ksHero">
-        <div class="ks-hero-slide active" style="background-color: #ddd; background-image: url('');">
-            <div class="ks-hero-box">
-                <h1>Expert Guidance for<br>Your Canadian Journey</h1>
-                <p>基于官方 CRS 标准的精准规划，从留学到移民，为您定制最优路径。</p>
-                <a href="/assessment" class="ks-btn">开始免费评估 &rarr;</a>
-            </div>
-        </div>
-        <div class="ks-hero-slide" style="background-color: #ccc; background-image: url('');">
-            <div class="ks-hero-box">
-                <h1>美加名校直通车</h1>
-                <p>顶尖名校文书定制，从小学到博士的全龄段申请服务。</p>
-                <a href="/services" class="ks-btn">查看留学服务</a>
-            </div>
-        </div>
-        <div class="ks-hero-slide" style="background-color: #bbb; background-image: url('');">
-            <div class="ks-hero-box">
-                <h1>疑难签证专家</h1>
-                <p>学签、工签、旅游签及拒签翻案，持牌顾问全程跟进。</p>
-                <a href="/contact" class="ks-btn">联系我们</a>
-            </div>
-        </div>
-        <div class="ks-dots">
-            <span class="ks-dot active" onclick="ksSetHero(0)"></span>
-            <span class="ks-dot" onclick="ksSetHero(1)"></span>
-            <span class="ks-dot" onclick="ksSetHero(2)"></span>
+
+    /* === 3. 服务卡片 (图 + 红胶囊标题 + 文) === */
+    .koto-services-section { padding: 60px 10%; background: white; }
+    
+    .koto-services-header { text-align: center; margin-bottom: 50px; }
+    .koto-services-header h2 { color: var(--k-red); font-size: 2.2rem; font-weight: bold; margin: 0; }
+
+    .koto-services-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+        gap: 30px;
+    }
+
+    .koto-card {
+        background: white;
+        border: 1px solid #eee;
+        border-radius: 16px;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        padding-bottom: 30px;
+        transition: transform 0.3s, box-shadow 0.3s;
+    }
+    .koto-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 30px rgba(0,0,0,0.08);
+    }
+
+    /* 图片预留区 */
+    .koto-card-img {
+        width: 100%;
+        height: 200px;
+        background-color: #e0e0e0; /* 灰色占位 */
+        display: flex; align-items: center; justify-content: center;
+        color: #999; font-weight: bold;
+        margin-bottom: 25px;
+    }
+    /* 真实图片适配 */
+    .koto-card-img img { width: 100%; height: 100%; object-fit: cover; }
+
+    /* 红色胶囊标题 (红底白字) */
+    .koto-card-pill {
+        background-color: var(--k-red);
+        color: white !important;
+        display: inline-block;
+        padding: 10px 30px;
+        border-radius: 50px;
+        font-size: 1.1rem;
+        font-weight: bold;
+        margin-bottom: 20px;
+        box-shadow: 0 4px 10px rgba(196, 30, 58, 0.2);
+    }
+
+    .koto-card-desc {
+        color: #666; font-size: 0.95rem; line-height: 1.6; padding: 0 20px; margin: 0;
+    }
+
+
+    /* === 4. 新闻滑块 === */
+    .koto-news-section { padding: 60px 20px; background: #fafafa; }
+    .koto-news-container { max-width: 1200px; margin: 0 auto; }
+    
+    .koto-news-scroll {
+        display: flex; overflow-x: auto; gap: 30px; padding: 10px 5px 30px 5px; scroll-snap-type: x mandatory;
+    }
+    .koto-news-scroll::-webkit-scrollbar { height: 6px; }
+    .koto-news-scroll::-webkit-scrollbar-thumb { background: #ddd; border-radius: 3px; }
+
+    .koto-news-card {
+        min-width: 300px; max-width: 300px; flex: 0 0 auto; scroll-snap-align: start;
+        background: white; border-radius: 12px; overflow: hidden;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.05); display: block; text-decoration: none;
+    }
+</style>
+
+<div class="koto-hero-wrapper" id="kotoHero">
+    
+    <div class="koto-hero-slide active" style="background-color: #ddd; background-image: url('');">
+        <div class="koto-hero-content">
+            <h1>Expert Guidance for<br>Your Canadian Journey</h1>
+            <p>基于官方 CRS 标准的精准规划，从留学到移民，为您定制最优路径。</p>
+            <a href="/assessment" class="koto-hero-btn">开始免费评估 &rarr;</a>
         </div>
     </div>
 
-    <div class="ks-section">
-        <div class="ks-title-center">
-            <h2>我们的核心服务</h2>
+    <div class="koto-hero-slide" style="background-color: #ccc; background-image: url('');">
+        <div class="koto-hero-content">
+            <h1>美加名校直通车</h1>
+            <p>顶尖名校文书定制，从小学到博士的全龄段申请服务。</p>
+            <a href="/services" class="koto-hero-btn">查看留学服务</a>
         </div>
-        <div class="ks-grid">
-            <div class="ks-card">
-                <div class="ks-card-img-box">雅思图片位</div>
-                <div class="ks-card-pill">雅思/思培提分</div>
-                <div class="ks-card-desc">名师一对一精准指导，针对性突破口语写作瓶颈，助您快速达到移民分数要求。</div>
-            </div>
-            <div class="ks-card">
-                <div class="ks-card-img-box">留学图片位</div>
-                <div class="ks-card-pill">美加留学规划</div>
-                <div class="ks-card-desc">从小学到博士的全龄段申请服务。顶尖名校文书定制，学签办理及拒签翻案。</div>
-            </div>
-            <div class="ks-card">
-                <div class="ks-card-img-box">加移民图片位</div>
-                <div class="ks-card-pill">加拿大移民</div>
-                <div class="ks-card-desc">快速通道 (Express Entry)、省提名 (PNP)、家庭团聚及配偶工签全类别办理。</div>
-            </div>
-            <div class="ks-card">
-                <div class="ks-card-img-box">美移民图片位</div>
-                <div class="ks-card-pill">美国移民</div>
-                <div class="ks-card-desc">杰出人才 (EB-1)、国家利益豁免 (NIW) 及跨国高管移民 (L1/
+    </div>
+
+    <div class="koto-hero-slide" style="background-color: #bbb; background-image: url('');">
+        <div class="koto-hero-content">
+            <h1>疑难签证专家</h1>
+            <p>学签、工签、旅游签及拒签翻案，持牌顾问全程跟进。</p>
+            <a href="/contact" class="koto-hero-btn">联系我们</a>
+        </div>
+    </div>
+
+    <div class="koto-dots">
+        <span class="koto-dot active" onclick="setKotoHero(0)"></span>
+        <span class="koto-dot" onclick="setKotoHero(1)"></span>
+        <span class="koto-dot" onclick="setKotoHero(2)"></span>
+    </div>
+</div>
+
+<section class="koto-services-section">
+    <div class="koto-services-header">
+        <h2>我们的核心服务</h2>
+    </div>
+
+    <div class="koto-services-grid">
+        <div class="koto-card">
+            <div class="koto-card-img">雅思图片位</div>
+            <div class="koto-card-pill">雅思/思培提分</div>
+            <p class="koto-card-desc">名师一对一精准指导，针对性突破口语写作瓶颈，助您快速达到移民分数要求。</p>
+        </div>
+
+        <div class="koto-card">
+            <div class="koto-card-img">留学图片位</div>
+            <div class="koto-card-pill">美加留学规划</div>
+            <p class="koto-card-desc">从小学到博士的全龄段申请服务。顶尖名校文书定制，学签办理及拒签翻案。</p>
+        </div>
+
+        <div class="koto-card">
+            <div class="koto-card-img">加移民图片位</div>
+            <div class="koto-card-pill">加拿大移民</div>
+            <p class="koto-card-desc">快速通道 (Express Entry)、省提名 (PNP)、家庭团聚及配偶工签全类别办理。</p>
+        </div>
+
+        <div class="koto-card">
+            <div class="koto-card-img">美移民图片位</div>
+            <div class="koto-card-pill">美国移民</div>
+            <p class="koto-card-desc">杰出人才 (EB-1)、国家利益豁免 (NIW) 及跨国高管移民 (L1/EB-1C) 专业咨询。</p>
+        </div>
+    </div>
+</section>
+
+<section class="koto-news-section">
+    <div class="koto-news-container">
+        <h2 style="color: var(--k-dark); margin-bottom: 30px; font-size: 1.5rem; font-weight: bold;">最新移民资讯</h2>
+        
+        <div class="koto-news-scroll">
+            {{ range first 6 .Site.RegularPages }}
+            <a href="{{ .Permalink }}" class="koto-news-card">
+                
+                {{/* 图片获取逻辑：如果没有图，使用 logo-koto.png */}}
+                {{ $img := "" }}
+                {{ if .Params.image }}
+                    {{ $res := .Resources.GetMatch .Params.image }}
+                    {{ if $res }}{{ $img = $res.RelPermalink }}{{ else }}{{ $img = .Params.image }}{{ end }}
+                {{ end }}
+                {{ if eq $img "" }}{{ $img = "/images/logo-koto.png" }}{{ end }}
+                
+                <img src="{{ $img }}" style="width: 100%; height: 180px; object-fit: cover; display:block;">
+                
+                <div style="padding: 20px;">
+                    <span style="font-size: 0.85rem; color: #888; display: block; margin-bottom: 8px;">
+                        📅 {{ .Date.Format "2006-01-02" }}
+                    </span>
+
+                    <h3 style="margin: 0 0 10px 0; font-size: 1.1rem; line-height: 1.4; color: #333;">{{ .Title }}</h3>
+                    <p style="font-size: 0.9rem; color: #666; margin:0;">{{ .Summary | truncate 50 }}</p>
+                    <span style="color: var(--k-red); font-weight: bold; font-size: 0.9rem; display:block; margin-top: 15px;">阅读全文 &rarr;</span>
+                </div>
+            </a>
+            {{ end }}
+        </div>
+    </div>
+</section>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        let kIdx = 0;
+        const slides = document.querySelectorAll('.koto-hero-slide');
+        const dots = document.querySelectorAll('.koto-dot');
+        
+        // 只有当页面存在轮播图时才执行
+        if (slides.length === 0) return;
+
+        function updateKotoHero(n) {
+            slides.forEach(s => s.classList.remove('active'));
+            dots.forEach(d => d.classList.remove('active'));
+            
+            kIdx = n;
+            if (kIdx >= slides.length) kIdx = 0;
+            if (kIdx < 0) kIdx = slides.length - 1;
+            
+            if (slides[kIdx]) slides[kIdx].classList.add('active');
+            if (dots[kIdx]) dots[kIdx].classList.add('active');
+        }
+
+        let kTimer = setInterval(() => { updateKotoHero(kIdx + 1); }, 4000);
+
+        window.setKotoHero = function(n) {
+            clearInterval(kTimer);
+            updateKotoHero(n);
+            kTimer = setInterval(() => { updateKotoHero(kIdx + 1); }, 4000);
+        };
+    });
+</script>
+{{ end }}
