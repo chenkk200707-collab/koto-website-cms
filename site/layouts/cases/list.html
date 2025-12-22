@@ -1,14 +1,15 @@
 {{ define "main" }}
 
 <style>
-    /* 页面容器 */
+    /* === 页面基础样式 === */
     .cases-container {
         max-width: 1200px;
         margin: 0 auto;
         padding: 40px 20px 100px;
+        font-family: -apple-system, BlinkMacSystemFont, "Microsoft YaHei", sans-serif;
     }
 
-    /* 顶部标题 */
+    /* 顶部标题区 */
     .cases-header {
         text-align: center;
         margin-bottom: 60px;
@@ -23,6 +24,8 @@
     .cases-header p {
         color: #666;
         font-size: 1.1rem;
+        max-width: 700px;
+        margin: 0 auto;
     }
 
     /* 案例网格布局 */
@@ -32,7 +35,7 @@
         gap: 30px;
     }
 
-    /* 卡片样式 */
+    /* === 卡片样式 === */
     .case-card {
         background: white;
         border: 1px solid #eee;
@@ -43,170 +46,38 @@
         display: flex;
         flex-direction: column;
         height: 100%;
+        position: relative;
     }
     .case-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+        transform: translateY(-8px);
+        box-shadow: 0 20px 40px rgba(0,0,0,0.1);
         border-color: #ddd;
     }
 
-    /* 顶部颜色条 */
+    /* 顶部颜色条 (区分难度/类型) */
     .case-bar { height: 6px; width: 100%; background: #2C3E50; }
-    .case-card.success .case-bar { background: #27ae60; } /* 绿色 */
-    .case-card.difficult .case-bar { background: #C41E3A; } /* 红色 */
+    .case-card.success .case-bar { background: #27ae60; } /* 绿色：非常顺利 */
+    .case-card.difficult .case-bar { background: #C41E3A; } /* 红色：疑难杂症 */
 
     /* 卡片内容 */
     .case-content { padding: 25px; display: flex; flex-direction: column; height: 100%; }
+    
     .case-tag { 
         font-size: 12px; font-weight: bold; color: #999; 
-        text-transform: uppercase; margin-bottom: 10px; letter-spacing: 1px;
+        text-transform: uppercase; margin-bottom: 12px; letter-spacing: 1px;
     }
-    .case-title { font-size: 18px; font-weight: bold; color: #333; margin: 0 0 10px 0; line-height: 1.4; }
-    .case-desc { font-size: 14px; color: #666; line-height: 1.6; margin-bottom: 20px; flex-grow: 1; }
-    .case-link { font-size: 14px; font-weight: bold; color: #C41E3A; margin-top: auto; }
-
-    /* 隐藏的详细数据 */
-    .hidden-data { display: none; }
-
-    /* --- 弹窗样式 --- */
-    .modal-overlay {
-        position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-        background: rgba(0,0,0,0.8);
-        z-index: 999999; /* 最高层级 */
-        display: none;
-        align-items: center; justify-content: center;
-        padding: 20px;
+    .case-title { 
+        font-size: 18px; font-weight: 800; color: #2C3E50; 
+        margin: 0 0 12px 0; line-height: 1.5; 
     }
-    .modal-overlay.active { display: flex; }
-
-    .modal-box {
-        background: white; width: 100%; max-width: 800px; max-height: 90vh;
-        border-radius: 12px; overflow: hidden; display: flex; flex-direction: column;
-        box-shadow: 0 25px 50px rgba(0,0,0,0.5);
+    .case-desc { 
+        font-size: 14px; color: #666; line-height: 1.6; 
+        margin-bottom: 20px; flex-grow: 1; 
     }
-
-    .modal-header {
-        padding: 20px 30px; border-bottom: 1px solid #eee; background: #f9f9f9;
-        display: flex; justify-content: space-between; align-items: center;
-    }
-    .modal-header h2 { margin: 0; font-size: 1.4rem; color: #2C3E50; }
-    .modal-close { font-size: 2rem; cursor: pointer; color: #999; line-height: 1; }
-    .modal-close:hover { color: #C41E3A; }
-
-    .modal-body {
-        padding: 40px; overflow-y: auto; font-size: 16px; line-height: 1.8; color: #444;
-    }
-    .modal-body h3 { color: #2C3E50; margin-top: 30px; margin-bottom: 15px; font-size: 1.2rem; border-left: 4px solid #C41E3A; padding-left: 10px; }
-    .modal-body ul { background: #f8f9fa; padding: 20px 40px; border-radius: 8px; margin-bottom: 20px; }
-    .modal-body li { margin-bottom: 8px; }
-    .highlight-box { background: #fff5f5; border: 1px solid #ffebeb; color: #a01830; padding: 15px; border-radius: 8px; font-weight: bold; margin: 20px 0; }
-</style>
-
-<div class="cases-container">
     
-    <div class="cases-header">
-        <h1>成功案例库</h1>
-        <p>真实案例见证。每一个 Offer 背后，都是我们对专业的坚持。</p>
-    </div>
-
-    <div class="cases-grid">
-
-        <div class="case-card success" onclick="showCase(this)">
-            <div class="case-bar"></div>
-            <div class="case-content">
-                <span class="case-tag">EE 联邦技术 | STEM 定向</span>
-                <h3 class="case-title">国内码农不留学、不辞职，一步到位拿身份</h3>
-                <p class="case-desc">G先生，国内大厂硕士，雅思 CLB 9。全程未登陆，节省数十万留学费。</p>
-                <div class="case-link">查看完整案情 →</div>
-            </div>
-
-            <div class="hidden-data">
-                <div class="d-title">EE (STEM) 国内直通车</div>
-                <div class="d-body">
-                    <div class="highlight-box">
-                        🎯 核心亮点：利用“STEM 定向邀请”红利，无需加拿大工作经验，国内直接获批。
-                    </div>
-
-                    <h3>1. 客户背景 & 痛点</h3>
-                    <p><strong>背景：</strong> G先生，20+岁，国内互联网大厂开发，硕士，雅思 CLB 9。</p>
-                    <p><strong>痛点：</strong> 不想辞职来加拿大倒读大专中断高薪收入。只希望在国内直接拿身份，但此前分数不够。</p>
-
-                    <h3>2. KOTO 破局策略</h3>
-                    <ul>
-                        <li><strong>紧抓红利：</strong> EE 开启 STEM 定向邀请，这是分数相对友好的赛道。</li>
-                        <li><strong>精准定位：</strong> 我们梳理其工作职责，精准匹配 NOC 代码 (Software Engineer)，优化推荐信，确保不被质疑。</li>
-                    </ul>
-
-                    <h3>3. 案件时间线 (2024年)</h3>
-                    <ul>
-                        <li>02月10日：入池 Express Entry</li>
-                        <li>04月11日：STEM 获邀 (ITA)</li>
-                        <li>05月15日：递交申请</li>
-                        <li>10月20日：收到寄护照通知 (PPR) ✅</li>
-                    </ul>
-
-                    <h3>💡 顾问点评</h3>
-                    <p>如果你的职业在 STEM、医疗或技工列表，且英语底子好，完全有机会“国内一步到位”。G先生不仅保住了国内工作，还省了留学费，性价比极高。</p>
-                </div>
-            </div>
-        </div>
-
-        <div class="case-card success" onclick="showCase(this)">
-            <div class="case-bar"></div>
-            <div class="case-content">
-                <span class="case-tag">BC 省提名 | 幼教</span>
-                <h3 class="case-title">文科生转行幼教，3个月极速提名</h3>
-                <p class="case-desc">英语专业转码失败，改读 ECE 幼教助理。时薪$20+，入职即移民。</p>
-                <div class="case-link">查看完整案情 →</div>
-            </div>
-            <div class="hidden-data">
-                <div class="d-title">BCPNP 幼教成功案例</div>
-                <div class="d-body">
-                    <h3>1. 背景</h3>
-                    <p>李女士，29岁，英语专业。想移民但没技术背景。</p>
-                    <h3>2. 方案</h3>
-                    <p>建议转读 ECE Assistant (幼教助理)，课程短，拿证快。BC省对幼教邀请分极低。</p>
-                    <h3>3. 结果</h3>
-                    <p>入职温哥华幼儿园满3个月，直接获得省提名邀请。</p>
-                </div>
-            </div>
-        </div>
-
-    </div>
-</div>
-
-<div class="modal-overlay" id="myModal">
-    <div class="modal-box">
-        <div class="modal-header">
-            <h2 id="mTitle">标题</h2>
-            <div class="modal-close" onclick="hideCase()">&times;</div>
-        </div>
-        <div class="modal-body" id="mBody">
-            </div>
-    </div>
-</div>
-
-<script>
-    function showCase(element) {
-        var title = element.querySelector('.d-title').innerHTML;
-        var body = element.querySelector('.d-body').innerHTML;
-        
-        document.getElementById('mTitle').innerHTML = title;
-        document.getElementById('mBody').innerHTML = body;
-        
-        document.getElementById('myModal').classList.add('active');
-        document.body.style.overflow = 'hidden'; // 禁止背景滚动
+    .case-link { 
+        font-size: 14px; font-weight: bold; color: #C41E3A; 
+        margin-top: auto; display: flex; align-items: center; gap: 5px;
     }
-
-    function hideCase() {
-        document.getElementById('myModal').classList.remove('active');
-        document.body.style.overflow = 'auto';
-    }
-
-    // 点击背景关闭
-    document.getElementById('myModal').addEventListener('click', function(e) {
-        if (e.target === this) hideCase();
-    });
-</script>
-
-{{ end }}
+    .case-link::after { content: '→'; transition: 0.2s; }
+    .case-card:hover .case-link::after
