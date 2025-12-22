@@ -1,44 +1,99 @@
 {{ define "main" }}
-{{ partial "koto-header.html" . }}
 
 <style>
-    /* 关键：给页面顶部加空隙 */
-    body { 
-        padding-top: 80px; 
-        font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
-        background-color: #fff;
-    }
-    
-    .page-container {
-        max-width: 800px;
-        margin: 60px auto 100px;
-        padding: 0 20px;
+    /* --- 1. 顶部 Hero 区域 --- */
+    .cases-hero {
         text-align: center;
+        padding: 80px 20px;
+        background: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%); /* 淡灰渐变，高级感 */
+        margin-bottom: 50px;
     }
-    h1 { color: #2C3E50; font-size: 2.5rem; margin-bottom: 20px; font-weight: 800; }
-    p { color: #666; font-size: 1.1rem; line-height: 1.6; }
-    .status-icon { font-size: 4rem; display:block; margin-bottom:20px; }
-    
-    .consult-btn {
-        margin-top: 30px; padding: 12px 35px; 
-        background: #C41E3A; color: white; border: none; border-radius: 50px; 
-        font-weight: bold; cursor: pointer; font-size: 1rem;
-        box-shadow: 0 4px 15px rgba(196, 30, 58, 0.3);
+    .cases-hero h1 { font-size: 2.8rem; font-weight: 800; color: #2C3E50; margin: 0 0 15px 0; }
+    .cases-hero p { font-size: 1.1rem; color: #666; max-width: 700px; margin: 0 auto; line-height: 1.6; }
+
+    /* --- 2. 案例网格 (瀑布流布局感) --- */
+    .cases-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); /* 自动适应屏幕 */
+        gap: 30px;
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 20px 100px;
     }
-    .consult-btn:hover { background: #a01830; transform: translateY(-2px); transition: 0.3s; }
-</style>
 
-<div class="page-container">
-    <span class="status-icon">🏆</span>
+    /* --- 3. 案例卡片 (Post Card) --- */
+    .case-card {
+        background: white;
+        border-radius: 12px;
+        overflow: hidden;
+        border: 1px solid #f0f0f0;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.03);
+        cursor: pointer;
+        transition: all 0.3s ease;
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        height: 100%; /* 保证卡片高度一致 */
+    }
     
-    <h1>成功案例库</h1>
-    
-    <p>真实案例见证我们的专业实力。<br>从疑难签证翻案到快速获批，我们用结果说话。</p>
-    <p style="font-size: 0.9rem; color: #999; margin-top: 10px;">（案例库正在整理上传中...）</p>
-    
-    <button onclick="openGlobalModal('成功案例咨询')" class="consult-btn">
-        查看更多案例
-    </button>
-</div>
+    /* 悬停效果：上浮 + 加深阴影 */
+    .case-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 20px 40px rgba(0,0,0,0.08);
+        border-color: #e0e0e0;
+    }
 
-{{ end }}
+    /* 顶部彩色装饰条 */
+    .case-top-bar { height: 6px; width: 100%; background: #ccc; }
+    .case-card.success .case-top-bar { background: #27ae60; } /* 绿色：非常顺利 */
+    .case-card.difficult .case-top-bar { background: #C41E3A; } /* 红色：疑难杂症 */
+    .case-card.normal .case-top-bar { background: #2C3E50; }    /* 深蓝：标准案例 */
+
+    /* 卡片内容区 */
+    .case-preview { padding: 30px; display: flex; flex-direction: column; height: 100%; }
+    
+    .case-tag { 
+        font-size: 0.75rem; color: #999; text-transform: uppercase; letter-spacing: 1px; 
+        margin-bottom: 12px; font-weight: 700; display: block;
+    }
+    
+    .case-title { 
+        font-size: 1.3rem; font-weight: 800; color: #2C3E50; 
+        margin: 0 0 12px 0; line-height: 1.4; 
+    }
+    
+    .case-subtitle { 
+        font-size: 0.95rem; color: #666; line-height: 1.6; 
+        margin-bottom: 20px; flex-grow: 1; /* 撑开空间，让按钮沉底 */
+    }
+    
+    .read-more { 
+        font-size: 0.9rem; color: #C41E3A; font-weight: bold; 
+        display: flex; align-items: center; gap: 5px; margin-top: auto;
+    }
+    .read-more::after { content: '→'; transition: 0.2s; }
+    .case-card:hover .read-more::after { transform: translateX(5px); }
+
+    /* === [关键] 隐藏存储区 (平时看不见) === */
+    .full-content-storage { display: none; }
+
+    /* --- 4. 详情弹窗 (Modal) --- */
+    .case-modal-overlay {
+        position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+        background: rgba(44, 62, 80, 0.85); /* 深色磨砂背景 */
+        backdrop-filter: blur(5px);
+        z-index: 200000; /* 比导航栏高 */
+        display: none;
+        align-items: center; justify-content: center;
+        padding: 20px;
+        opacity: 0; transition: opacity 0.3s;
+    }
+    .case-modal-overlay.show { display: flex; opacity: 1; }
+
+    .case-modal-box {
+        background: white;
+        width: 100%; max-width: 800px;
+        max-height: 85vh; /* 避免太高 */
+        border-radius: 16px;
+        box-shadow: 0 25px 60px rgba(0,0,0,0.4);
+        display: flex; flex-direction
