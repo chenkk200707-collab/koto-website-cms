@@ -80,4 +80,224 @@
         margin-top: auto; display: flex; align-items: center; gap: 5px;
     }
     .case-link::after { content: '→'; transition: 0.2s; }
-    .case-card:hover .case-link::after
+    .case-card:hover .case-link::after { transform: translateX(5px); }
+
+    /* 隐藏数据 (用于弹窗) */
+    .hidden-data { display: none; }
+
+
+    /* === 弹窗 (Modal) 样式 === */
+    .modal-overlay {
+        position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+        background: rgba(44, 62, 80, 0.85); /* 深色背景 */
+        backdrop-filter: blur(5px);
+        z-index: 999999;
+        display: none;
+        align-items: center; justify-content: center;
+        padding: 20px;
+        opacity: 0; transition: opacity 0.3s;
+    }
+    .modal-overlay.active { display: flex; opacity: 1; }
+
+    .modal-box {
+        background: white; width: 100%; max-width: 800px; max-height: 90vh;
+        border-radius: 16px; 
+        box-shadow: 0 25px 60px rgba(0,0,0,0.4);
+        display: flex; flex-direction: column;
+        transform: translateY(20px); transition: transform 0.3s;
+    }
+    .modal-overlay.active .modal-box { transform: translateY(0); }
+
+    .modal-header {
+        padding: 25px 30px; border-bottom: 1px solid #eee; background: #fcfcfc;
+        display: flex; justify-content: space-between; align-items: flex-start;
+        border-radius: 16px 16px 0 0;
+    }
+    .modal-header h2 { margin: 0; font-size: 1.5rem; color: #2C3E50; }
+    .modal-close { font-size: 2rem; cursor: pointer; color: #bbb; line-height: 1; transition: 0.2s; }
+    .modal-close:hover { color: #C41E3A; transform: rotate(90deg); }
+
+    .modal-body {
+        padding: 40px; overflow-y: auto; 
+        font-size: 16px; line-height: 1.8; color: #444;
+    }
+
+    /* 弹窗内容排版 */
+    .modal-body h3 { 
+        color: #2C3E50; margin-top: 30px; margin-bottom: 15px; 
+        font-size: 1.2rem; border-left: 4px solid #C41E3A; padding-left: 12px; 
+    }
+    .modal-body ul { 
+        background: #f8f9fa; padding: 20px 40px; border-radius: 8px; margin-bottom: 20px; 
+    }
+    .modal-body li { margin-bottom: 10px; }
+    
+    /* 高亮框 */
+    .highlight-box { 
+        background: #fff8f8; border: 1px solid #ffdcdc; color: #a01830; 
+        padding: 20px; border-radius: 8px; margin: 25px 0; 
+    }
+    .highlight-title { display: block; font-weight: 800; margin-bottom: 8px; font-size: 1.1rem; }
+</style>
+
+<div class="cases-container">
+    
+    <div class="cases-header">
+        <h1>成功案例库</h1>
+        <p>每一个 Offer 背后，都是一段独特的故事。<br>从疑难签证翻案到快速获批，看看 KOTO 如何助您圆梦。</p>
+    </div>
+
+    <div class="cases-grid">
+
+        <div class="case-card success" onclick="showCase(this)">
+            <div class="case-bar"></div>
+            <div class="case-content">
+                <span class="case-tag">EE 联邦技术 | STEM 定向</span>
+                <h3 class="case-title">国内码农不留学、不辞职，一步到位拿身份</h3>
+                <p class="case-desc">G先生，国内大厂硕士，雅思 CLB 9。利用 STEM 定向邀请，全程未登陆加拿大，节省数十万留学费。</p>
+                <div class="case-link">查看完整案情</div>
+            </div>
+
+            <div class="hidden-data">
+                <div class="d-title">EE (STEM) 国内直通车</div>
+                <div class="d-body">
+                    <div class="highlight-box">
+                        <span class="highlight-title">🎯 核心亮点</span>
+                        利用 2023 年新政“STEM 定向邀请”，无需加拿大工作经验，国内直接获批。
+                    </div>
+
+                    <h3>1. 客户背景 & 痛点</h3>
+                    <p><strong>背景：</strong> G先生，20+岁，国内某互联网大厂软件开发工程师，硕士学历，雅思 CLB 9。</p>
+                    <p><strong>痛点：</strong> 考虑到职业发展（国内薪资高）和家庭原因，不想辞职来加拿大“倒读”大专中断收入。只希望在国内直接拿身份，但前几年 FSW（联邦技术移民）全类别分数太高，一直不敢递交。</p>
+
+                    <h3>2. KOTO 破局策略</h3>
+                    <ul>
+                        <li><strong>紧抓政策红利：</strong> 2023年起，EE 开启了“基于类别（Category-based）”的定向邀请。G先生的职业属于 STEM（科技）类别，这是捞取频率最高、分数相对友好的赛道。</li>
+                        <li><strong>职业代码精准定位：</strong> 我们仔细梳理了G先生在国内的工作职责，将其精准匹配到 NOC 代码中符合 STEM 要求的 <strong>Software Engineer</strong> 类别，并优化了推荐信描述，确保工作职责符合加拿大 NOC 标准，不被签证官质疑。</li>
+                    </ul>
+
+                    <h3>3. 案件时间线 (2024年)</h3>
+                    <ul>
+                        <li><strong>02月10日：</strong> 入池 Express Entry</li>
+                        <li><strong>04月11日：</strong> STEM 定向类别获邀 (ITA)</li>
+                        <li><strong>05月15日：</strong> 递交全套正式申请</li>
+                        <li><strong>10月20日：</strong> 全家收到寄护照通知 (PPR) ✅</li>
+                    </ul>
+
+                    <div class="highlight-box" style="background: #f0f7ff; border-color: #dbeafe; color: #2C3E50;">
+                        <span class="highlight-title">💡 顾问点评</span>
+                        很多人以为移民加拿大必须先留学，其实不然。如果你的职业在 <strong>STEM、医疗或技工紧缺列表</strong> 中，且英语底子好，完全有机会在国内“一步到位”。G先生全程没登陆加拿大，不仅保住了国内的高薪工作，还节省了数十万的留学费用，是性价比最高的移民方式。
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="case-card difficult" onclick="showCase(this)">
+            <div class="case-bar"></div> <div class="case-content">
+                <span class="case-tag">EE 快速通道 | LMIA 加分</span>
+                <h3 class="case-title">大龄低分逆袭：EE 480分 6个月获批</h3>
+                <p class="case-desc">张先生 35岁+，雅思成绩平平。通过 LMIA 批文加分弯道超车，成功获邀。</p>
+                <div class="case-link">查看完整案情</div>
+            </div>
+
+            <div class="hidden-data">
+                <div class="d-title">EE 快速通道：大龄客户 LMIA 逆袭记</div>
+                <div class="d-body">
+                    <div class="highlight-box">
+                        <span class="highlight-title">🎯 核心难点</span>
+                        年龄减分严重，雅思 6.5 无法再提升，常规打分仅 390 分，远低于邀请线。
+                    </div>
+                    <h3>1. KOTO 解决方案</h3>
+                    <p>我们分析后发现，张先生唯一的突破口在于 <strong>LMIA (劳工部批文)</strong> 加分。</p>
+                    <ul>
+                        <li><strong>第一步：</strong> 匹配加拿大本地科技公司雇主，利用 Tech Pilot 通道。</li>
+                        <li><strong>第二步：</strong> 协助雇主申请 LMIA，仅用时 2 周获批。</li>
+                        <li><strong>第三步：</strong> LMIA 为张先生 EE 系统直接加上 50 分。</li>
+                    </ul>
+                    <h3>2. 最终结果</h3>
+                    <p>加上 LMIA 的 50 分后，张先生分数达到 440 分（配合当时定向抽分）。我们随后建议张先生利用“法语加分”红利，突击了 3 个月法语，达到 CLB 5，再加 10 分。最终以 450+ 分数在定向抽取中顺利获邀！</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="case-card success" onclick="showCase(this)">
+            <div class="case-bar"></div>
+            <div class="case-content">
+                <span class="case-tag">BC 省提名 | 幼教通道</span>
+                <h3 class="case-title">文科生转行：读幼教 3 个月拿省提名</h3>
+                <p class="case-desc">李女士转码失败，迷茫中选择 ECE 幼教通道。时薪 $20+，入职即移民。</p>
+                <div class="case-link">查看完整案情</div>
+            </div>
+            
+            <div class="hidden-data">
+                <div class="d-title">BCPNP 幼教通道成功案例</div>
+                <div class="d-body">
+                    <h3>1. 客户背景</h3>
+                    <p>李女士，29岁，国内英语专业。原本想转码农，但学习吃力。来到加拿大后比较迷茫。</p>
+                    <h3>2. 解决方案</h3>
+                    <p>KOTO 团队评估后建议她转读 <strong>ECE Assistant (幼教助理)</strong> 课程。该课程仅需数周即可拿证上岗。</p>
+                    <p>入职温哥华本地幼儿园后，时薪 $20+。由于 BC 省对幼教紧缺职业的邀请分极低（仅 60 分），她在入职满 3 个月后直接获得省提名邀请。</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="case-card difficult" onclick="showCase(this)">
+            <div class="case-bar"></div>
+            <div class="case-content">
+                <span class="case-tag">疑难签证 | 拒签翻案</span>
+                <h3 class="case-title">大龄倒读，学签两次拒签终获批</h3>
+                <p class="case-desc">40岁申请 College 被质疑“移民倾向”。深度解析 Study Plan 翻案逻辑。</p>
+                <div class="case-link">查看完整案情</div>
+            </div>
+
+            <div class="hidden-data">
+                <div class="d-title">大龄倒读学签翻案</div>
+                <div class="d-body">
+                    <h3>案情回顾</h3>
+                    <p>王先生 40 岁，申请 College 研文，因“访问目的不纯”被拒签两次。</p>
+                    <h3>翻案策略</h3>
+                    <p>我们重写了 2000 字的学习计划 (Study Plan)，强调国内职业瓶颈与加拿大课程的强关联性，并提供了详细的归国就业证明，最终打消签证官顾虑。</p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<div class="modal-overlay" id="myModal">
+    <div class="modal-box">
+        <div class="modal-header">
+            <h2 id="mTitle">案例详情</h2>
+            <div class="modal-close" onclick="hideCase()">&times;</div>
+        </div>
+        <div class="modal-body" id="mBody">
+            </div>
+    </div>
+</div>
+
+<script>
+    // 显示弹窗
+    function showCase(element) {
+        var title = element.querySelector('.d-title').innerHTML;
+        var body = element.querySelector('.d-body').innerHTML;
+        
+        document.getElementById('mTitle').innerHTML = title;
+        document.getElementById('mBody').innerHTML = body;
+        
+        document.getElementById('myModal').classList.add('active');
+        document.body.style.overflow = 'hidden'; // 禁止背景滚动
+    }
+
+    // 关闭弹窗
+    function hideCase() {
+        document.getElementById('myModal').classList.remove('active');
+        document.body.style.overflow = 'auto'; // 恢复滚动
+    }
+
+    // 点击背景关闭
+    document.getElementById('myModal').addEventListener('click', function(e) {
+        if (e.target === this) hideCase();
+    });
+</script>
+
+{{ end }}
