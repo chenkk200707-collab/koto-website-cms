@@ -1,25 +1,11 @@
 {{ define "main" }}
-{{ partial "koto-header.html" . }}
 
 <style>
-    /* === 1. 布局核心修复 === */
-    /* 强力隐藏可能存在的旧菜单 */
-    header:not(.koto-main-nav), nav:not(.koto-main-nav), .navbar { 
-        display: none !important; 
-    }
-    
-    /* 强制重置 body */
-    body { 
-        margin: 0; padding: 0;
-        background-color: #fff;
-        font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
-    }
-
-    /* === 2. Hero 区域 (物理防遮挡) === */
+    /* Hero 区域 (顶部宣传图) */
     .capsule-hero { 
         text-align: center; 
-        /* [关键] 强制距离顶部 100px，确保不被菜单挡住 */
-        margin-top: 100px !important; 
+        /* 保持顶部间距，防止被固定导航栏挡住 */
+        margin-top: 50px; 
         padding: 40px 20px 40px; 
         background-color: #F5F7FA; 
     }
@@ -27,16 +13,16 @@
     .capsule-hero h1 { font-size: 2.5rem; font-weight: 800; color: #2C3E50; margin: 0 0 20px 0; }
     .capsule-hero p { font-size: 1.1rem; color: #666; max-width: 600px; margin: 0 auto; line-height: 1.6; }
     
-    /* === 3. 筛选器 === */
+    /* 筛选器样式 */
     .capsule-filters { display: flex; justify-content: center; gap: 15px; flex-wrap: wrap; margin-bottom: 60px; margin-top: 30px; }
     .filter-tag { padding: 10px 25px; border-radius: 50px; background: #e0e0e0; color: #555; font-weight: 600; cursor: pointer; border: none; font-size: 0.95rem; transition: 0.3s; }
     .filter-tag:hover { background: #d0d0d0; transform: translateY(-2px); }
     .filter-tag.active { background: #2C3E50; color: white; box-shadow: 0 4px 10px rgba(44, 62, 80, 0.3); }
 
-    /* === 4. 网格布局 === */
+    /* 网格布局 */
     .capsule-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; max-width: 1200px; margin: 0 auto; padding: 0 20px 100px; }
     
-    /* === 5. 卡片样式 === */
+    /* 卡片样式 */
     .course-card { 
         background: white; border-radius: 12px; 
         border-top: 5px solid #C41E3A; /* 默认红色 */
@@ -76,7 +62,6 @@
 </div>
 
 <div class="capsule-grid" id="capsuleGrid">
-
     <div class="course-card" data-category="ielts">
         <div class="card-category">IELTS SPEAKING</div>
         <div class="card-icon">🗣️</div>
@@ -132,7 +117,6 @@
         <p class="card-desc">专为 EE 移民加分设计。聚焦核心词汇与句型，剔除无效内容，快速达到 CLB 7 门槛。</p>
         <button class="inquire-btn" onclick="openGlobalModal('法语 CLB7 加速营')">咨询获取</button>
     </div>
-
 </div>
 
 <script>
