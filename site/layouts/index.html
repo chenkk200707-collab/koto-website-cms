@@ -27,10 +27,10 @@
         display: flex; align-items: center; justify-content: center; 
         z-index: 1; 
         
-        /* 关键设置：保证图片铺满 */
-        background-size: cover; 
-        background-position: center; 
-        background-repeat: no-repeat;
+        /* 关键：确保任何背景图都铺满 */
+        background-size: cover !important; 
+        background-position: center !important; 
+        background-repeat: no-repeat !important;
     }
     
     /* 遮罩层：让文字更清晰 */
@@ -42,11 +42,6 @@
 
     .koto-hero-slide.active { opacity: 1; z-index: 2; }
     
-    /* === [关键修改] 图片在这里定义，绝对能显示 === */
-    .bg-1 { background-image: url('https://images.unsplash.com/photo-1516738901171-8eb4fc2ab886?w=1600&q=80'); }
-    .bg-2 { background-image: url('https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=1600&q=80'); }
-    .bg-3 { background-image: url('https://images.unsplash.com/photo-1628258334105-2a0b3d6efee1?w=1600&q=80'); }
-
     /* 文字卡片 */
     .koto-hero-content { 
         position: relative; z-index: 3;
@@ -89,7 +84,7 @@
 
 <div class="koto-hero-wrapper" id="kotoHero">
     
-    <div class="koto-hero-slide active bg-1">
+    <div class="koto-hero-slide active" style="background-image: url('https://images.unsplash.com/photo-1516738901171-8eb4fc2ab886?w=1600&q=80');">
         <div class="koto-hero-content">
             <h1>开启您的加拿大新生活</h1>
             <p>基于官方 CRS 标准的精准规划，从留学到移民，为您定制最优路径。</p>
@@ -97,7 +92,7 @@
         </div>
     </div>
 
-    <div class="koto-hero-slide bg-2">
+    <div class="koto-hero-slide" style="background-image: url('https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=1600&q=80');">
         <div class="koto-hero-content">
             <h1>美加名校直通车</h1>
             <p>顶尖名校文书定制，从小学到博士的全龄段申请服务。</p>
@@ -105,7 +100,7 @@
         </div>
     </div>
     
-    <div class="koto-hero-slide bg-3">
+    <div class="koto-hero-slide" style="background-image: url('https://images.unsplash.com/photo-1628258334105-2a0b3d6efee1?w=1600&q=80');">
         <div class="koto-hero-content">
             <h1>加拿大配偶担保移民</h1>
             <p>精准预案，力争免面试、无补件直通 PR</p>
