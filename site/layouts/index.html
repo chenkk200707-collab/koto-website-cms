@@ -27,7 +27,7 @@
         display: flex; align-items: center; justify-content: center; 
         z-index: 1; 
         
-        /* 强制背景图样式 */
+        /* 强制图片铺满 */
         background-size: cover !important; 
         background-position: center !important; 
         background-repeat: no-repeat !important;
@@ -146,21 +146,8 @@
         <div class="koto-news-scroll">
             {{ range first 6 .Site.RegularPages }}
             <a href="{{ .Permalink }}" class="koto-news-card">
-                
-                {{/* 1. 初始化默认图片 */}}
                 {{ $img := "/images/logo-koto.png" }}
-                
-                {{/* 2. 检查是否有 Front Matter 图片设置 */}}
-                {{ if .Params.image }}
-                    {{ $img = .Params.image }}
-                {{ else }}
-                    {{/* 3. 如果没有，去正文里找第一张 <img src="..."> */}}
-                    {{ $imgs := findRE "<img src=\"([^\"]+)\"" .Content 1 }}
-                    {{ range $imgs }}
-                        {{ $img = . | replaceRE "<img src=\"([^\"]+)\"" "$1" }}
-                    {{ end }}
-                {{ end }}
-
+                {{ if .Params.image }}{{ $img = .Params.image }}{{ end }}
                 <img src="{{ $img }}" style="width: 100%; height: 180px; object-fit: cover; display:block;">
                 <div style="padding: 20px;">
                     <span style="font-size: 0.85rem; color: #888; display: block; margin-bottom: 8px;">
@@ -176,4 +163,30 @@
     </div>
 </section>
 
-<div id="page-bottom" style
+<div id="page-bottom" style="height: 1px;"></div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        let kIdx = 0;
+        const slides = document.querySelectorAll('.koto-hero-slide');
+        const dots = document.querySelectorAll('.koto-dot');
+        if (slides.length > 0) {
+            function updateKotoHero(n) {
+                slides.forEach(s => s.classList.remove('active'));
+                dots.forEach(d => d.classList.remove('active'));
+                kIdx = n;
+                if (kIdx >= slides.length) kIdx = 0;
+                if (kIdx < 0) kIdx = slides.length - 1;
+                if(slides[kIdx]) slides[kIdx].classList.add('active');
+                if(dots[kIdx]) dots[kIdx].classList.add('active');
+            }
+            let kTimer = setInterval(() => { updateKotoHero(kIdx + 1); }, 4000);
+            window.setKotoHero = function(n) {
+                clearInterval(kTimer);
+                updateKotoHero(n);
+                kTimer = setInterval(() => { updateKotoHero(kIdx + 1); }, 4000);
+            };
+        }
+    });
+</script>
+{{ end }}
