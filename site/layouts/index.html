@@ -2,54 +2,190 @@
 {{ partial "koto-header.html" . }}
 
 <style>
+    /* === 基础样式 === */
     html { scroll-behavior: smooth; }
-    
-    /* 关键：给 Body 加顶部边距，因为 Header 是 fixed 的 */
-    body {
-        margin: 0; padding: 0;
-        padding-top: 80px; 
-        font-family: -apple-system, BlinkMacSystemFont, sans-serif;
-        color: #333; background-color: #fff;
-    }
-    a { text-decoration: none; color: inherit; transition: 0.3s; }
+    body { margin: 0; padding: 0; padding-top: 80px; font-family: sans-serif; background: #fff; }
+    a { text-decoration: none; color: inherit; }
     * { box-sizing: border-box; }
 
-    /* 轮播图 */
-    .koto-hero-wrapper { position: relative; width: 100%; height: 550px; background-color: #F5F7FA; overflow: hidden; }
-    /* 增加 !important 确保背景图样式生效 */
-    .koto-hero-slide { 
-        position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
-        opacity: 0; transition: opacity 0.8s; 
-        display: flex; align-items: center; justify-content: center; 
-        z-index: 1; 
-        background-size: cover !important; 
-        background-position: center !important; 
-        background-repeat: no-repeat !important;
+    /* === 轮播图区域 === */
+    .hero-wrapper { 
+        position: relative; 
+        width: 100%; 
+        height: 600px; 
+        background-color: #333; 
+        overflow: hidden; 
     }
-    /* 增加遮罩层让文字更清晰 */
-    .koto-hero-slide::before {
-        content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-        background: rgba(0,0,0,0.4); z-index: 1;
-    }
-    .koto-hero-slide.active { opacity: 1; z-index: 2; }
-    
-    .koto-hero-content { 
-        position: relative; z-index: 3; /* 确保文字在遮罩之上 */
-        background: rgba(196, 30, 58, 0.95); padding: 40px 60px; border-radius: 12px; 
-        text-align: center; color: white; max-width: 700px; 
-    }
-    .koto-hero-content h1 { font-size: 2.5rem; margin: 0 0 15px 0; color: white !important; }
-    .koto-hero-content p { font-size: 1.1rem; margin-bottom: 30px; color: #f0f0f0 !important; }
-    .koto-hero-btn { background: white !important; color: #C41E3A !important; padding: 12px 35px; border-radius: 50px; font-weight: bold; display: inline-block; cursor: pointer; }
-    
-    .koto-dots { position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%); z-index: 10; display: flex; gap: 12px; }
-    .koto-dot { width: 12px; height: 12px; background: rgba(255,255,255,0.4); border-radius: 50%; cursor: pointer; }
-    .koto-dot.active { background: white; }
 
-    /* 服务区 */
-    .koto-services-section { padding: 60px 10%; background: white; scroll-margin-top: 100px; }
-    .koto-services-header { text-align: center; margin-bottom: 50px; }
-    .koto-services-header h2 { color: #C41E3A; font-size: 2.2rem; font-weight: bold; }
-    .koto-services-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 30px; }
+    .hero-slide {
+        position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+        opacity: 0; transition: opacity 0.5s ease-in-out;
+        display: flex; align-items: center; justify-content: center;
+        z-index: 1;
+    }
     
-    .k
+    .hero-slide.active { opacity: 1; z-index: 5; }
+
+    /* [强制修复] 使用 IMG 标签作为背景 */
+    .hero-bg {
+        position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+        object-fit: cover; /* 保证铺满不拉伸 */
+        z-index: -1;
+    }
+    .hero-mask {
+        position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+        background: rgba(0,0,0,0.5); /* 黑色遮罩 */
+        z-index: 0;
+    }
+
+    .hero-content {
+        position: relative; z-index: 10;
+        background: rgba(196, 30, 58, 0.9);
+        padding: 40px 60px; border-radius: 12px;
+        text-align: center; color: white; max-width: 700px;
+    }
+    .hero-content h1 { font-size: 2.5rem; margin: 0 0 15px 0; font-weight: 800; color: white; }
+    .hero-content p { font-size: 1.2rem; margin-bottom: 30px; color: #eee; }
+    
+    .hero-btn {
+        background: white; color: #C41E3A; padding: 12px 30px; 
+        border-radius: 50px; font-weight: bold; display: inline-block;
+    }
+
+    /* 轮播点 */
+    .dots { position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%); z-index: 20; display: flex; gap: 10px; }
+    .dot { width: 12px; height: 12px; background: rgba(255,255,255,0.5); border-radius: 50%; cursor: pointer; }
+    .dot.active { background: white; }
+
+    /* === 服务卡片区 === */
+    .services-section { padding: 60px 10%; background: #fff; }
+    .services-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px; max-width: 1200px; margin: 0 auto; }
+    
+    .card { border: 1px solid #eee; border-radius: 12px; overflow: hidden; text-align: center; padding-bottom: 20px; transition: 0.3s; }
+    .card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
+    
+    .card-img-box { width: 100%; height: 200px; overflow: hidden; }
+    .card-img { width: 100%; height: 100%; object-fit: cover; }
+    
+    .card-btn { display: inline-block; background: #C41E3A; color: white; padding: 8px 25px; border-radius: 20px; margin: 20px 0; font-weight: bold; }
+    .card p { color: #666; padding: 0 20px; font-size: 0.9rem; }
+
+    /* === 新闻区 === */
+    .news-section { padding: 60px 20px; background: #f9f9f9; }
+    .news-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; max-width: 1200px; margin: 0 auto; }
+    .news-card { background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+</style>
+
+<div class="hero-wrapper">
+    
+    <div class="hero-slide active">
+        <img src="https://images.unsplash.com/photo-1516738901171-8eb4fc2ab886?w=1600&q=80" class="hero-bg" alt="Canada">
+        <div class="hero-mask"></div>
+        <div class="hero-content">
+            <h1>Expert Guidance for<br>Your Canadian Journey</h1>
+            <p>基于官方 CRS 标准的精准规划，从留学到移民，为您定制最优路径。</p>
+            <a href="/assessment" class="hero-btn">开始免费评估</a>
+        </div>
+    </div>
+
+    <div class="hero-slide">
+        <img src="https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=1600&q=80" class="hero-bg" alt="University">
+        <div class="hero-mask"></div>
+        <div class="hero-content">
+            <h1>美加名校直通车</h1>
+            <p>顶尖名校文书定制，从小学到博士的全龄段申请服务。</p>
+            <a href="/study/" class="hero-btn">查看留学服务</a>
+        </div>
+    </div>
+
+    <div class="hero-slide">
+        <img src="https://images.unsplash.com/photo-1628258334105-2a0b3d6efee1?w=1600&q=80" class="hero-bg" alt="Family">
+        <div class="hero-mask"></div>
+        <div class="hero-content">
+            <h1>加拿大配偶担保移民</h1>
+            <p>精准预案，力争免面试、无补件直通 PR</p>
+            <a href="/canada/" class="hero-btn">了解方案细节 &rarr;</a>
+        </div>
+    </div>
+
+    <div class="dots">
+        <span class="dot active" onclick="switchSlide(0)"></span>
+        <span class="dot" onclick="switchSlide(1)"></span>
+        <span class="dot" onclick="switchSlide(2)"></span>
+    </div>
+</div>
+
+<section class="services-section">
+    <div style="text-align:center; margin-bottom:40px;"><h2 style="color:#C41E3A; font-size:2rem;">我们的核心服务</h2></div>
+    <div class="services-grid">
+        <div class="card">
+            <div class="card-img-box"><img src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=800" class="card-img"></div>
+            <a href="/capsules/" class="card-btn">雅思/思培提分</a>
+            <p>名师一对一精准指导，针对性突破口语写作瓶颈。</p>
+        </div>
+        <div class="card">
+            <div class="card-img-box"><img src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=800" class="card-img"></div>
+            <a href="/study/" class="card-btn">美加留学规划</a>
+            <p>从小学到博士的全龄段申请，学签拒签翻案。</p>
+        </div>
+        <div class="card">
+            <div class="card-img-box"><img src="https://images.unsplash.com/photo-1517935706615-2717063c2225?w=800" class="card-img"></div>
+            <a href="/canada/" class="card-btn">加拿大移民</a>
+            <p>EE 快速通道、PNP 省提名及家庭团聚。</p>
+        </div>
+        <div class="card">
+            <div class="card-img-box"><img src="https://images.unsplash.com/photo-1501466044931-62695aada8e9?w=800" class="card-img"></div>
+            <div onclick="openGlobalModal('美国移民规划')" class="card-btn" style="cursor:pointer;">美国移民</div>
+            <p>EB-1 杰出人才、NIW 及跨国高管移民咨询。</p>
+        </div>
+    </div>
+</section>
+
+<section class="news-section">
+    <div style="max-width:1200px; margin:0 auto;">
+        <h2 style="color:#333; margin-bottom:30px;">最新移民资讯</h2>
+        <div class="news-grid">
+            {{ range first 6 .Site.RegularPages }}
+            <a href="{{ .Permalink }}" class="news-card">
+                {{ $img := "/images/logo-koto.png" }}
+                {{ if .Params.image }}{{ $img = .Params.image }}{{ end }}
+                <img src="{{ $img }}" style="width:100%; height:180px; object-fit:cover;">
+                <div style="padding:15px;">
+                    <h3 style="margin:0 0 10px 0; color:#333; font-size:1.1rem;">{{ .Title }}</h3>
+                    <p style="color:#666; font-size:0.9rem;">{{ .Summary | truncate 50 }}</p>
+                </div>
+            </a>
+            {{ end }}
+        </div>
+    </div>
+</section>
+
+<div id="page-bottom" style="height:1px;"></div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        let idx = 0;
+        const slides = document.querySelectorAll('.hero-slide');
+        const dots = document.querySelectorAll('.dot');
+        
+        function showSlide(n) {
+            slides.forEach(s => s.classList.remove('active'));
+            dots.forEach(d => d.classList.remove('active'));
+            idx = n;
+            if (idx >= slides.length) idx = 0;
+            if (idx < 0) idx = slides.length - 1;
+            if(slides[idx]) slides[idx].classList.add('active');
+            if(dots[idx]) dots[idx].classList.add('active');
+        }
+
+        window.switchSlide = function(n) {
+            clearInterval(timer);
+            showSlide(n);
+            timer = setInterval(() => showSlide(idx + 1), 4000);
+        }
+
+        let timer = setInterval(() => showSlide(idx + 1), 4000);
+    });
+</script>
+
+{{ end }}
