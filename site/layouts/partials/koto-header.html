@@ -1,54 +1,108 @@
 <style>
-    /* 1. 强力隐藏旧菜单 */
-    header:not(.koto-main-nav), nav:not(.koto-main-nav), .site-header, #header, .navbar { display: none !important; }
+    /* --- 1. 强力清除旧样式干扰 --- */
+    /* 隐藏所有旧的导航栏、顶部条，防止出现棕色色块 */
+    header:not(.koto-main-nav), nav:not(.koto-main-nav), .site-header, #header, .navbar, .top-bar { 
+        display: none !important; 
+    }
 
-    /* 2. KOTO 菜单样式 (固定顶部) */
+    /* --- 2. 全局布局修正 --- */
+    body {
+        margin: 0;
+        padding: 0;
+        /* [关键] 给所有页面顶部增加 90px 的内边距，
+           这样固定的导航栏就不会挡住下面的标题或广告图了 */
+        padding-top: 90px; 
+        background-color: #fff;
+        font-family: -apple-system, BlinkMacSystemFont, "Microsoft YaHei", sans-serif;
+    }
+
+    /* --- 3. 新导航栏样式 --- */
     :root { --k-red: #C41E3A; --k-dark: #2C3E50; }
-    
+
     .koto-main-nav {
-        background-color: white; height: 80px; padding: 0 5%;
-        display: flex !important; justify-content: space-between; align-items: center;
-        box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-        position: fixed; top: 0; left: 0; width: 100%; z-index: 99999;
+        background-color: white;
+        height: 80px; /* 导航栏高度 */
+        padding: 0 5%;
+        display: flex !important;
+        justify-content: space-between;
+        align-items: center;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.05); /* 底部淡淡的阴影 */
+        
+        /* 固定在顶部 */
+        position: fixed; 
+        top: 0; 
+        left: 0; 
+        width: 100%; 
+        z-index: 99999; /* 保证在最最上层 */
+        box-sizing: border-box;
     }
-    
-    /* Logo 限制，防止过大 */
+
+    /* Logo 区域 */
     .nav-logo { height: 100%; display: flex; align-items: center; }
-    .nav-logo img { height: 60px; width: auto; max-width: 180px; object-fit: contain; }
-    
-    .nav-links { display: flex; gap: 20px; align-items: center; }
-    
+    .nav-logo a { height: 60px; display: block; }
+    .nav-logo img { 
+        height: 100%; 
+        width: auto; 
+        max-width: 200px; 
+        object-fit: contain; 
+        display: block; 
+    }
+
+    /* 菜单链接区域 */
+    .nav-links { display: flex; gap: 25px; align-items: center; }
+
     .nav-item {
-        font-size: 1.05rem; font-weight: 800; color: var(--k-red); 
-        padding: 5px 0; cursor: pointer; text-decoration: none;
-        background: none; border: none; font-family: inherit; white-space: nowrap;
+        font-size: 16px; 
+        font-weight: 800; 
+        color: var(--k-red); 
+        padding: 10px 5px; 
+        cursor: pointer; 
+        text-decoration: none;
+        background: none; 
+        border: none; 
+        font-family: inherit;
+        transition: all 0.2s;
     }
-    .nav-item:hover { opacity: 0.8; transform: translateY(-1px); transition:0.2s; }
+    .nav-item:hover { opacity: 0.7; transform: translateY(-1px); }
 
+    /* 预约按钮特别样式 */
     .nav-btn-cta {
-        background-color: var(--k-red); color: white !important;
-        padding: 10px 25px; border-radius: 50px; font-weight: 800; font-size: 1rem;
-        box-shadow: 0 4px 12px rgba(196, 30, 58, 0.3); text-decoration: none; white-space: nowrap;
+        background-color: var(--k-red); 
+        color: white !important;
+        padding: 10px 25px; 
+        border-radius: 50px; 
+        font-weight: 800; 
+        font-size: 16px;
+        box-shadow: 0 4px 12px rgba(196, 30, 58, 0.3); 
+        text-decoration: none; 
+        white-space: nowrap;
+        transition: transform 0.2s;
     }
-    .nav-btn-cta:hover { transform: scale(1.05); }
+    .nav-btn-cta:hover { transform: scale(1.05); background-color: #a01830; }
 
-    /* 3. 全局弹窗样式 (就是这里！代码藏在这里了) */
+    /* --- 4. 弹窗 (Modal) 样式 --- */
     .g-modal-overlay {
         position: fixed; top: 0; left: 0; width: 100%; height: 100%;
         background: rgba(0,0,0,0.6); backdrop-filter: blur(5px);
-        z-index: 100000; display: none; align-items: center; justify-content: center;
+        z-index: 100000; 
+        display: none; /* 默认隐藏 */
+        align-items: center; justify-content: center;
     }
-    .g-modal-overlay.show { display: flex; }
+    .g-modal-overlay.show { display: flex; } /* 激活时显示 */
+
     .g-modal-box {
-        background: white; width: 90%; max-width: 400px; border-radius: 16px; 
+        background: white; width: 90%; max-width: 420px; border-radius: 16px; 
         padding: 40px; text-align: center; position: relative;
         box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        animation: modalFadeIn 0.3s ease;
     }
+    @keyframes modalFadeIn { from {opacity:0; transform:translateY(20px);} to {opacity:1; transform:translateY(0);} }
+
     .g-qr-box {
-        width: 200px; height: 200px; background: #f9f9f9; margin: 20px auto; 
-        display: flex; align-items: center; justify-content: center; overflow: hidden;
+        width: 200px; height: 200px; background: #f9f9f9; margin: 25px auto; 
+        display: flex; align-items: center; justify-content: center; border-radius: 8px;
     }
-    .g-qr-box img { width: 100%; height: 100%; object-fit: contain; }
+    .g-qr-box img { width: 90%; height: 90%; object-fit: contain; }
 </style>
 
 <nav class="koto-main-nav">
@@ -60,45 +114,66 @@
     
     <div class="nav-links">
         <a href="/capsules/" class="nav-item">英语胶囊</a>
-        
         <a href="/study/" class="nav-item">北美留学</a>
-        
         <a href="/canada/" class="nav-item">加拿大移民</a>
-        
         <button onclick="openGlobalModal('美国移民规划')" class="nav-item">美国移民</button>
-        
         <a href="/cases/" class="nav-item">成功案例</a>
-        
-        <a href="{{ if .IsHome }}#page-bottom{{ else }}/#page-bottom{{ end }}" class="nav-btn-cta">预约咨询</a>
+        <a href="#page-bottom" class="nav-btn-cta" onclick="openGlobalModal('通用咨询')">预约咨询</a>
     </div>
 </nav>
 
 <div class="g-modal-overlay" id="globalModal">
     <div class="g-modal-box">
-        <div style="position:absolute; top:15px; right:20px; font-size:1.5rem; color:#999; cursor:pointer;" onclick="closeGlobalModal()">&times;</div>
-        <h3>预约咨询</h3>
-        <p style="color:#666; margin-bottom:5px;">您正在咨询：</p>
-        <p style="color:#C41E3A; font-weight:bold; margin-top:0;" id="gModalService">...</p>
+        <div style="position:absolute; top:15px; right:20px; font-size:24px; color:#ccc; cursor:pointer;" onclick="closeGlobalModal()">&times;</div>
+        
+        <h3 style="margin:0 0 10px 0; color:#333;">预约咨询</h3>
+        <p style="color:#666; margin:0; font-size:14px;">您正在咨询：</p>
+        <p style="color:#C41E3A; font-weight:bold; margin:5px 0 0 0; font-size:18px;" id="gModalService">...</p>
+        
         <div class="g-qr-box">
             <img src="/images/qrcode.png" alt="客服二维码">
         </div>
-        <p style="font-size:0.9rem; color:#999;">点击下方复制微信号</p>
-        <div style="background:#f0f0f0; padding:10px; border-radius:6px; cursor:pointer;" onclick="copyGWx()">KotoHelp2025 📋</div>
+        
+        <p style="font-size:13px; color:#999; margin-bottom:10px;">点击下方复制微信号</p>
+        <div style="background:#f0f0f0; padding:12px; border-radius:8px; cursor:pointer; font-weight:bold; color:#333;" onclick="copyGWx()">
+            KotoHelp2025 📋
+        </div>
     </div>
 </div>
 
 <script>
-    function openGlobalModal(name) {
-        document.getElementById('gModalService').innerText = name;
-        document.getElementById('globalModal').classList.add('show');
+    // 弹窗控制逻辑
+    function openGlobalModal(serviceName) {
+        var name = serviceName || "通用咨询";
+        var label = document.getElementById('gModalService');
+        if(label) label.innerText = name;
+        var modal = document.getElementById('globalModal');
+        if(modal) modal.classList.add('show');
     }
+
     function closeGlobalModal() {
-        document.getElementById('globalModal').classList.remove('show');
+        var modal = document.getElementById('globalModal');
+        if(modal) modal.classList.remove('show');
     }
-    document.getElementById('globalModal').addEventListener('click', function(e){
-        if(e.target === this) closeGlobalModal();
-    });
+
+    // 点击阴影区域关闭弹窗
+    var modalOverlay = document.getElementById('globalModal');
+    if(modalOverlay) {
+        modalOverlay.addEventListener('click', function(e){
+            if(e.target === this) closeGlobalModal();
+        });
+    }
+
+    // 复制微信号功能
     function copyGWx() {
-        navigator.clipboard.writeText('KotoHelp2025').then(() => alert('微信号已复制'));
+        if(navigator.clipboard) {
+            navigator.clipboard.writeText('KotoHelp2025').then(function() {
+                alert('微信号已复制：KotoHelp2025');
+            }).catch(function() {
+                alert('请手动添加微信：KotoHelp2025');
+            });
+        } else {
+            alert('请手动添加微信：KotoHelp2025');
+        }
     }
 </script>
