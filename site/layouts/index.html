@@ -4,97 +4,52 @@
 <style>
     html { scroll-behavior: smooth; }
     
-    /* === 基础设置 === */
+    /* 关键：给 Body 加顶部边距，因为 Header 是 fixed 的 */
     body {
         margin: 0; padding: 0;
         padding-top: 80px; 
-        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        font-family: -apple-system, BlinkMacSystemFont, sans-serif;
         color: #333; background-color: #fff;
     }
     a { text-decoration: none; color: inherit; transition: 0.3s; }
     * { box-sizing: border-box; }
 
-    /* === 轮播图容器 === */
-    .koto-hero-wrapper { 
-        position: relative; 
-        width: 100%; 
-        height: 600px; /* 高度设为600px以保证视觉冲击力 */
-        background-color: #f0f0f0; 
-        overflow: hidden; 
-    }
-    
-    /* 每一个幻灯片 */
+    /* 轮播图 */
+    .koto-hero-wrapper { position: relative; width: 100%; height: 550px; background-color: #F5F7FA; overflow: hidden; }
+    /* 增加 !important 确保背景图样式生效 */
     .koto-hero-slide { 
         position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
-        opacity: 0; 
-        transition: opacity 0.8s ease-in-out; 
+        opacity: 0; transition: opacity 0.8s; 
         display: flex; align-items: center; justify-content: center; 
         z-index: 1; 
-        overflow: hidden; /* 防止图片溢出 */
+        background-size: cover !important; 
+        background-position: center !important; 
+        background-repeat: no-repeat !important;
     }
-    
-    /* 激活状态 */
-    .koto-hero-slide.active { opacity: 1; z-index: 3; }
-
-    /* === [核心修复] 背景图片样式 === */
-    /* 使用 img 标签作为背景，兼容性最好，绝对能显示 */
-    .hero-bg-img {
-        position: absolute;
-        top: 0; left: 0;
-        width: 100%; height: 100%;
-        object-fit: cover; /* 关键：保证图片铺满且不变形 */
-        z-index: -1; /* 放在最底层 */
+    /* 增加遮罩层让文字更清晰 */
+    .koto-hero-slide::before {
+        content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+        background: rgba(0,0,0,0.4); z-index: 1;
     }
+    .koto-hero-slide.active { opacity: 1; z-index: 2; }
     
-    /* 黑色半透明遮罩：放在图片和文字中间，让文字更清晰 */
-    .hero-overlay {
-        position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-        background: rgba(0,0,0,0.45); 
-        z-index: 0;
-    }
-    
-    /* 文字内容框 */
     .koto-hero-content { 
-        position: relative; z-index: 10; /* 最顶层 */
-        background: rgba(196, 30, 58, 0.9); /* 红色半透明卡片 */
-        padding: 40px 60px; border-radius: 12px; 
+        position: relative; z-index: 3; /* 确保文字在遮罩之上 */
+        background: rgba(196, 30, 58, 0.95); padding: 40px 60px; border-radius: 12px; 
         text-align: center; color: white; max-width: 700px; 
-        box-shadow: 0 15px 40px rgba(0,0,0,0.3);
-        /* 简单的上浮动画 */
-        animation: slideUp 0.8s ease-out;
     }
-    @keyframes slideUp { from {transform: translateY(30px); opacity: 0;} to {transform: translateY(0); opacity: 1;} }
-
-    .koto-hero-content h1 { font-size: 2.8rem; margin: 0 0 15px 0; color: white !important; font-weight: 800; }
-    .koto-hero-content p { font-size: 1.2rem; margin-bottom: 30px; color: #f0f0f0 !important; }
+    .koto-hero-content h1 { font-size: 2.5rem; margin: 0 0 15px 0; color: white !important; }
+    .koto-hero-content p { font-size: 1.1rem; margin-bottom: 30px; color: #f0f0f0 !important; }
+    .koto-hero-btn { background: white !important; color: #C41E3A !important; padding: 12px 35px; border-radius: 50px; font-weight: bold; display: inline-block; cursor: pointer; }
     
-    .koto-hero-btn { 
-        background: white !important; color: #C41E3A !important; 
-        padding: 12px 35px; border-radius: 50px; font-weight: bold; 
-        display: inline-block; cursor: pointer; text-decoration: none;
-        transition: transform 0.2s;
-    }
-    .koto-hero-btn:hover { transform: scale(1.05); }
+    .koto-dots { position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%); z-index: 10; display: flex; gap: 12px; }
+    .koto-dot { width: 12px; height: 12px; background: rgba(255,255,255,0.4); border-radius: 50%; cursor: pointer; }
+    .koto-dot.active { background: white; }
 
-    /* 轮播圆点 */
-    .koto-dots { position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%); z-index: 20; display: flex; gap: 12px; }
-    .koto-dot { width: 12px; height: 12px; background: rgba(255,255,255,0.4); border-radius: 50%; cursor: pointer; transition: 0.3s; }
-    .koto-dot.active { background: white; transform: scale(1.2); }
-
-    /* === 服务区 & 新闻区样式 (保持原样) === */
-    .koto-services-section { padding: 80px 10%; background: white; }
+    /* 服务区 */
+    .koto-services-section { padding: 60px 10%; background: white; scroll-margin-top: 100px; }
     .koto-services-header { text-align: center; margin-bottom: 50px; }
     .koto-services-header h2 { color: #C41E3A; font-size: 2.2rem; font-weight: bold; }
-    .koto-services-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px; }
+    .koto-services-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 30px; }
     
-    .koto-card { background: white; border: 1px solid #eee; border-radius: 16px; overflow: hidden; display: flex; flex-direction: column; align-items: center; text-align: center; padding-bottom: 30px; transition: 0.3s; }
-    .koto-card:hover { transform: translateY(-5px); box-shadow: 0 15px 30px rgba(0,0,0,0.08); }
-    .koto-card-img { width: 100%; height: 200px; background: #e0e0e0; display: flex; align-items: center; justify-content: center; color: #999; margin-bottom: 25px; }
-    .koto-card-img img { width: 100%; height: 100%; object-fit: cover; }
-    .koto-card-pill { display: inline-block; background: #C41E3A; color: white !important; padding: 10px 30px; border-radius: 50px; font-weight: bold; margin-bottom: 20px; transition: transform 0.2s; cursor: pointer; }
-    .koto-card-pill:hover { transform: scale(1.05); }
-    .koto-card-desc { color: #666; font-size: 0.95rem; padding: 0 20px; }
-
-    .koto-news-section { padding: 60px 20px; background: #fafafa; }
-    .koto-news-container { max-width: 1200px; margin: 0 auto; }
-    .koto-news-scroll { display: flex; overflow-x: auto; gap: 30px; padding: 10px 5px 30px 5px; scroll-snap-type: x mandatory; }
+    .k
