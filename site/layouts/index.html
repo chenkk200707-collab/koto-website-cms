@@ -4,179 +4,70 @@
 <style>
     html { scroll-behavior: smooth; }
     
-    /* 基础设置 */
+    /* 基础布局 */
     body {
         margin: 0; padding: 0;
         padding-top: 80px; 
-        font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
         color: #333; background-color: #fff;
     }
     a { text-decoration: none; color: inherit; transition: 0.3s; }
     * { box-sizing: border-box; }
 
-    /* === 轮播图容器 === */
+    /* === 轮播图样式 === */
     .koto-hero-wrapper { 
-        position: relative; 
-        width: 100%; 
-        height: 550px; 
-        background-color: #2C3E50; /* 默认深色背景，防止白屏 */
-        overflow: hidden; 
+        position: relative; width: 100%; height: 550px; 
+        background-color: #2C3E50; overflow: hidden; 
     }
     
-    /* 幻灯片通用样式 */
     .koto-hero-slide { 
         position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
-        opacity: 0; 
-        transition: opacity 0.8s ease-in-out; 
+        opacity: 0; transition: opacity 0.8s ease-in-out; 
         display: flex; align-items: center; justify-content: center; 
         z-index: 1; 
         
-        /* 关键：确保图片覆盖整个区域 */
+        /* 强制图片铺满 */
         background-size: cover !important; 
         background-position: center center !important;
         background-repeat: no-repeat !important;
     }
     
-    /* 黑色半透明遮罩 (让文字更清晰) */
+    /* 遮罩层：让文字看清楚 */
     .koto-hero-slide::before {
         content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-        background: rgba(0,0,0,0.5); /* 50% 黑色遮罩 */
-        z-index: 2;
+        background: rgba(0,0,0,0.4); z-index: 2;
     }
-
-    .koto-hero-slide.active { opacity: 1; z-index: 2; }
-
-    /* === [关键修改] 这里直接指定每一张图的背景 === */
-    /* 第一张：加拿大风景 */
-    #slide-1 {
-        background-image: url('https://images.unsplash.com/photo-1503614472-8c93d56e92ce?auto=format&fit=crop&w=1600&q=80');
-    }
-    /* 第二张：校园/留学 */
-    #slide-2 {
-        background-image: url('https://images.unsplash.com/photo-1523050854058-8df90110c9f1?auto=format&fit=crop&w=1600&q=80');
-    }
-    /* 第三张：家庭/配偶 */
-    #slide-3 {
-        background-image: url('https://images.unsplash.com/photo-1628258334105-2a0b3d6efee1?auto=format&fit=crop&w=1600&q=80');
-    }
-
-    /* 文字内容 */
+    
+    .koto-hero-slide.active { opacity: 1; z-index: 3; }
+    
     .koto-hero-content { 
-        position: relative; z-index: 3; /* 文字在遮罩之上 */
-        background: rgba(196, 30, 58, 0.9); /* 红色半透明背景框 */
+        position: relative; z-index: 4;
+        background: rgba(196, 30, 58, 0.9); /* 红色半透明背景 */
         padding: 40px 60px; border-radius: 12px; 
         text-align: center; color: white; max-width: 700px; 
         box-shadow: 0 10px 30px rgba(0,0,0,0.3);
     }
+    
     .koto-hero-content h1 { font-size: 2.5rem; margin: 0 0 15px 0; color: white !important; font-weight: 800; }
     .koto-hero-content p { font-size: 1.1rem; margin-bottom: 30px; color: #f0f0f0 !important; }
     
-    /* 按钮样式 */
     .koto-hero-btn { 
         background: white !important; color: #C41E3A !important; 
         padding: 12px 35px; border-radius: 50px; font-weight: bold; 
-        display: inline-block; cursor: pointer; text-decoration: none;
+        display: inline-block; cursor: pointer; 
         transition: transform 0.2s;
     }
     .koto-hero-btn:hover { transform: scale(1.05); }
 
-    /* 底部圆点 */
     .koto-dots { position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%); z-index: 10; display: flex; gap: 12px; }
     .koto-dot { width: 12px; height: 12px; background: rgba(255,255,255,0.4); border-radius: 50%; cursor: pointer; }
     .koto-dot.active { background: white; }
 
-    /* 服务区 & 新闻区通用 */
+    /* === 服务区 & 新闻区 === */
     .koto-services-section { padding: 60px 10%; background: white; }
     .koto-services-header { text-align: center; margin-bottom: 50px; }
     .koto-services-header h2 { color: #C41E3A; font-size: 2.2rem; font-weight: bold; }
     .koto-services-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 30px; }
     
     .koto-card { background: white; border: 1px solid #eee; border-radius: 16px; overflow: hidden; display: flex; flex-direction: column; align-items: center; text-align: center; padding-bottom: 30px; transition: 0.3s; }
-    .koto-card:hover { transform: translateY(-5px); box-shadow: 0 15px 30px rgba(0,0,0,0.08); }
-    .koto-card-img { width: 100%; height: 200px; background: #e0e0e0; display: flex; align-items: center; justify-content: center; color: #999; margin-bottom: 25px; }
-    .koto-card-img img { width: 100%; height: 100%; object-fit: cover; }
-    .koto-card-pill { display: inline-block; background: #C41E3A; color: white !important; padding: 10px 30px; border-radius: 50px; font-weight: bold; margin-bottom: 20px; transition: transform 0.2s; cursor: pointer; }
-    .koto-card-pill:hover { transform: scale(1.05); }
-    .koto-card-desc { color: #666; font-size: 0.95rem; padding: 0 20px; }
-
-    .koto-news-section { padding: 60px 20px; background: #fafafa; }
-    .koto-news-container { max-width: 1200px; margin: 0 auto; }
-    .koto-news-scroll { display: flex; overflow-x: auto; gap: 30px; padding: 10px 5px 30px 5px; scroll-snap-type: x mandatory; }
-    .koto-news-card { min-width: 300px; scroll-snap-align: start; background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.05); display: block; }
-</style>
-
-<div class="koto-hero-wrapper" id="kotoHero">
-    
-    <div class="koto-hero-slide active" id="slide-1">
-        <div class="koto-hero-content">
-            <h1>Expert Guidance for<br>Your Canadian Journey</h1>
-            <p>基于官方 CRS 标准的精准规划，从留学到移民，为您定制最优路径。</p>
-            <a href="/assessment" class="koto-hero-btn">开始免费评估 &rarr;</a>
-        </div>
-    </div>
-    
-    <div class="koto-hero-slide" id="slide-2">
-        <div class="koto-hero-content">
-            <h1>美加名校直通车</h1>
-            <p>顶尖名校文书定制，从小学到博士的全龄段申请服务。</p>
-            <a href="/study/" class="koto-hero-btn">查看留学服务</a>
-        </div>
-    </div>
-    
-    <div class="koto-hero-slide" id="slide-3">
-        <div class="koto-hero-content">
-            <h1>加拿大配偶担保移民</h1>
-            <p>精准预案，力争免面试、无补件直通 PR</p>
-            <a href="/canada/" class="koto-hero-btn">了解方案细节 &rarr;</a>
-        </div>
-    </div>
-
-    <div class="koto-dots">
-        <span class="koto-dot active" onclick="setKotoHero(0)"></span>
-        <span class="koto-dot" onclick="setKotoHero(1)"></span>
-        <span class="koto-dot" onclick="setKotoHero(2)"></span>
-    </div>
-</div>
-
-<section class="koto-services-section" id="core-services">
-    <div class="koto-services-header"><h2>我们的核心服务</h2></div>
-    <div class="koto-services-grid">
-        <div class="koto-card">
-            <div class="koto-card-img"><img src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&w=800&q=80"></div>
-            <a href="/capsules/" class="koto-card-pill">雅思/思培提分</a>
-            <p class="koto-card-desc">名师一对一精准指导，针对性突破口语写作瓶颈，助您快速达到移民分数要求。</p>
-        </div>
-
-        <div class="koto-card">
-            <div class="koto-card-img"><img src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&w=800&q=80"></div>
-            <a href="/study/" class="koto-card-pill">美加留学规划</a>
-            <p class="koto-card-desc">从小学到博士的全龄段申请服务。顶尖名校文书定制，学签办理及拒签翻案。</p>
-        </div>
-
-        <div class="koto-card">
-            <div class="koto-card-img"><img src="https://images.unsplash.com/photo-1517935706615-2717063c2225?auto=format&fit=crop&w=800&q=80"></div>
-            <a href="/canada/" class="koto-card-pill">加拿大移民</a>
-            <p class="koto-card-desc">快速通道 (Express Entry)、省提名 (PNP)、家庭团聚及配偶工签全类别办理。</p>
-        </div>
-
-        <div class="koto-card">
-            <div class="koto-card-img"><img src="https://images.unsplash.com/photo-1501466044931-62695aada8e9?auto=format&fit=crop&w=800&q=80"></div>
-            <div onclick="openGlobalModal('美国移民规划')" class="koto-card-pill">美国移民</div>
-            <p class="koto-card-desc">杰出人才 (EB-1)、国家利益豁免 (NIW) 及跨国高管移民 (L1/EB-1C) 专业咨询。</p>
-        </div>
-    </div>
-</section>
-
-<section class="koto-news-section">
-    <div class="koto-news-container">
-        <h2 style="color: #2C3E50; margin-bottom: 30px; font-size: 1.5rem; font-weight: bold;">最新移民资讯</h2>
-        <div class="koto-news-scroll">
-            {{ range first 6 .Site.RegularPages }}
-            <a href="{{ .Permalink }}" class="koto-news-card">
-                {{ $img := "" }}
-                {{ if .Params.image }}
-                    {{ $res := .Resources.GetMatch .Params.image }}
-                    {{ if $res }}{{ $img = $res.RelPermalink }}{{ else }}{{ $img = .Params.image }}{{ end }}
-                {{ end }}
-                {{ if eq $img "" }}{{ $img = "/images/logo-koto.png" }}{{ end }}
-                <img src="{{ $img
+    .koto-card
