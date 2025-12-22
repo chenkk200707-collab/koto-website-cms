@@ -1,44 +1,207 @@
 {{ define "main" }}
-{{ partial "koto-header.html" . }}
 
 <style>
-    /* 关键：给页面顶部加空隙，防止被固定菜单挡住 */
-    body { 
-        padding-top: 80px; 
-        font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
-        background-color: #fff;
-    }
-    
-    .page-container {
-        max-width: 800px;
-        margin: 60px auto 100px;
-        padding: 0 20px;
+    /* 1. Hero 区域：学术蓝调 */
+    .study-hero {
         text-align: center;
+        padding: 70px 20px;
+        background: linear-gradient(120deg, #e0f7fa 0%, #fff 100%); /* 浅蓝渐变，更具学术气息 */
+        margin-bottom: 50px;
     }
-    h1 { color: #2C3E50; font-size: 2.5rem; margin-bottom: 20px; font-weight: 800; }
-    p { color: #666; font-size: 1.1rem; line-height: 1.6; }
-    .status-icon { font-size: 4rem; display:block; margin-bottom:20px; }
+    .study-badge {
+        display: inline-block;
+        background-color: #2C3E50; /* 深蓝徽章 */
+        color: white;
+        padding: 5px 15px;
+        border-radius: 50px;
+        font-size: 0.85rem;
+        font-weight: bold;
+        margin-bottom: 20px;
+        letter-spacing: 1px;
+    }
+    .study-hero h1 { font-size: 3rem; font-weight: 800; color: #2C3E50; margin: 0 0 15px 0; }
+    .study-hero p { font-size: 1.1rem; color: #555; max-width: 700px; margin: 0 auto; line-height: 1.7; }
+
+    /* 2. 服务卡片布局 */
+    .study-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); /* 稍微宽一点 */
+        gap: 30px;
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 20px 60px;
+    }
+
+    .study-card {
+        background: white;
+        border-radius: 16px;
+        border: 1px solid #eee; /* 轻微边框 */
+        box-shadow: 0 10px 30px rgba(0,0,0,0.04);
+        padding: 35px;
+        transition: 0.3s;
+        display: flex;
+        flex-direction: column;
+        position: relative;
+        overflow: hidden;
+    }
     
-    .consult-btn {
-        margin-top: 30px; padding: 12px 35px; 
-        background: #C41E3A; color: white; border: none; border-radius: 50px; 
-        font-weight: bold; cursor: pointer; font-size: 1rem;
-        box-shadow: 0 4px 15px rgba(196, 30, 58, 0.3);
+    /* 顶部彩色线条装饰 */
+    .study-card::before {
+        content: '';
+        position: absolute;
+        top: 0; left: 0; width: 100%; height: 6px;
+        background: #2C3E50; /* 默认深蓝 */
     }
-    .consult-btn:hover { background: #a01830; transform: translateY(-2px); transition: 0.3s; }
+    .study-card.u-grad::before { background: #C41E3A; } /* 本科/红 */
+    .study-card.high::before { background: #f39c12; }  /* 高中/黄 */
+    
+    .study-card:hover { transform: translateY(-10px); box-shadow: 0 20px 40px rgba(0,0,0,0.08); }
+
+    .s-icon { font-size: 2.5rem; margin-bottom: 20px; }
+    .s-title { font-size: 1.5rem; font-weight: 800; color: #333; margin-bottom: 10px; }
+    .s-subtitle { font-size: 0.9rem; color: #888; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 15px; font-weight: bold; }
+    .s-desc { color: #666; line-height: 1.6; margin-bottom: 25px; flex-grow: 1; }
+    .s-list { list-style: none; padding: 0; margin-bottom: 25px; }
+    .s-list li { margin-bottom: 8px; color: #555; display: flex; align-items: center; gap: 8px; font-size: 0.95rem; }
+    .s-list li::before { content: '✓'; color: #27ae60; font-weight: bold; }
+
+    /* 按钮样式 */
+    .study-btn {
+        width: 100%; padding: 12px; border-radius: 8px; text-align: center;
+        text-decoration: none; font-weight: bold; cursor: pointer; transition: 0.3s;
+        border: 2px solid #2C3E50; color: #2C3E50; background: transparent;
+    }
+    .study-btn:hover { background: #2C3E50; color: white; }
+
+    /* 3. 申请流程时间轴 (Timeline) - 甲方通常很喜欢这个 */
+    .process-section { background: #F9FAFC; padding: 80px 20px; text-align: center; }
+    .process-container { max-width: 1000px; margin: 0 auto; }
+    .process-steps { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 20px; margin-top: 40px; }
+    
+    .step-box { flex: 1; min-width: 200px; position: relative; }
+    .step-num { 
+        width: 40px; height: 40px; background: #2C3E50; color: white; border-radius: 50%; 
+        display: flex; align-items: center; justify-content: center; font-weight: bold; margin: 0 auto 15px; 
+    }
+    .step-title { font-weight: bold; margin-bottom: 10px; color: #333; }
+    .step-desc { font-size: 0.85rem; color: #777; line-height: 1.5; }
+
+    /* 4. Offer 展示区 */
+    .offer-wall { max-width: 1200px; margin: 60px auto; text-align: center; padding: 0 20px; }
+    .offer-wall h2 { font-size: 2rem; color: #2C3E50; margin-bottom: 30px; }
+    .university-tags { display: flex; justify-content: center; gap: 15px; flex-wrap: wrap; }
+    .uni-tag { 
+        padding: 10px 20px; background: white; border: 1px solid #ddd; border-radius: 50px; 
+        color: #555; font-weight: 600; font-size: 0.9rem;
+    }
 </style>
 
-<div class="page-container">
-    <span class="status-icon">🎓</span>
+<div class="study-hero">
+    <span class="study-badge">NORTH AMERICA</span>
+    <h1>连接你与世界名校</h1>
+    <p>不仅仅是申请一所学校，更是规划一段未来。<br>从选校定位到文书润色，KOTO 为您的留学之路保驾护航。</p>
+</div>
+
+<div class="study-grid">
     
-    <h1>北美留学规划</h1>
-    
-    <p>从小学到博士的全龄段申请服务。<br>顶尖名校文书定制，学签办理及拒签翻案。</p>
-    <p style="font-size: 0.9rem; color: #999; margin-top: 10px;">（该板块详细内容正在上传中...）</p>
-    
-    <button onclick="openGlobalModal('北美留学咨询')" class="consult-btn">
-        预约留学顾问
-    </button>
+    <div class="study-card u-grad">
+        <div class="s-icon">🏛️</div>
+        <div class="s-subtitle">UNDERGRADUATE</div>
+        <h3 class="s-title">本科名校规划</h3>
+        <p class="s-desc">针对美加 Top 50 名校设计。不仅关注 GPA，更挖掘您的独特性，打造招生官无法拒绝的文书。</p>
+        <ul class="s-list">
+            <li>选校定位与背景提升</li>
+            <li>Common App / OUAC 系统指导</li>
+            <li>个性化文书 (PS/Essay) 精修</li>
+        </ul>
+        <button class="study-btn" onclick="openGlobalModal('本科申请咨询')">免费规划</button>
+    </div>
+
+    <div class="study-card">
+        <div class="s-icon">🎓</div>
+        <div class="s-subtitle">GRADUATE / PHD</div>
+        <h3 class="s-title">硕博精英通道</h3>
+        <p class="s-desc">无论是授课型硕士 (Course-based) 还是研究型 (Thesis-based)，我们助您匹配导师，攻克科研难题。</p>
+        <ul class="s-list">
+            <li>研究计划 (Research Proposal) 指导</li>
+            <li>导师套磁 (CV/Email) 策略</li>
+            <li>推荐信润色与面试辅导</li>
+        </ul>
+        <button class="study-btn" onclick="openGlobalModal('硕博申请咨询')">评估背景</button>
+    </div>
+
+    <div class="study-card high">
+        <div class="s-icon">🎒</div>
+        <div class="s-subtitle">HIGH SCHOOL</div>
+        <h3 class="s-title">低龄/高中留学</h3>
+        <p class="s-desc">让孩子更早适应北美教育体系。精选加拿大公立教育局与顶尖私立贵族学校，提供寄宿家庭安置服务。</p>
+        <ul class="s-list">
+            <li>公立/私立学校申请</li>
+            <li>监护人 (Custodianship) 服务</li>
+            <li>寄宿家庭与学业监管</li>
+        </ul>
+        <button class="study-btn" onclick="openGlobalModal('低龄留学咨询')">咨询详情</button>
+    </div>
+
+    <div class="study-card">
+        <div class="s-icon">📄</div>
+        <div class="s-subtitle">VISA SERVICES</div>
+        <h3 class="s-title">学签 & 陪读签证</h3>
+        <p class="s-desc">拒签风险把控。无论是首次办理学签 (Study Permit)，还是境内续签、父母陪读签证，我们都有丰富经验。</p>
+        <ul class="s-list">
+            <li>学习计划 (Study Plan) 撰写</li>
+            <li>大签/小签续签</li>
+            <li>疑难杂症/拒签翻案</li>
+        </ul>
+        <button class="study-btn" onclick="openGlobalModal('签证办理咨询')">办理签证</button>
+    </div>
+</div>
+
+<div class="process-section">
+    <div class="process-container">
+        <h2 style="margin-bottom: 40px; color:#2C3E50;">KOTO 全程服务流程</h2>
+        
+        <div class="process-steps">
+            <div class="step-box">
+                <div class="step-num">1</div>
+                <div class="step-title">咨询评估</div>
+                <div class="step-desc">分析学术背景<br>确定选校方案</div>
+            </div>
+            <div class="step-box">
+                <div class="step-num">2</div>
+                <div class="step-title">规划签约</div>
+                <div class="step-desc">制定时间表<br>签订服务协议</div>
+            </div>
+            <div class="step-box">
+                <div class="step-num">3</div>
+                <div class="step-title">文书打磨</div>
+                <div class="step-desc">PS/CV深度挖掘<br>外籍导师润色</div>
+            </div>
+            <div class="step-box">
+                <div class="step-num">4</div>
+                <div class="step-title">递交申请</div>
+                <div class="step-desc">填写网申系统<br>跟进补件要求</div>
+            </div>
+            <div class="step-box">
+                <div class="step-num">5</div>
+                <div class="step-title">录取/签证</div>
+                <div class="step-desc">Offer 选择指导<br>办理留学签证</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="offer-wall">
+    <h2>2024 录取院校 (部分)</h2>
+    <div class="university-tags">
+        <span class="uni-tag">🇨🇦 多伦多大学</span>
+        <span class="uni-tag">🇨🇦 UBC</span>
+        <span class="uni-tag">🇨🇦 麦吉尔大学</span>
+        <span class="uni-tag">🇨🇦 滑铁卢大学</span>
+        <span class="uni-tag">🇺🇸 纽约大学</span>
+        <span class="uni-tag">🇺🇸 哥伦比亚大学</span>
+        <span class="uni-tag">🇺🇸 加州大学</span>
+    </div>
 </div>
 
 {{ end }}
