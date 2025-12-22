@@ -3,11 +3,18 @@
 
 <style>
     html { scroll-behavior: smooth; }
-    body { margin: 0; padding: 0; padding-top: 80px; font-family: -apple-system, BlinkMacSystemFont, sans-serif; color: #333; background-color: #fff; }
+    
+    /* 全局设置 */
+    body {
+        margin: 0; padding: 0;
+        padding-top: 80px; /* 给固定导航栏留位 */
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        color: #333; background-color: #fff;
+    }
     a { text-decoration: none; color: inherit; transition: 0.3s; }
     * { box-sizing: border-box; }
 
-    /* === 轮播图核心样式 === */
+    /* === 轮播图区域 (Hero Slider) === */
     .koto-hero-wrapper { position: relative; width: 100%; height: 600px; background-color: #2C3E50; overflow: hidden; }
     
     .koto-hero-slide { 
@@ -15,58 +22,88 @@
         opacity: 0; transition: opacity 1s ease-in-out; 
         display: flex; align-items: center; justify-content: center; 
         z-index: 1; 
-        background-size: cover !important; 
-        background-position: center center !important; 
-        background-repeat: no-repeat !important;
+        background-size: cover; background-position: center; 
     }
-    
-    /* 黑色遮罩，确保文字清晰 */
     .koto-hero-slide::before {
         content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-        background: rgba(0,0,0,0.5); z-index: 2;
+        background: rgba(0,0,0,0.45); /* 遮罩层 */
     }
-    
-    .koto-hero-slide.active { opacity: 1; z-index: 5; }
+    .koto-hero-slide.active { opacity: 1; z-index: 2; }
     
     .koto-hero-content { 
-        position: relative; z-index: 10;
+        position: relative; z-index: 3;
         text-align: center; color: white; max-width: 800px; padding: 20px;
+        animation: slideUp 0.8s ease-out;
     }
+    @keyframes slideUp { from {transform: translateY(30px); opacity: 0;} to {transform: translateY(0); opacity: 1;} }
 
-    .koto-hero-content h1 { font-size: 3rem; margin: 0 0 20px 0; font-weight: 800; text-shadow: 0 2px 15px rgba(0,0,0,0.5); }
-    .koto-hero-content p { font-size: 1.3rem; margin-bottom: 40px; color: #fff; text-shadow: 0 1px 10px rgba(0,0,0,0.5); }
+    .koto-hero-content h1 { 
+        font-size: 3rem; margin: 0 0 20px 0; font-weight: 800; text-shadow: 0 2px 10px rgba(0,0,0,0.3); 
+    }
+    .koto-hero-content p { 
+        font-size: 1.3rem; margin-bottom: 40px; color: #f8f8f8; text-shadow: 0 1px 5px rgba(0,0,0,0.3); 
+    }
     
     .koto-hero-btn { 
-        background: #C41E3A; color: white; padding: 15px 40px; border-radius: 50px; 
-        font-weight: bold; font-size: 1.1rem; display: inline-block; cursor: pointer; 
-        border: 2px solid #C41E3A; transition: 0.3s;
+        background: #C41E3A; color: white; 
+        padding: 15px 40px; border-radius: 50px; font-weight: bold; font-size: 1.1rem;
+        display: inline-block; cursor: pointer; border: 2px solid #C41E3A;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.2);
     }
-    .koto-hero-btn:hover { background: transparent; border-color: white; color: white; }
+    .koto-hero-btn:hover { background: transparent; color: white; }
 
-    .koto-dots { position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%); z-index: 20; display: flex; gap: 12px; }
-    .koto-dot { width: 12px; height: 12px; background: rgba(255,255,255,0.4); border-radius: 50%; cursor: pointer; }
-    .koto-dot.active { background: white; }
+    /* 轮播指示点 */
+    .koto-dots { position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%); z-index: 10; display: flex; gap: 12px; }
+    .koto-dot { width: 12px; height: 12px; background: rgba(255,255,255,0.4); border-radius: 50%; cursor: pointer; transition: 0.3s; }
+    .koto-dot.active { background: white; transform: scale(1.2); }
 
-    /* 服务区卡片 */
-    .koto-services-section { padding: 80px 5%; background: white; }
+    /* === 核心服务区 === */
+    .koto-services-section { padding: 80px 5%; background: white; scroll-margin-top: 100px; }
     .koto-services-header { text-align: center; margin-bottom: 60px; }
-    .koto-services-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 40px; max-width: 1400px; margin: 0 auto; }
-    .koto-card { background: white; border-radius: 16px; overflow: hidden; text-align: center; padding-bottom: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); transition: 0.3s; }
-    .koto-card:hover { transform: translateY(-10px); }
-    .koto-card-img { width: 100%; height: 220px; overflow: hidden; }
-    .koto-card-img img { width: 100%; height: 100%; object-fit: cover; }
-    .koto-card-pill { display: inline-block; border: 2px solid #C41E3A; color: #C41E3A; padding: 8px 25px; border-radius: 50px; font-weight: bold; margin: 20px 0; cursor: pointer; }
+    .koto-services-header h2 { color: #2C3E50; font-size: 2.2rem; font-weight: 800; position: relative; display: inline-block; }
+    .koto-services-header h2::after { content: ''; display: block; width: 60px; height: 4px; background: #C41E3A; margin: 15px auto 0; border-radius: 2px; }
+
+    .koto-services-grid { 
+        display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 40px; max-width: 1400px; margin: 0 auto; 
+    }
+    
+    .koto-card { 
+        background: white; border-radius: 16px; overflow: hidden; 
+        display: flex; flex-direction: column; align-items: center; text-align: center; padding-bottom: 30px; 
+        box-shadow: 0 10px 30px rgba(0,0,0,0.05); transition: 0.3s; border: 1px solid #f0f0f0;
+    }
+    .koto-card:hover { transform: translateY(-10px); box-shadow: 0 20px 50px rgba(0,0,0,0.1); }
+    
+    .koto-card-img { width: 100%; height: 220px; overflow: hidden; margin-bottom: 25px; }
+    .koto-card-img img { width: 100%; height: 100%; object-fit: cover; transition: 0.5s; }
+    .koto-card:hover .koto-card-img img { transform: scale(1.1); }
+    
+    .koto-card-pill { 
+        display: inline-block; background: white; border: 2px solid #C41E3A; color: #C41E3A; 
+        padding: 8px 25px; border-radius: 50px; font-weight: bold; margin-bottom: 20px; 
+        transition: 0.3s; cursor: pointer; text-transform: uppercase; font-size: 0.9rem;
+    }
+    .koto-card-pill:hover { background: #C41E3A; color: white; }
     .koto-card-desc { color: #666; font-size: 1rem; padding: 0 25px; line-height: 1.6; }
 
-    /* 资讯区 */
+    /* === 新闻资讯区 === */
     .koto-news-section { padding: 80px 5%; background: #F5F7FA; }
-    .koto-news-scroll { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 30px; margin-top: 40px; }
-    .koto-news-card { background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 5px 15px rgba(0,0,0,0.03); display: block; }
+    .koto-news-container { max-width: 1200px; margin: 0 auto; }
+    .koto-news-scroll { 
+        display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); 
+        gap: 30px; margin-top: 40px; 
+    }
+    
+    .koto-news-card { 
+        background: white; border-radius: 12px; overflow: hidden; display: block;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.03); transition: 0.3s;
+    }
+    .koto-news-card:hover { transform: translateY(-5px); box-shadow: 0 15px 30px rgba(0,0,0,0.08); }
 </style>
 
 <div class="koto-hero-wrapper" id="kotoHero">
     
-    <div class="koto-hero-slide active" style="background: url('https://images.unsplash.com/photo-1503614472-8c93d56e92ce?auto=format&fit=crop&w=1600&q=80');">
+    <div class="koto-hero-slide active" style="background-image: url('https://images.unsplash.com/photo-1554160116-13423749b11d?q=80&w=2070&auto=format&fit=crop');">
         <div class="koto-hero-content">
             <h1>Expert Guidance for<br>Your Canadian Journey</h1>
             <p>基于官方 CRS 标准的精准规划，从留学到移民，为您定制最优路径。</p>
@@ -74,7 +111,7 @@
         </div>
     </div>
 
-    <div class="koto-hero-slide" style="background: url('https://images.unsplash.com/photo-1541339907198-e08756ebafe3?auto=format&fit=crop&w=1600&q=80');">
+    <div class="koto-hero-slide" style="background-image: url('https://images.unsplash.com/photo-1541339907198-e08756ebafe3?q=80&w=2070&auto=format&fit=crop');">
         <div class="koto-hero-content">
             <h1>美加名校直通车</h1>
             <p>顶尖名校文书定制，从小学到博士的全龄段申请服务。</p>
@@ -82,7 +119,7 @@
         </div>
     </div>
 
-    <div class="koto-hero-slide" style="background: url('https://images.unsplash.com/photo-1628258334105-2a0b3d6efee1?auto=format&fit=crop&w=1600&q=80');">
+    <div class="koto-hero-slide" style="background-image: url('https://images.unsplash.com/photo-1628258334105-2a0b3d6efee1?q=80&w=2000&auto=format&fit=crop');">
         <div class="koto-hero-content">
             <h1>加拿大配偶担保移民</h1>
             <p>精准预案，力争免面试、无补件直通 PR</p>
@@ -97,49 +134,75 @@
     </div>
 </div>
 
-<section class="koto-services-section">
+<section class="koto-services-section" id="core-services">
     <div class="koto-services-header"><h2>我们的核心服务</h2></div>
     <div class="koto-services-grid">
         <div class="koto-card">
-            <div class="koto-card-img"><img src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&w=800&q=80"></div>
+            <div class="koto-card-img">
+                <img src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?q=80&w=800&auto=format&fit=crop" alt="IELTS Study">
+            </div>
             <a href="/capsules/" class="koto-card-pill">雅思/思培提分</a>
-            <p class="koto-card-desc">名师一对一精准指导，助您快速达到移民分数要求。</p>
+            <p class="koto-card-desc">名师一对一精准指导，针对性突破口语写作瓶颈，助您快速达到移民分数要求。</p>
         </div>
+
         <div class="koto-card">
-            <div class="koto-card-img"><img src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&w=800&q=80"></div>
+            <div class="koto-card-img">
+                <img src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?q=80&w=800&auto=format&fit=crop" alt="Study Abroad">
+            </div>
             <a href="/study/" class="koto-card-pill">美加留学规划</a>
-            <p class="koto-card-desc">从小学到博士的全龄段申请，顶尖名校文书定制。</p>
+            <p class="koto-card-desc">从小学到博士的全龄段申请服务。顶尖名校文书定制，学签办理及拒签翻案。</p>
         </div>
+
         <div class="koto-card">
-            <div class="koto-card-img"><img src="https://images.unsplash.com/photo-1517935706615-2717063c2225?auto=format&fit=crop&w=800&q=80"></div>
+            <div class="koto-card-img">
+                <img src="https://images.unsplash.com/photo-1517935706615-2717063c2225?q=80&w=800&auto=format&fit=crop" alt="Canada Immigration">
+            </div>
             <a href="/canada/" class="koto-card-pill">加拿大移民</a>
-            <p class="koto-card-desc">EE 快速通道、PNP 省提名及家庭团聚全类别办理。</p>
+            <p class="koto-card-desc">快速通道 (Express Entry)、省提名 (PNP)、家庭团聚及配偶工签全类别办理。</p>
         </div>
+
         <div class="koto-card">
-            <div class="koto-card-img"><img src="https://images.unsplash.com/photo-1501466044931-62695aada8e9?auto=format&fit=crop&w=800&q=80"></div>
+            <div class="koto-card-img">
+                <img src="https://images.unsplash.com/photo-1501466044931-62695aada8e9?q=80&w=800&auto=format&fit=crop" alt="USA Immigration">
+            </div>
             <div onclick="openGlobalModal('美国移民规划')" class="koto-card-pill">美国移民</div>
-            <p class="koto-card-desc">EB-1 杰出人才、NIW 及跨国高管移民专业咨询。</p>
+            <p class="koto-card-desc">杰出人才 (EB-1)、国家利益豁免 (NIW) 及跨国高管移民 (L1/EB-1C) 专业咨询。</p>
         </div>
     </div>
 </section>
 
 <section class="koto-news-section">
     <div class="koto-news-container">
-        <h2 style="text-align: center; color: #2C3E50;">最新移民资讯</h2>
+        <h2 style="color: #2C3E50; margin-bottom: 30px; font-size: 1.8rem; font-weight: 800; text-align: center;">最新移民资讯</h2>
         <div class="koto-news-scroll">
             {{ range first 3 .Site.RegularPages }}
             <a href="{{ .Permalink }}" class="koto-news-card">
-                {{ $img := "/images/logo-koto.png" }}
-                <img src="{{ $img }}" style="width: 100%; height: 200px; object-fit: cover;">
-                <div style="padding: 20px;">
-                    <h3 style="font-size: 1.1rem; color: #2C3E50;">{{ .Title }}</h3>
-                    <p style="font-size: 0.9rem; color: #666;">{{ .Summary | truncate 60 }}</p>
+                {{ $img := "" }}
+                {{ if .Params.image }}
+                    {{ $res := .Resources.GetMatch .Params.image }}
+                    {{ if $res }}{{ $img = $res.RelPermalink }}{{ else }}{{ $img = .Params.image }}{{ end }}
+                {{ end }}
+                {{ if eq $img "" }}{{ $img = "/images/logo-koto.png" }}{{ end }}
+                
+                <img src="{{ $img }}" style="width: 100%; height: 200px; object-fit: cover; display:block;">
+                <div style="padding: 25px;">
+                    <span style="font-size: 0.85rem; color: #888; display: block; margin-bottom: 10px;">
+                        📅 {{ .Date.Format "2006-01-02" }}
+                    </span>
+                    <h3 style="margin: 0 0 10px 0; font-size: 1.2rem; line-height: 1.4; color: #2C3E50; font-weight: bold;">{{ .Title }}</h3>
+                    <p style="font-size: 0.95rem; color: #666; margin:0; line-height: 1.6;">{{ .Summary | truncate 60 }}</p>
+                    <span style="color: #C41E3A; font-weight: bold; font-size: 0.9rem; display:block; margin-top: 20px;">阅读全文 &rarr;</span>
                 </div>
             </a>
             {{ end }}
         </div>
+        {{ if not .Site.RegularPages }}
+        <p style="text-align: center; color: #999; padding: 40px;">暂无新闻资讯，后台添加文章后将自动在此显示。</p>
+        {{ end }}
     </div>
 </section>
+
+<div id="page-bottom" style="height: 1px;"></div>
 
 <script>
     document.addEventListener("DOMContentLoaded", function() {
@@ -147,23 +210,27 @@
         const slides = document.querySelectorAll('.koto-hero-slide');
         const dots = document.querySelectorAll('.koto-dot');
         
-        function updateKotoHero(n) {
-            slides.forEach(s => s.classList.remove('active'));
-            dots.forEach(d => d.classList.remove('active'));
-            kIdx = n;
-            if (kIdx >= slides.length) kIdx = 0;
-            if (kIdx < 0) kIdx = slides.length - 1;
-            slides[kIdx].classList.add('active');
-            dots[kIdx].classList.add('active');
+        if (slides.length > 0) {
+            function updateKotoHero(n) {
+                slides.forEach(s => s.classList.remove('active'));
+                dots.forEach(d => d.classList.remove('active'));
+                
+                kIdx = n;
+                if (kIdx >= slides.length) kIdx = 0;
+                if (kIdx < 0) kIdx = slides.length - 1;
+                
+                if(slides[kIdx]) slides[kIdx].classList.add('active');
+                if(dots[kIdx]) dots[kIdx].classList.add('active');
+            }
+            
+            let kTimer = setInterval(() => { updateKotoHero(kIdx + 1); }, 5000);
+            
+            window.setKotoHero = function(n) {
+                clearInterval(kTimer);
+                updateKotoHero(n);
+                kTimer = setInterval(() => { updateKotoHero(kIdx + 1); }, 5000);
+            };
         }
-        
-        let kTimer = setInterval(() => { updateKotoHero(kIdx + 1); }, 5000);
-        
-        window.setKotoHero = function(n) {
-            clearInterval(kTimer);
-            updateKotoHero(n);
-            kTimer = setInterval(() => { updateKotoHero(kIdx + 1); }, 5000);
-        };
     });
 </script>
 {{ end }}
