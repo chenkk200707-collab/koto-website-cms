@@ -26,7 +26,7 @@
     }
     .koto-hero-slide::before {
         content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-        background: rgba(0,0,0,0.45); /* 遮罩层 */
+        background: rgba(0,0,0,0.4); /* 图片遮罩，保证文字清晰 */
     }
     .koto-hero-slide.active { opacity: 1; z-index: 2; }
     
@@ -84,6 +84,7 @@
         transition: 0.3s; cursor: pointer; text-transform: uppercase; font-size: 0.9rem;
     }
     .koto-card-pill:hover { background: #C41E3A; color: white; }
+    
     .koto-card-desc { color: #666; font-size: 1rem; padding: 0 25px; line-height: 1.6; }
 
     /* === 新闻资讯区 === */
@@ -99,11 +100,12 @@
         box-shadow: 0 5px 15px rgba(0,0,0,0.03); transition: 0.3s;
     }
     .koto-news-card:hover { transform: translateY(-5px); box-shadow: 0 15px 30px rgba(0,0,0,0.08); }
+    
 </style>
 
 <div class="koto-hero-wrapper" id="kotoHero">
     
-    <div class="koto-hero-slide active" style="background-image: url('https://images.unsplash.com/photo-1554160116-13423749b11d?q=80&w=2070&auto=format&fit=crop');">
+    <div class="koto-hero-slide active" style="background-image: url('https://images.unsplash.com/photo-1516738901171-8eb4fc2ab886?q=80&w=2070&auto=format&fit=crop');">
         <div class="koto-hero-content">
             <h1>Expert Guidance for<br>Your Canadian Journey</h1>
             <p>基于官方 CRS 标准的精准规划，从留学到移民，为您定制最优路径。</p>
@@ -111,7 +113,7 @@
         </div>
     </div>
 
-    <div class="koto-hero-slide" style="background-image: url('https://images.unsplash.com/photo-1541339907198-e08756ebafe3?q=80&w=2070&auto=format&fit=crop');">
+    <div class="koto-hero-slide" style="background-image: url('https://images.unsplash.com/photo-1523050854058-8df90110c9f1?q=80&w=2000&auto=format&fit=crop');">
         <div class="koto-hero-content">
             <h1>美加名校直通车</h1>
             <p>顶尖名校文书定制，从小学到博士的全龄段申请服务。</p>
@@ -137,6 +139,7 @@
 <section class="koto-services-section" id="core-services">
     <div class="koto-services-header"><h2>我们的核心服务</h2></div>
     <div class="koto-services-grid">
+        
         <div class="koto-card">
             <div class="koto-card-img">
                 <img src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?q=80&w=800&auto=format&fit=crop" alt="IELTS Study">
@@ -223,6 +226,7 @@
                 if(dots[kIdx]) dots[kIdx].classList.add('active');
             }
             
+            // 自动轮播时间 (毫秒)
             let kTimer = setInterval(() => { updateKotoHero(kIdx + 1); }, 5000);
             
             window.setKotoHero = function(n) {
