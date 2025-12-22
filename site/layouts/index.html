@@ -4,91 +4,44 @@
 <style>
     html { scroll-behavior: smooth; }
     
-    /* 基础设置 */
+    /* 关键：给 Body 加顶部边距，因为 Header 是 fixed 的 */
     body {
         margin: 0; padding: 0;
         padding-top: 80px; 
-        font-family: -apple-system, BlinkMacSystemFont, "Microsoft YaHei", sans-serif;
+        font-family: -apple-system, BlinkMacSystemFont, sans-serif;
         color: #333; background-color: #fff;
     }
     a { text-decoration: none; color: inherit; transition: 0.3s; }
     * { box-sizing: border-box; }
 
-    /* === 轮播图容器 === */
-    .koto-hero-wrapper { 
-        position: relative; width: 100%; height: 500px; /* 高度适中 */
-        background-color: #f9f9f9; 
-        overflow: hidden; 
-    }
-    
-    /* === 轮播内容卡片 === */
-    .koto-hero-slide { 
-        position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
-        opacity: 0; transition: opacity 0.6s ease-in-out; 
-        display: flex; align-items: center; justify-content: center; 
-        z-index: 1; 
-    }
+    /* 轮播图 */
+    .koto-hero-wrapper { position: relative; width: 100%; height: 550px; background-color: #F5F7FA; overflow: hidden; }
+    .koto-hero-slide { position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; transition: opacity 0.8s; display: flex; align-items: center; justify-content: center; z-index: 1; background-size: cover; background-position: center; }
     .koto-hero-slide.active { opacity: 1; z-index: 2; }
-
-    /* === [核心修改] 用渐变色代替图片背景 === */
-    /* 第一屏：加拿大红白渐变 */
-    .slide-bg-1 { background: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%); }
-    /* 第二屏：学术蓝渐变 */
-    .slide-bg-2 { background: linear-gradient(120deg, #e0c3fc 0%, #8ec5fc 100%); }
-    /* 第三屏：温馨暖色渐变 */
-    .slide-bg-3 { background: linear-gradient(120deg, #f093fb 0%, #f5576c 100%); }
-
-    /* 文字内容框 (去掉红色底色，直接显示在渐变背景上) */
-    .koto-hero-content { 
-        text-align: center; max-width: 800px; padding: 40px;
-        /* 让文字稍微浮起 */
-        transform: translateY(20px); opacity: 0; transition: all 0.8s ease 0.2s;
-    }
-    .koto-hero-slide.active .koto-hero-content {
-        transform: translateY(0); opacity: 1;
-    }
-
-    /* 标题样式优化 */
-    .koto-hero-content h1 { 
-        font-size: 3rem; margin: 0 0 20px 0; font-weight: 800; 
-        color: #2C3E50; /* 深色文字更清晰 */
-        text-shadow: none; /* 去掉阴影 */
-    }
-    .koto-hero-content p { 
-        font-size: 1.2rem; margin-bottom: 40px; 
-        color: #555; line-height: 1.6;
-        text-shadow: none; 
-    }
-    
-    /* 按钮样式 */
-    .koto-hero-btn { 
-        background: #C41E3A; color: white; 
-        padding: 15px 45px; border-radius: 50px; font-weight: bold; font-size: 1.1rem;
-        display: inline-block; cursor: pointer; text-decoration: none;
-        box-shadow: 0 10px 20px rgba(196, 30, 58, 0.2);
-        transition: transform 0.2s;
-    }
-    .koto-hero-btn:hover { transform: translateY(-3px); }
-
-    /* 轮播点 */
+    .koto-hero-content { background: rgba(196, 30, 58, 0.95); padding: 40px 60px; border-radius: 12px; text-align: center; color: white; max-width: 700px; }
+    .koto-hero-content h1 { font-size: 2.5rem; margin: 0 0 15px 0; color: white !important; }
+    .koto-hero-content p { font-size: 1.1rem; margin-bottom: 30px; color: #f0f0f0 !important; }
+    .koto-hero-btn { background: white !important; color: #C41E3A !important; padding: 12px 35px; border-radius: 50px; font-weight: bold; display: inline-block; cursor: pointer; }
     .koto-dots { position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%); z-index: 10; display: flex; gap: 12px; }
-    .koto-dot { width: 12px; height: 12px; background: rgba(0,0,0,0.1); border-radius: 50%; cursor: pointer; }
-    .koto-dot.active { background: #C41E3A; transform: scale(1.2); }
+    .koto-dot { width: 12px; height: 12px; background: rgba(255,255,255,0.4); border-radius: 50%; cursor: pointer; }
+    .koto-dot.active { background: white; }
 
-    /* === 服务区 & 新闻区 (保持原样) === */
-    .koto-services-section { padding: 80px 10%; background: white; }
+    /* 服务区 */
+    .koto-services-section { padding: 60px 10%; background: white; scroll-margin-top: 100px; }
     .koto-services-header { text-align: center; margin-bottom: 50px; }
-    .koto-services-header h2 { color: #2C3E50; font-size: 2.2rem; font-weight: bold; }
-    .koto-services-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px; }
+    .koto-services-header h2 { color: #C41E3A; font-size: 2.2rem; font-weight: bold; }
+    .koto-services-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 30px; }
     
     .koto-card { background: white; border: 1px solid #eee; border-radius: 16px; overflow: hidden; display: flex; flex-direction: column; align-items: center; text-align: center; padding-bottom: 30px; transition: 0.3s; }
     .koto-card:hover { transform: translateY(-5px); box-shadow: 0 15px 30px rgba(0,0,0,0.08); }
     .koto-card-img { width: 100%; height: 200px; background: #e0e0e0; display: flex; align-items: center; justify-content: center; color: #999; margin-bottom: 25px; }
     .koto-card-img img { width: 100%; height: 100%; object-fit: cover; }
+    
     .koto-card-pill { display: inline-block; background: #C41E3A; color: white !important; padding: 10px 30px; border-radius: 50px; font-weight: bold; margin-bottom: 20px; transition: transform 0.2s; cursor: pointer; }
-    .koto-card-pill:hover { transform: scale(1.05); }
+    .koto-card-pill:hover { transform: scale(1.05); box-shadow: 0 5px 15px rgba(196, 30, 58, 0.2); }
     .koto-card-desc { color: #666; font-size: 0.95rem; padding: 0 20px; }
 
+    /* 新闻区 */
     .koto-news-section { padding: 60px 20px; background: #fafafa; }
     .koto-news-container { max-width: 1200px; margin: 0 auto; }
     .koto-news-scroll { display: flex; overflow-x: auto; gap: 30px; padding: 10px 5px 30px 5px; scroll-snap-type: x mandatory; }
@@ -96,16 +49,14 @@
 </style>
 
 <div class="koto-hero-wrapper" id="kotoHero">
-    
-    <div class="koto-hero-slide active slide-bg-1">
+    <div class="koto-hero-slide active" style="background-color: #ddd; background-image: url('https://images.unsplash.com/photo-1503614472-8c93d56e92ce?auto=format&fit=crop&w=1600&q=80');">
         <div class="koto-hero-content">
-            <h1>开启您的加拿大新生活</h1>
+            <h1>Expert Guidance for<br>Your Canadian Journey</h1>
             <p>基于官方 CRS 标准的精准规划，从留学到移民，为您定制最优路径。</p>
-            <a href="/assessment/" class="koto-hero-btn">开始免费评估 &rarr;</a>
+            <a href="/assessment" class="koto-hero-btn">开始免费评估 &rarr;</a>
         </div>
     </div>
-
-    <div class="koto-hero-slide slide-bg-2">
+    <div class="koto-hero-slide" style="background-color: #ccc; background-image: url('https://images.unsplash.com/photo-1541339907198-e08756ebafe3?auto=format&fit=crop&w=1600&q=80');">
         <div class="koto-hero-content">
             <h1>美加名校直通车</h1>
             <p>顶尖名校文书定制，从小学到博士的全龄段申请服务。</p>
@@ -113,7 +64,7 @@
         </div>
     </div>
     
-    <div class="koto-hero-slide slide-bg-3">
+    <div class="koto-hero-slide" style="background-color: #bbb; background-image: url('https://images.unsplash.com/photo-1628258334105-2a0b3d6efee1?auto=format&fit=crop&w=1600&q=80');">
         <div class="koto-hero-content">
             <h1>加拿大配偶担保移民</h1>
             <p>精准预案，力争免面试、无补件直通 PR</p>
@@ -131,35 +82,26 @@
 <section class="koto-services-section" id="core-services">
     <div class="koto-services-header"><h2>我们的核心服务</h2></div>
     <div class="koto-services-grid">
-        
         <div class="koto-card">
-            <div class="koto-card-img">
-                <img src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&w=800&q=80">
-            </div>
+            <div class="koto-card-img"><img src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&w=800&q=80"></div>
             <a href="/capsules/" class="koto-card-pill">雅思/思培提分</a>
             <p class="koto-card-desc">名师一对一精准指导，针对性突破口语写作瓶颈，助您快速达到移民分数要求。</p>
         </div>
 
         <div class="koto-card">
-            <div class="koto-card-img">
-                <img src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&w=800&q=80">
-            </div>
+            <div class="koto-card-img"><img src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&w=800&q=80"></div>
             <a href="/study/" class="koto-card-pill">美加留学规划</a>
             <p class="koto-card-desc">从小学到博士的全龄段申请服务。顶尖名校文书定制，学签办理及拒签翻案。</p>
         </div>
 
         <div class="koto-card">
-            <div class="koto-card-img">
-                <img src="https://images.unsplash.com/photo-1517935706615-2717063c2225?auto=format&fit=crop&w=800&q=80">
-            </div>
+            <div class="koto-card-img"><img src="https://images.unsplash.com/photo-1517935706615-2717063c2225?auto=format&fit=crop&w=800&q=80"></div>
             <a href="/canada/" class="koto-card-pill">加拿大移民</a>
             <p class="koto-card-desc">快速通道 (Express Entry)、省提名 (PNP)、家庭团聚及配偶工签全类别办理。</p>
         </div>
 
         <div class="koto-card">
-            <div class="koto-card-img">
-                <img src="https://images.unsplash.com/photo-1501466044931-62695aada8e9?auto=format&fit=crop&w=800&q=80">
-            </div>
+            <div class="koto-card-img"><img src="https://images.unsplash.com/photo-1501466044931-62695aada8e9?auto=format&fit=crop&w=800&q=80"></div>
             <div onclick="openGlobalModal('美国移民规划')" class="koto-card-pill">美国移民</div>
             <p class="koto-card-desc">杰出人才 (EB-1)、国家利益豁免 (NIW) 及跨国高管移民 (L1/EB-1C) 专业咨询。</p>
         </div>
