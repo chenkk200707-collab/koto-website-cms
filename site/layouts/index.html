@@ -4,7 +4,6 @@
 <style>
     html { scroll-behavior: smooth; }
     
-    /* 基础设置 */
     body {
         margin: 0; padding: 0;
         padding-top: 80px; 
@@ -144,15 +143,24 @@
             {{ range first 6 .Site.RegularPages }}
             <a href="{{ .Permalink }}" class="koto-news-card">
                 
-                {{/* 默认图片改为一张网络风景图，保证 100% 能显示 */}}
-                {{ $img := "https://images.unsplash.com/photo-1499591934245-40b55745b905?w=800&q=80" }}
+                {{ $img := "/images/logo-koto.png" }}
                 
+                {{/* 1. 检查 FrontMatter */}}
                 {{ if .Params.image }}
                     {{ $img = .Params.image }}
                 {{ else }}
-                    {{ $imgs := findRE "<img[^>]+src=[\"']([^\"']+)[\"']" .Content 1 }}
-                    {{ range $imgs }}
-                        {{ $img = . | replaceRE "<img[^>]+src=[\"']([^\"']+)[\"']" "$1" }}
+                    {{/* 2. 核心修复：扫描文件夹里的文件 (Page Resources) */}}
+                    {{/* 这里的 .Resources.ByType "image" 会自动找到 post 文件夹里的 png/jpg */}}
+                    {{ $res := .Resources.ByType "image" }}
+                    {{ if gt (len $res) 0 }}
+                        {{/* 拿到第一张图的链接 */}}
+                        {{ $img = (index $res 0).RelPermalink }}
+                    {{ else }}
+                        {{/* 3. 保底：扫描正文内容 */}}
+                        {{ $imgs := findRE "<img[^>]+src=[\"']([^\"']+)[\"']" .Content 1 }}
+                        {{ range $imgs }}
+                            {{ $img = . | replaceRE "<img[^>]+src=[\"']([^\"']+)[\"']" "$1" }}
+                        {{ end }}
                     {{ end }}
                 {{ end }}
 
