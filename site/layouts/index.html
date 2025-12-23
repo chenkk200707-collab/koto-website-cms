@@ -4,7 +4,6 @@
 <style>
     html { scroll-behavior: smooth; }
     
-    /* 基础设置 */
     body {
         margin: 0; padding: 0;
         padding-top: 80px; 
@@ -14,7 +13,7 @@
     a { text-decoration: none; color: inherit; transition: 0.3s; }
     * { box-sizing: border-box; }
 
-    /* === 轮播图区域 (保留渐变色) === */
+    /* 轮播图区域 */
     .koto-hero-wrapper { 
         position: relative; width: 100%; height: 550px; 
         background-color: #f0f0f0; overflow: hidden; 
@@ -62,7 +61,7 @@
     .koto-dot { width: 12px; height: 12px; background: rgba(0,0,0,0.1); border-radius: 50%; cursor: pointer; }
     .koto-dot.active { background: #C41E3A; transform: scale(1.2); }
 
-    /* === 服务区 & 新闻区 === */
+    /* 服务区 & 新闻区 */
     .koto-services-section { padding: 60px 10%; background: white; }
     .koto-services-header { text-align: center; margin-bottom: 50px; }
     .koto-services-header h2 { color: #C41E3A; font-size: 2.2rem; font-weight: bold; }
@@ -143,13 +142,15 @@
         <div class="koto-news-scroll">
             {{ range first 6 .Site.RegularPages }}
             <a href="{{ .Permalink }}" class="koto-news-card">
+                
                 {{ $img := "/images/logo-koto.png" }}
+                
                 {{ if .Params.image }}
                     {{ $img = .Params.image }}
                 {{ else }}
-                    {{ $imgs := findRE "<img.+?src=[\"'](.+?)[\"']" .Content 1 }}
+                    {{ $imgs := findRE "<img[^>]+src=[\"']([^\"']+)[\"']" .Content 1 }}
                     {{ range $imgs }}
-                        {{ $img = . | replaceRE "<img.+?src=[\"'](.+?)[\"']" "$1" }}
+                        {{ $img = . | replaceRE "<img[^>]+src=[\"']([^\"']+)[\"']" "$1" }}
                     {{ end }}
                 {{ end }}
 
