@@ -1,27 +1,67 @@
 <style>
+    /* === 仅保留导航栏样式，删除多余的弹窗样式 === */
     header:not(.koto-main-nav), nav:not(.koto-main-nav), .site-header, #header, .navbar, .top-bar { display: none !important; }
-    body { margin: 0; padding: 0; padding-top: 90px; background-color: #fff; font-family: -apple-system, BlinkMacSystemFont, "Microsoft YaHei", sans-serif; }
+    
+    body { 
+        margin: 0; padding: 0; 
+        padding-top: 90px; 
+        background-color: #fff; 
+        font-family: -apple-system, BlinkMacSystemFont, "Microsoft YaHei", sans-serif; 
+    }
+    
     :root { --k-red: #C41E3A; --k-dark: #2C3E50; }
-    .koto-main-nav { background-color: white; height: 80px; padding: 0 5%; display: flex !important; justify-content: space-between; align-items: center; box-shadow: 0 4px 10px rgba(0,0,0,0.05); position: fixed; top: 0; left: 0; width: 100%; z-index: 99999; box-sizing: border-box; }
+    
+    .koto-main-nav { 
+        background-color: white; 
+        height: 80px; 
+        padding: 0 5%; 
+        display: flex !important; 
+        justify-content: space-between; 
+        align-items: center; 
+        box-shadow: 0 4px 10px rgba(0,0,0,0.05); 
+        position: fixed; 
+        top: 0; left: 0; width: 100%; 
+        z-index: 99999; 
+        box-sizing: border-box; 
+    }
+    
     .nav-logo { height: 100%; display: flex; align-items: center; }
     .nav-logo a { height: 60px; display: block; }
     .nav-logo img { height: 100%; width: auto; max-width: 200px; object-fit: contain; display: block; }
+    
     .nav-links { display: flex; gap: 25px; align-items: center; }
-    .nav-item { font-size: 16px; font-weight: 800; color: var(--k-dark); padding: 10px 0; cursor: pointer; text-decoration: none; background: none; border: none; font-family: inherit; position: relative; }
-    .nav-item::after { content: ''; position: absolute; width: 0%; height: 3px; bottom: 0; left: 0; background-color: var(--k-red); transition: width 0.3s ease; }
+    
+    .nav-item { 
+        font-size: 16px; font-weight: 800; color: var(--k-dark); 
+        padding: 10px 0; cursor: pointer; text-decoration: none; 
+        background: none; border: none; font-family: inherit; position: relative; 
+    }
+    .nav-item::after { 
+        content: ''; position: absolute; width: 0%; height: 3px; 
+        bottom: 0; left: 0; background-color: var(--k-red); 
+        transition: width 0.3s ease; 
+    }
     .nav-item:hover { color: var(--k-red); }
     .nav-item:hover::after { width: 100%; }
-    .free-assess-btn { display: flex; align-items: center; gap: 5px; color: var(--k-red) !important; background-color: #fff0f0; padding: 8px 15px !important; border-radius: 8px; transition: all 0.2s; }
+    
+    .free-assess-btn { 
+        display: flex; align-items: center; gap: 5px; 
+        color: var(--k-red) !important; background-color: #fff0f0; 
+        padding: 8px 15px !important; border-radius: 8px; 
+        transition: all 0.2s; 
+    }
     .free-assess-btn:hover { background-color: #ffe0e0; transform: translateY(-2px); }
     .free-assess-btn::after { display: none; }
-    .nav-btn-cta { background-color: var(--k-red); color: white !important; padding: 10px 25px; border-radius: 50px; font-weight: 800; font-size: 16px; box-shadow: 0 4px 12px rgba(196, 30, 58, 0.3); text-decoration: none; white-space: nowrap; transition: transform 0.2s; }
+    
+    .nav-btn-cta { 
+        background-color: var(--k-red); color: white !important; 
+        padding: 10px 25px; border-radius: 50px; 
+        font-weight: 800; font-size: 16px; 
+        box-shadow: 0 4px 12px rgba(196, 30, 58, 0.3); 
+        text-decoration: none; white-space: nowrap; 
+        transition: transform 0.2s; cursor: pointer;
+    }
     .nav-btn-cta:hover { transform: scale(1.05); background-color: #a01830; }
-    .g-modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); backdrop-filter: blur(5px); z-index: 100000; display: none; align-items: center; justify-content: center; }
-    .g-modal-overlay.show { display: flex; }
-    .g-modal-box { background: white; width: 90%; max-width: 420px; border-radius: 16px; padding: 40px; text-align: center; position: relative; box-shadow: 0 20px 60px rgba(0,0,0,0.3); animation: modalFadeIn 0.3s ease; }
-    @keyframes modalFadeIn { from {opacity:0; transform:translateY(20px);} to {opacity:1; transform:translateY(0);} }
-    .g-qr-box { width: 200px; height: 200px; background: #f9f9f9; margin: 25px auto; display: flex; align-items: center; justify-content: center; border-radius: 8px; }
-    .g-qr-box img { width: 90%; height: 90%; object-fit: contain; }
 </style>
 
 <nav class="koto-main-nav">
@@ -35,48 +75,12 @@
         <a href="/capsules/" class="nav-item">英语胶囊</a>
         <a href="/study/" class="nav-item">北美留学</a>
         <a href="/canada/" class="nav-item">加拿大移民</a>
-        <button onclick="openGlobalModal('美国移民规划')" class="nav-item">美国移民</button>
-        <a href="/cases/" class="nav-item">成功案例</a>
         
+        <button onclick="openGlobalModal('美国移民规划')" class="nav-item">美国移民</button>
+        
+        <a href="/cases/" class="nav-item">成功案例</a>
         <a href="/assessment/" class="nav-item free-assess-btn">⚡ 免费评估</a>
 
-        <a href="#page-bottom" class="nav-btn-cta" onclick="openGlobalModal('通用咨询')">预约咨询</a>
+        <a href="javascript:void(0)" class="nav-btn-cta" onclick="openGlobalModal('通用咨询')">预约咨询</a>
     </div>
 </nav>
-
-<div class="g-modal-overlay" id="globalModal">
-    <div class="g-modal-box">
-        <div style="position:absolute; top:15px; right:20px; font-size:24px; color:#ccc; cursor:pointer;" onclick="closeGlobalModal()">&times;</div>
-        <h3 style="margin:0 0 10px 0; color:#333;">联系 KOTO</h3>
-        <p style="color:#666; margin:0; font-size:14px;">您正在咨询：</p>
-        <p style="color:#C41E3A; font-weight:bold; margin:5px 0 0 0; font-size:18px;" id="gModalService">...</p>
-        <div class="g-qr-box"><img src="/images/qrcode.png" alt="客服二维码"></div>
-        <p style="font-size:13px; color:#999; margin-bottom:10px;">点击下方复制微信号</p>
-        <div style="background:#f0f0f0; padding:12px; border-radius:8px; cursor:pointer; font-weight:bold; color:#333;" onclick="copyGWx()">KotoHelp2025 📋</div>
-    </div>
-</div>
-
-<script>
-    function openGlobalModal(serviceName) {
-        var name = serviceName || "通用咨询";
-        var label = document.getElementById('gModalService');
-        if(label) label.innerText = name;
-        var modal = document.getElementById('globalModal');
-        if(modal) modal.classList.add('show');
-    }
-    function closeGlobalModal() {
-        var modal = document.getElementById('globalModal');
-        if(modal) modal.classList.remove('show');
-    }
-    var modalOverlay = document.getElementById('globalModal');
-    if(modalOverlay) {
-        modalOverlay.addEventListener('click', function(e){
-            if(e.target === this) closeGlobalModal();
-        });
-    }
-    function copyGWx() {
-        if(navigator.clipboard) {
-            navigator.clipboard.writeText('KotoHelp2025').then(function() { alert('微信号已复制：KotoHelp2025'); }).catch(function() { alert('请手动添加微信：KotoHelp2025'); });
-        } else { alert('请手动添加微信：KotoHelp2025'); }
-    }
-</script>
