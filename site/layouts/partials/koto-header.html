@@ -1,16 +1,17 @@
 <style>
-    /* === 仅保留导航栏样式，删除多余的弹窗样式 === */
+    /* === 基础设置 === */
     header:not(.koto-main-nav), nav:not(.koto-main-nav), .site-header, #header, .navbar, .top-bar { display: none !important; }
     
     body { 
         margin: 0; padding: 0; 
-        padding-top: 90px; 
+        padding-top: 90px; /* 留出顶部空间 */
         background-color: #fff; 
         font-family: -apple-system, BlinkMacSystemFont, "Microsoft YaHei", sans-serif; 
     }
     
     :root { --k-red: #C41E3A; --k-dark: #2C3E50; }
     
+    /* === 导航栏容器 === */
     .koto-main-nav { 
         background-color: white; 
         height: 80px; 
@@ -25,10 +26,12 @@
         box-sizing: border-box; 
     }
     
-    .nav-logo { height: 100%; display: flex; align-items: center; }
-    .nav-logo a { height: 60px; display: block; }
-    .nav-logo img { height: 100%; width: auto; max-width: 200px; object-fit: contain; display: block; }
+    /* === Logo 区域 === */
+    .nav-logo { height: 100%; display: flex; align-items: center; z-index: 100001; }
+    .nav-logo a { height: 50px; display: block; }
+    .nav-logo img { height: 100%; width: auto; max-width: 180px; object-fit: contain; display: block; }
     
+    /* === 菜单链接区域 (电脑版) === */
     .nav-links { display: flex; gap: 25px; align-items: center; }
     
     .nav-item { 
@@ -44,6 +47,7 @@
     .nav-item:hover { color: var(--k-red); }
     .nav-item:hover::after { width: 100%; }
     
+    /* 免费评估按钮 (浅红背景) */
     .free-assess-btn { 
         display: flex; align-items: center; gap: 5px; 
         color: var(--k-red) !important; background-color: #fff0f0; 
@@ -53,15 +57,55 @@
     .free-assess-btn:hover { background-color: #ffe0e0; transform: translateY(-2px); }
     .free-assess-btn::after { display: none; }
     
+    /* 预约咨询按钮 (深红实心) */
     .nav-btn-cta { 
         background-color: var(--k-red); color: white !important; 
         padding: 10px 25px; border-radius: 50px; 
         font-weight: 800; font-size: 16px; 
         box-shadow: 0 4px 12px rgba(196, 30, 58, 0.3); 
         text-decoration: none; white-space: nowrap; 
-        transition: transform 0.2s; cursor: pointer;
+        transition: transform 0.2s; cursor: pointer; border: none;
     }
     .nav-btn-cta:hover { transform: scale(1.05); background-color: #a01830; }
+
+    /* === 汉堡菜单图标 (默认隐藏，仅手机显示) === */
+    .koto-hamburger {
+        display: none; /* 电脑端隐藏 */
+        font-size: 28px; cursor: pointer; color: var(--k-dark);
+        z-index: 100001; user-select: none;
+    }
+
+    /* === 📱 手机端适配 (屏幕宽度 < 900px) === */
+    @media (max-width: 900px) {
+        .koto-hamburger { display: block; } /* 显示汉堡图标 */
+        
+        .nav-links {
+            display: none; /* 默认隐藏菜单 */
+            position: absolute; top: 80px; left: 0; width: 100%;
+            background-color: white;
+            flex-direction: column; /* 垂直排列 */
+            padding: 20px 0 40px 0;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            border-top: 1px solid #f0f0f0;
+        }
+        
+        /* 菜单展开状态 */
+        .nav-links.active { display: flex; }
+        
+        /* 手机端菜单项样式调整 */
+        .nav-item { 
+            width: 100%; text-align: center; padding: 15px 0; 
+            font-size: 18px; border-bottom: 1px solid #f9f9f9;
+        }
+        .nav-item::after { display: none; } /* 去掉下划线动画 */
+        
+        .free-assess-btn { 
+            background: none; width: 100%; justify-content: center; 
+            font-size: 18px; margin-top: 10px;
+        }
+        
+        .nav-btn-cta { margin-top: 20px; width: 80%; text-align: center; }
+    }
 </style>
 
 <nav class="koto-main-nav">
@@ -71,16 +115,34 @@
         </a>
     </div>
     
-    <div class="nav-links">
+    <div class="koto-hamburger" onclick="toggleMobileMenu()">☰</div>
+    
+    <div class="nav-links" id="kotoNavLinks">
         <a href="/capsules/" class="nav-item">英语胶囊</a>
         <a href="/study/" class="nav-item">北美留学</a>
         <a href="/canada/" class="nav-item">加拿大移民</a>
         
-        <button onclick="openGlobalModal('美国移民规划')" class="nav-item">美国移民</button>
+        <button onclick="openGlobalModal('美国移民规划'); toggleMobileMenu()" class="nav-item">美国移民</button>
         
         <a href="/cases/" class="nav-item">成功案例</a>
         <a href="/assessment/" class="nav-item free-assess-btn">⚡ 免费评估</a>
 
-        <a href="javascript:void(0)" class="nav-btn-cta" onclick="openGlobalModal('通用咨询')">预约咨询</a>
+        <a href="javascript:void(0)" class="nav-btn-cta" onclick="openGlobalModal('通用咨询'); toggleMobileMenu()">预约咨询</a>
     </div>
 </nav>
+
+<script>
+    // 切换手机菜单显示/隐藏
+    function toggleMobileMenu() {
+        const nav = document.getElementById('kotoNavLinks');
+        const hamburger = document.querySelector('.koto-hamburger');
+        
+        if (nav.classList.contains('active')) {
+            nav.classList.remove('active');
+            hamburger.innerHTML = "☰"; // 恢复三道杠
+        } else {
+            nav.classList.add('active');
+            hamburger.innerHTML = "✕"; // 变成叉号
+        }
+    }
+</script>
