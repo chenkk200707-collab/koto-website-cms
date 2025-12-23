@@ -4,6 +4,7 @@
 <style>
     html { scroll-behavior: smooth; }
     
+    /* 基础设置 */
     body {
         margin: 0; padding: 0;
         padding-top: 80px; 
@@ -13,7 +14,7 @@
     a { text-decoration: none; color: inherit; transition: 0.3s; }
     * { box-sizing: border-box; }
 
-    /* 轮播图区域 */
+    /* === 轮播图区域 === */
     .koto-hero-wrapper { 
         position: relative; width: 100%; height: 550px; 
         background-color: #f0f0f0; overflow: hidden; 
@@ -61,7 +62,7 @@
     .koto-dot { width: 12px; height: 12px; background: rgba(0,0,0,0.1); border-radius: 50%; cursor: pointer; }
     .koto-dot.active { background: #C41E3A; transform: scale(1.2); }
 
-    /* 服务区 & 新闻区 */
+    /* === 服务区 & 新闻区 === */
     .koto-services-section { padding: 60px 10%; background: white; }
     .koto-services-header { text-align: center; margin-bottom: 50px; }
     .koto-services-header h2 { color: #C41E3A; font-size: 2.2rem; font-weight: bold; }
@@ -143,7 +144,8 @@
             {{ range first 6 .Site.RegularPages }}
             <a href="{{ .Permalink }}" class="koto-news-card">
                 
-                {{ $img := "/images/logo-koto.png" }}
+                {{/* 默认图片改为一张网络风景图，保证 100% 能显示 */}}
+                {{ $img := "https://images.unsplash.com/photo-1499591934245-40b55745b905?w=800&q=80" }}
                 
                 {{ if .Params.image }}
                     {{ $img = .Params.image }}
@@ -196,5 +198,4 @@
     });
 </script>
 
-{{ partial "footer.html" . }}
 {{ end }}
