@@ -4,7 +4,7 @@
         <div>
             <h3 style="color: #2C3E50; margin-bottom: 20px; font-weight: bold;">快速导航</h3>
             <ul style="list-style: none; padding: 0; line-height: 2.2;">
-                <li><a href="/" style="color: #666; text-decoration: none;">回到首页 (Home)</a></li>
+                <li><a href="/" style="color: #666; text-decoration: none; transition: 0.3s;">回到首页 (Home)</a></li>
                 <li><a href="/assessment" style="color: #C41E3A; font-weight: bold; text-decoration: none;">CRS 算分器 (免费评估)</a></li>
                 <li><a href="/study/" style="color: #C41E3A; text-decoration: none;">加拿大留学规划</a></li>
                 <li><a href="/canada/" style="color: #C41E3A; text-decoration: none;">加拿大移民项目</a></li>
@@ -18,15 +18,17 @@
                 <div style="font-size: 0.9rem; color: #666; line-height: 1.6;">
                     <p style="margin: 0 0 5px 0; font-weight: bold; color: #333;">扫码添加顾问</p>
                     <p style="margin: 0;">一对一免费评估</p>
+                    <p style="margin: 0;">规划移民路径</p>
                     <p style="margin: 5px 0 0 0; color: #C41E3A; font-weight: bold;">微信号: kotokelly</p>
                 </div>
             </div>
-            </div>
+        </div>
 
         <div>
             <h3 style="color: #2C3E50; margin-bottom: 20px; font-weight: bold;">关注我们</h3>
             <div style="background: white; padding: 25px; border-radius: 12px; border: 1px solid #eee; box-shadow: 0 5px 15px rgba(0,0,0,0.03);">
-                <p style="margin: 0 0 10px 0; color: #888; font-size: 0.9rem;">全网同名搜索：</p>
+                <p style="margin: 0 0 10px 0; color: #888; font-size: 0.9rem;">小红书 / 微信公众号 / Instagram</p>
+                <p style="margin: 0 0 5px 0; color: #333; font-weight: bold;">全网同名搜索：</p>
                 <h4 style="margin: 0 0 10px 0; color: #C41E3A; font-size: 1.3rem; font-weight: 800;">KOTO移民留学</h4>
                 <p style="margin: 0; color: #999; font-size: 0.85rem;">认准 KOTO 红黑 Logo</p>
             </div>
@@ -49,7 +51,7 @@
         
         <p style="font-size: 0.9rem; color: #888; margin-bottom: 12px;">点击下方按钮复制微信号</p>
         
-        <div onclick="copyWeChat()" style="background: #f7f9fc; padding: 15px; border-radius: 50px; cursor: pointer; font-weight: bold; color: #333; display: flex; align-items: center; justify-content: center; gap: 10px; border: 1px solid #eee;">
+        <div onclick="copyWeChat()" style="background: #f7f9fc; padding: 15px; border-radius: 50px; cursor: pointer; font-weight: bold; color: #333; display: flex; align-items: center; justify-content: center; gap: 10px; border: 1px solid #eee; transition: 0.2s;">
             <span style="font-size: 1.1rem; font-family: monospace;">kotokelly</span> 
             <span style="background: #C41E3A; color: white; font-size: 0.7rem; padding: 2px 6px; border-radius: 4px;">复制</span>
         </div>
@@ -60,7 +62,7 @@
 
 <script>
     function openGlobalModal(service) {
-        // 如果传入了 service 就用传入的，否则用默认值
+        // 如果没有传入服务名，默认显示“移民留学规划”
         const sName = service ? service : "移民留学规划";
         document.getElementById('modalServiceName').innerText = sName;
         document.getElementById('globalModal').style.display = 'flex';
@@ -84,7 +86,7 @@
         textArea.value = text;
         document.body.appendChild(textArea);
         textArea.select();
-        try { document.execCommand('copy'); showToast(); } catch (err) { alert('复制失败，微信号：' + text); }
+        try { document.execCommand('copy'); showToast(); } catch (err) { alert('复制失败，请手动输入：' + text); }
         document.body.removeChild(textArea);
     }
 
