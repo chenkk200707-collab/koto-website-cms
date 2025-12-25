@@ -1,6 +1,6 @@
 ---
 title: 【重磅】联邦创业移民 (SUV) 官宣暂停受理！
-date: 2025-12-25T01:45:36.998Z
+date: 2025-12-25T02:01:22.447Z
 description: "        SUV 积压严重，IRCC 正式按下暂停键。为了清理库存，即日起不再接收新的 SUV 申请。正在准备商业计划书的申请人该何去何从？"
 image: canada-pauses-start-up-visa-1140x570.png
 ---
